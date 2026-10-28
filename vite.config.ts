@@ -15,6 +15,8 @@ export default defineConfig({
   base: '/pathfinder-honors-shop-my/',
   // React first, then Tailwind's CSS plugin.
   plugins: [react(), tailwindcss()],
+  // Keep `/*! */` licence comments (Tabler's MIT notice) in the built JS.
+  build: { rolldownOptions: { output: { comments: { legal: true } } } },
   // `@` resolves to src, mirroring the tsconfig path.
   resolve: {
     alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) },
