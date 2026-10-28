@@ -12,6 +12,21 @@ import { CartLine } from './CartLine.tsx' // one order line or its removed note
 import { useCart } from './use-cart.ts' // the cart
 
 const SKELETON_LINES = 3 // how many skeleton lines the loading state shows
+
+/**
+ * Words the Unavailable notice for honors taken out of the cart.
+ * @param names the switched-off honors' names
+ * @param unnamed how many gone honors have no name
+ * @return the Unavailable notice text, or null when nothing was taken out
+ */
+function unavailableNotice(names: string[], unnamed: number): string | null {
+  const parts = [...names, ...(unnamed > 0 ? [`${unnamed} ${unnamed === 1 ? 'honor' : 'honors'}`] : [])] // a gone honor counts as "1 honor"
+  if (parts.length === 0) return null // nothing taken out
+  const joined = parts.length === 1 ? parts[0] : `${parts.slice(0, -1).join(', ')} and ${parts[parts.length - 1]}` // names joined
+  const single = names.length + unnamed === 1 // one honor, or the "1 honor" count alone
+  return `${joined} ${single ? 'is' : 'are'} no longer available and ${single ? 'was' : 'were'} taken out of your cart.` // verb agrees
+}
+
 const ACTION_BOX =
   'focus-visible:outline-focus-ring inline-flex min-h-11 items-center rounded-md font-medium transition-transform duration-(--duration-press) focus-visible:outline-2 focus-visible:outline-offset-2 active:scale-[0.97]' // 44 px, press feedback, focus ring
 
@@ -23,7 +38,7 @@ const ACTION_BOX =
  */
 export function CartScreen({ data, onBack }: { data: CatalogueLoad; onBack: () => void }) {
   const { state, showSkeleton, retry } = data // load state, skeleton gate and retry
-  const { quantities, setQuantity } = useCart() // the cart
+  const { quantities, setQuantity, unavailableNames, unavailableUnnamed } = useCart() // the cart and what was taken out
   const headingRef = useRef<HTMLHeadingElement>(null) // focused on arrival
   const [removed, setRemoved] = useState<Record<string, { quantity: number; height: number }>>({}) // lines set to zero on this screen, kept until it closes
 
@@ -58,6 +73,7 @@ export function CartScreen({ data, onBack }: { data: CatalogueLoad; onBack: () =
     ...lines.map((line) => line.honor),
     ...honors.filter((honor) => removed[honor.id] !== undefined && quantities[honor.id] === undefined),
   ]) // the honors of the lines and of the removed notes in one A to Z list, so a removed note keeps its place
+  const notice = unavailableNotice(unavailableNames, unavailableUnnamed) // null when nothing was taken out
   return (
     <>
       {/* Back to the catalogue, quiet; the heading follows. */}
@@ -66,6 +82,8 @@ export function CartScreen({ data, onBack }: { data: CatalogueLoad; onBack: () =
       <h2 ref={headingRef} tabIndex={-1} className="mt-2 text-xl font-semibold outline-none">
         Your cart
       </h2>
+      {/* Muted, above the lines, until the buyer leaves the screen. */}
+      {notice !== null && state.status === 'ready' && <p className="text-text-muted mt-3">{notice}</p>}
       {/* Loading shows nothing for 300 ms, then lines of the same shape. */}
       {showSkeleton && (
         <div aria-hidden="true" className="mt-2">

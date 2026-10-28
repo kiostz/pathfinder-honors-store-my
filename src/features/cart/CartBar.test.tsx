@@ -40,7 +40,7 @@ function renderBar() {
     )
   }
   render(
-    <CartProvider>
+    <CartProvider honors={honors}>
       <CartBar honors={honors} currency="MYR" />
       <Controls />
     </CartProvider>,

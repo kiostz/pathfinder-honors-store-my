@@ -5,6 +5,7 @@ import { useEffect, useRef } from 'react' // seeds the cart
 import { describe, expect, it, vi } from 'vitest' // test API and mocks
 import type { CatalogueLoad } from '@/features/catalogue/use-catalogue-data.ts' // the load the screen receives
 import type { Honor } from '@/shared/data/types.ts' // the shape of an honor
+import { CART_STORAGE_KEY } from './cart-storage.ts' // where the cart is kept
 import { CartProvider } from './CartProvider.tsx' // the state the screen edits
 import { CartScreen } from './CartScreen.tsx' // code under test
 import { useCart } from './use-cart.ts' // sets the starting cart
@@ -52,7 +53,7 @@ function Seed({ quantities }: { quantities: Record<string, number> }) {
  */
 function renderScreen(quantities: Record<string, number>, data: CatalogueLoad = ready, onBack: () => void = () => {}) {
   render(
-    <CartProvider>
+    <CartProvider honors={honors}>
       <Seed quantities={quantities} />
       <CartScreen data={data} onBack={onBack} />
     </CartProvider>,
@@ -141,7 +142,7 @@ describe('CartScreen', () => {
     // catches: a skeleton flash on a fast load, or the wrong number of skeleton lines
     const loading: CatalogueLoad = { state: { status: 'loading' }, showSkeleton: false, retry: () => {} }
     const { rerender } = render(
-      <CartProvider>
+      <CartProvider honors={honors}>
         <CartScreen data={loading} onBack={() => {}} />
       </CartProvider>,
     )
@@ -149,7 +150,7 @@ describe('CartScreen', () => {
     expect(screen.queryAllByTestId('cart-skeleton-line')).toHaveLength(0)
     expect(screen.queryByText('Your cart is empty.')).not.toBeInTheDocument() // not empty, only unknown
     rerender(
-      <CartProvider>
+      <CartProvider honors={honors}>
         <CartScreen data={{ ...loading, showSkeleton: true }} onBack={() => {}} />
       </CartProvider>,
     )
@@ -223,5 +224,54 @@ describe('CartScreen', () => {
     document.removeEventListener('focusin', record) // stop listening
     expect(focused.filter((entry) => entry.startsWith('BUTTON:Undo'))).toEqual([]) // Undo never had focus
     expect(knots).toHaveFocus()
+  })
+})
+
+describe('CartScreen notice for honors taken out', () => {
+  /**
+   * Renders the screen over a stored cart, as a reload does.
+   * @param stored honor id to quantity in storage
+   * @param honorsNow the honors the load holds
+   */
+  function renderStored(stored: Record<string, number>, honorsNow: Honor[]) {
+    window.localStorage.setItem(CART_STORAGE_KEY, JSON.stringify({ version: 1, quantities: stored }))
+    render(
+      <CartProvider honors={honorsNow}>
+        <CartScreen
+          data={{
+            ...ready,
+            state: { status: 'ready', honors: honorsNow, settings: { currency: 'MYR', defaultPrice: 4 } },
+          }}
+          onBack={() => {}}
+        />
+      </CartProvider>,
+    )
+  }
+  const withAfrica = [...honors, { ...honors[0], id: 'africa-lore', name: 'Africa Lore', enabled: false }] // a switched-off honor too
+
+  it('names a switched-off honor taken out', () => {
+    // catches: a honor vanishing from the cart with no word
+    renderStored({ 'knot-tying': 1, 'africa-lore': 2 }, withAfrica)
+    expect(screen.getByText('Africa Lore is no longer available and was taken out of your cart.')).toBeInTheDocument()
+  })
+
+  it('joins two names', () => {
+    // catches: a notice that shows only the first name, or the wrong verb
+    renderStored({ 'knot-tying': 1, 'africa-lore': 2 }, [{ ...honors[0], enabled: false }, honors[1], withAfrica[2]])
+    expect(
+      screen.getByText('Africa Lore and Knot Tying are no longer available and were taken out of your cart.'),
+    ).toBeInTheDocument()
+  })
+
+  it('counts a honor missing from the data as 1 honor', () => {
+    // catches: a gone honor shown by its id, or not shown
+    renderStored({ ants: 1, 'no-such-honor': 2 }, honors)
+    expect(screen.getByText('1 honor is no longer available and was taken out of your cart.')).toBeInTheDocument()
+  })
+
+  it('shows no notice when nothing was taken out', () => {
+    // catches: a notice on every cart screen
+    renderStored({ ants: 1 }, honors)
+    expect(screen.queryByText(/no longer available/)).not.toBeInTheDocument()
   })
 })

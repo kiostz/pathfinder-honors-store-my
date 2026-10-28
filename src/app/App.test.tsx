@@ -2,6 +2,7 @@
 
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react' // render and query the page
 import { afterEach, describe, expect, it, vi } from 'vitest' // test API and mocks
+import { CART_STORAGE_KEY } from '@/features/cart/cart-storage.ts' // the stored cart's key
 import { App } from './App.tsx' // code under test
 
 afterEach(() => {
@@ -249,6 +250,38 @@ describe('App', () => {
     expect(scrollTo).toHaveBeenLastCalledWith(0, 92) // back where the buyer was
     delete (window as { scrollY?: number }).scrollY // jsdom's own again
     scrollTo.mockRestore() // put scrollTo back
+  })
+
+  it('drops the Unavailable notice when the buyer leaves the cart screen', async () => {
+    // catches: a notice kept in the provider that shows again on every later opening of the cart
+    const honor = (id: string, name: string, enabled: boolean) => ({
+      id,
+      name,
+      category: 'Recreation',
+      skillLevel: null,
+      issuedBy: 'General Conference',
+      enabled,
+      price: 4,
+      image: null,
+    }) // one honor
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (url: string) =>
+        url.endsWith('settings.json')
+          ? new Response(JSON.stringify({ currency: 'MYR', defaultPrice: 4 }))
+          : new Response(
+              JSON.stringify([honor('knot-tying', 'Knot Tying', true), honor('africa-lore', 'Africa Lore', false)]),
+            ),
+      ),
+    ) // Africa Lore is switched off
+    window.localStorage.setItem(CART_STORAGE_KEY, '{"version":1,"quantities":{"knot-tying":1,"africa-lore":1}}') // a saved cart holding it
+    window.location.hash = '#/cart' // opened by address
+    render(<App />)
+    expect(await screen.findByText(/Africa Lore is no longer available/)).toBeInTheDocument() // shown once
+    fireEvent.click(screen.getByRole('link', { name: 'Back to honors' })) // leave the cart screen
+    fireEvent.click(await screen.findByRole('link', { name: /View cart/ })) // open it again
+    await screen.findByRole('heading', { name: 'Your cart' })
+    expect(screen.queryByText(/no longer available/)).not.toBeInTheDocument() // gone for good
   })
 
   it('takes over scroll restoration so the saved position wins', () => {

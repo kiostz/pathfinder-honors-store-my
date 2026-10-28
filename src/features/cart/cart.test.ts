@@ -103,3 +103,30 @@ describe('money and count', () => {
     expect(cartCount([])).toBe(0)
   })
 })
+
+describe('resolveCart unavailable honors', () => {
+  it('reports a switched-off honor by name and a missing id with null, out of lines, count and total', () => {
+    // catches: a switched-off honor still priced into the total, or a missing id dropped without a trace
+    const honors = [
+      honor('ants', 'Ants'),
+      { ...honor('africa-lore', 'Africa Lore'), enabled: false },
+    ]
+    const { lines, unavailable } = resolveCart(
+      { ants: 2, 'africa-lore': 1, 'no-such-honor': 3 },
+      honors,
+    )
+    expect(lines.map((line) => line.honor.name)).toEqual(['Ants'])
+    expect(unavailable).toEqual([
+      { honorId: 'africa-lore', name: 'Africa Lore' },
+      { honorId: 'no-such-honor', name: null },
+    ])
+    expect(cartCount(lines)).toBe(2)
+    expect(estimatedTotalCents(lines)).toBe(800)
+  })
+
+  it('prices a repriced honor at the new price', () => {
+    // catches: a stored price surviving a price change
+    const { lines } = resolveCart({ ants: 2 }, [honor('ants', 'Ants', 5)])
+    expect(estimatedTotalCents(lines)).toBe(1000)
+  })
+})

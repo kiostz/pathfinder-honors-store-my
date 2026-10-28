@@ -8,4 +8,7 @@ import { cleanup } from '@testing-library/react'
 import { afterEach } from 'vitest'
 
 // Remove anything a test rendered so tests do not leak into each other.
-afterEach(() => cleanup())
+afterEach(() => {
+  cleanup() // unmount
+  if (typeof window !== 'undefined') window.localStorage.clear() // script tests run without a window; the cart is kept there, so one test's cart must not reach the next
+})

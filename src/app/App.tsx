@@ -3,6 +3,7 @@
 import { useEffect, useLayoutEffect, useRef, type MouseEvent } from 'react' // scroll, focus and title around a screen change, and the click's type
 import { CartBar } from '@/features/cart/CartBar.tsx' // the fixed bar with the item count
 import { CartProvider } from '@/features/cart/CartProvider.tsx' // the cart state
+import { useCart } from '@/features/cart/use-cart.ts' // clears the Unavailable notice
 import { CartScreen } from '@/features/cart/CartScreen.tsx' // the cart screen
 import { Catalogue } from '@/features/catalogue/Catalogue.tsx' // the buyer's list of honors
 import { useCatalogueData } from '@/features/catalogue/use-catalogue-data.ts' // the one load
@@ -11,6 +12,22 @@ import { useHashRoute } from './use-hash-route.ts' // which screen the address n
 
 const SITE_TITLE = 'Pathfinder Honors' // the catalogue's tab title
 const FROM_CATALOGUE_STATE = { fromCatalogue: true } // marks a cart history entry the bar pushed, so history back leads to the catalogue
+
+/**
+ * Ends the Unavailable notice when the address goes from the cart screen to the catalogue; inside the provider so it can reach the cart.
+ * @param route the screen the address names
+ * @return nothing drawn
+ */
+function ClearUnavailableOnLeave({ route }: { route: 'catalogue' | 'cart' }) {
+  const { clearUnavailable } = useCart() // the cart's way to end the notice
+  const previous = useRef(route) // the screen before this one
+  // runs after each route change
+  useEffect(() => {
+    if (previous.current === 'cart' && route === 'catalogue') clearUnavailable() // only a real leave; first draw and cached loads keep the notice
+    previous.current = route // for the next change
+  }, [route, clearUnavailable]) // rerun on a route change
+  return null // draws nothing
+}
 
 /**
  * The whole page: header and the catalogue or the cart screen.
@@ -82,7 +99,8 @@ export function App() {
   }
 
   return (
-    <CartProvider>
+    <CartProvider honors={data.state.status === 'ready' ? data.state.honors : null}>
+      <ClearUnavailableOnLeave route={route} /> {/* the notice goes when the buyer leaves the cart */}
       <div className="bg-bg-app text-text-default min-h-screen">
         {/* Site name; the only header content. */}
         <header className="border-border-subtle bg-bg-surface border-b">

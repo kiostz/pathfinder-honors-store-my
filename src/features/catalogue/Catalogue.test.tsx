@@ -13,7 +13,7 @@ import { useCatalogueData } from './use-catalogue-data.ts' // the load the catal
 function CatalogueWithCart() {
   const data = useCatalogueData() // the one load
   return (
-    <CartProvider>
+    <CartProvider honors={data.state.status === 'ready' ? data.state.honors : null}>
       <Catalogue data={data} />
     </CartProvider>
   )
