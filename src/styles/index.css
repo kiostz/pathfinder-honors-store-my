@@ -13,6 +13,9 @@
   --color-on-accent: #ffffff;
   --color-danger: #b91c1c;
   --color-focus-ring: #0369a1;
+  --color-category-mark-border: rgb(
+    0 0 0 / 0.12
+  ); /* hairline round the category mark, light mode */
 
   /* Motion durations (read by animation and duration utilities through var()). */
   --duration-press: 100ms;
@@ -49,6 +52,9 @@
     --color-on-accent: #0a0a0a;
     --color-danger: #f87171;
     --color-focus-ring: #7dd3fc;
+    --color-category-mark-border: rgb(
+      255 255 255 / 0.2
+    ); /* hairline round the category mark, dark mode */
   }
 }
 
