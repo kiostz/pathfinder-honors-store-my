@@ -1,22 +1,22 @@
-// Loads the honors and the settings as one load for the catalogue, with the loader delay, retry and stale-attempt guard, so every screen that lists honors shares one pattern.
+// Loads the honors, the settings and the clubs as one load for the catalogue, with the loader delay, retry and stale-attempt guard, so every screen that lists honors shares one pattern.
 
 import { useCallback, useEffect, useState } from 'react' // state and the load effect
-import { loadHonors, loadSettings } from '@/shared/data/load.ts' // read honors.json and settings.json
-import type { Honor, Settings } from '@/shared/data/types.ts' // the shapes of the two files
+import { loadClubs, loadHonors, loadSettings } from '@/shared/data/load.ts' // read the three data files
+import type { ClubList, Honor, Settings } from '@/shared/data/types.ts' // the shapes of the three files
 
 const LOADER_DELAY_MS = 300 // how long a load runs before the skeleton may show
 
 // What the page knows about the load.
 export type CatalogueData =
   | { status: 'loading' } // the request is running
-  | { status: 'error' } // either file failed
-  | { status: 'ready'; honors: Honor[]; settings: Settings } // both files arrived
+  | { status: 'error' } // any file failed
+  | { status: 'ready'; honors: Honor[]; settings: Settings; clubs: ClubList } // all three files arrived
 
 // What useCatalogueData returns, passed to every screen that lists honors.
 export type CatalogueLoad = ReturnType<typeof useCatalogueData>
 
 /**
- * Loads honors and settings together; either failing is one error.
+ * Loads honors, settings and clubs together; any failing is one error.
  * @return the load state, whether the skeleton may show, and retry to load again
  */
 export function useCatalogueData(): {
@@ -31,13 +31,13 @@ export function useCatalogueData(): {
   // Load both files on mount and on every retry.
   useEffect(() => {
     let cancelled = false // ignore an answer that arrives after unmount or a newer attempt
-    Promise.all([loadHonors(), loadSettings()]) // both files, one result
-      .then(([honors, settings]) => {
-        // both files arrived
-        if (!cancelled) setState({ status: 'ready', honors, settings }) // show the data unless this attempt is stale
+    Promise.all([loadHonors(), loadSettings(), loadClubs()]) // all three files, one result
+      .then(([honors, settings, clubs]) => {
+        // all three files arrived
+        if (!cancelled) setState({ status: 'ready', honors, settings, clubs }) // show the data unless this attempt is stale
       })
       .catch((error: unknown) => {
-        // either file failed
+        // any file failed
         console.error('Could not load the catalogue data', error) // visible in the console, no buyer data involved
         if (!cancelled) setState({ status: 'error' }) // show the error unless this attempt is stale
       })

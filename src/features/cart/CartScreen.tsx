@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react' // removals and the heading focus
 import type { CatalogueLoad } from '@/features/catalogue/use-catalogue-data.ts' // the load the app hands over
+import { OrderForm } from '@/features/order/OrderForm.tsx' // the form under the total
 import { formatPrice } from '@/shared/format/price.ts' // "RM 20.00"
 import { CATALOGUE_HASH } from '@/shared/routes.ts' // the catalogue's address
 import { sortByName } from '@/shared/sort/sort-by-name.ts' // names A to Z
@@ -156,6 +157,15 @@ export function CartScreen({ data, onBack }: { data: CatalogueLoad; onBack: () =
               <span>Estimated total</span> {/* the label */}
               <span>{formatPrice(estimatedTotalCents(lines) / 100, currency)}</span> {/* the sum */}
             </p>
+          )}
+          {/* The invoice note and the form, only with something to order. */}
+          {lines.length > 0 && (
+            <>
+              <p className="text-text-muted mt-1 text-sm">
+                Estimated total at today&apos;s prices. The treasurer will email you the invoice.
+              </p>
+              <OrderForm clubs={state.clubs} />
+            </>
           )}
           {/* Nothing in the cart: say so and lead back. */}
           {lines.length === 0 && (

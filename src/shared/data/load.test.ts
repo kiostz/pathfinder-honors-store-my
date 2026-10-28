@@ -1,7 +1,7 @@
-// Tests for loadHonors: the run-time read of public/data/honors.json, with fetch mocked at the boundary.
+// Tests for loadHonors, loadSettings and loadClubs: the run-time read of the data files, with fetch mocked at the boundary.
 
 import { describe, expect, it, vi } from 'vitest' // test API and mock helper
-import { loadHonors, loadSettings } from './load.ts' // code under test
+import { loadClubs, loadHonors, loadSettings } from './load.ts' // code under test
 
 /**
  * Builds a fake fetch that answers every request with one response.
@@ -80,5 +80,83 @@ describe('loadSettings', () => {
     await expect(loadSettings(fakeFetch(body))).rejects.toThrow(
       'not valid settings',
     ) // catches a loader that trusts any JSON and fails later at formatPrice
+  })
+})
+
+describe('loadClubs', () => {
+  const eagles = {
+    name: 'Eagles',
+    area: null,
+    language: null,
+    location: null,
+    churchName: null,
+  } // a valid club
+  const gilead = {
+    name: 'Gilead',
+    area: 'Klang',
+    language: 'BM',
+    location: 'Hall',
+    churchName: 'Klang BM SDA Church',
+  } // every field set
+
+  it('requests the clubs file under the base path', async () => {
+    // catches: a wrong path or a missing base
+    const fetchFn = fakeFetch([])
+    await loadClubs(fetchFn)
+    expect(fetchFn).toHaveBeenCalledWith('/data/clubs.json')
+  })
+
+  it('returns the list in the file', async () => {
+    // catches: fields dropped on the way through
+    expect(await loadClubs(fakeFetch([eagles, gilead]))).toEqual([
+      eagles,
+      gilead,
+    ])
+  })
+
+  it('accepts an empty list', async () => {
+    // catches: an empty club file treated as broken, when only Club name should show
+    expect(await loadClubs(fakeFetch([]))).toEqual([])
+  })
+
+  it('throws on a 404', async () => {
+    // catches: a missing file passing as no clubs
+    await expect(loadClubs(fakeFetch({}, 404))).rejects.toThrow(
+      'Could not load clubs: HTTP 404',
+    )
+  })
+
+  it('throws a clear error when the body is not valid JSON', async () => {
+    // catches: an HTML error page read as data
+    const fetchFn = vi.fn(async () => new Response('<html>oops</html>'))
+    await expect(loadClubs(fetchFn)).rejects.toThrow(
+      'Could not load clubs: the file is not valid JSON',
+    )
+  })
+
+  it('throws when the body is an object, not a list', async () => {
+    // catches: a wrong top-level shape accepted
+    await expect(loadClubs(fakeFetch({ clubs: [] }))).rejects.toThrow(
+      'Could not load clubs: the file is not a list',
+    )
+  })
+
+  it.each([
+    ['the old string shape', ['Eagles']],
+    [
+      'a missing key',
+      [{ name: 'Eagles', area: null, language: null, location: null }],
+    ],
+    ['an empty name', [{ ...eagles, name: '' }]],
+    ['an empty-string optional field', [{ ...eagles, area: '' }]],
+    ['a number in an optional field', [{ ...eagles, language: 5 }]],
+    ['a duplicate name', [eagles, eagles]],
+    ['an extra key', [{ ...eagles, extra: 1 }]],
+    ['a non-string name', [{ ...eagles, name: 5 }]],
+  ])('throws on %s', async (_label, body) => {
+    // catches: a bad club entry reaching the dropdown
+    await expect(loadClubs(fakeFetch(body))).rejects.toThrow(
+      'Could not load clubs: the file is not a valid club list',
+    )
   })
 })

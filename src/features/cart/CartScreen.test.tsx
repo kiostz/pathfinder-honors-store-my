@@ -6,9 +6,24 @@ import { describe, expect, it, vi } from 'vitest' // test API and mocks
 import type { CatalogueLoad } from '@/features/catalogue/use-catalogue-data.ts' // the load the screen receives
 import type { Honor } from '@/shared/data/types.ts' // the shape of an honor
 import { CART_STORAGE_KEY } from './cart-storage.ts' // where the cart is kept
+import { OrderFormProvider } from '@/features/order/OrderFormProvider.tsx' // the form state the screen shows
 import { CartProvider } from './CartProvider.tsx' // the state the screen edits
 import { CartScreen } from './CartScreen.tsx' // code under test
 import { useCart } from './use-cart.ts' // sets the starting cart
+
+// The real captcha loads hCaptcha's script, which a test must not do; this stand-in ticks and expires on demand.
+vi.mock('@/features/order/Captcha.tsx', () => ({
+  Captcha: ({ onToken }: { onToken: (token: string | null) => void }) => (
+    <div>
+      <button type="button" onClick={() => onToken('token-1')}>
+        Tick captcha
+      </button>
+      <button type="button" onClick={() => onToken(null)}>
+        Expire captcha
+      </button>
+    </div>
+  ),
+}))
 
 const honors: Honor[] = [
   { id: 'knot-tying', name: 'Knot Tying', price: 4 },
@@ -23,7 +38,7 @@ const honors: Honor[] = [
 })) // Knot Tying RM 4.00, Ants RM 3.50
 
 const ready: CatalogueLoad = {
-  state: { status: 'ready', honors, settings: { currency: 'MYR', defaultPrice: 4 } },
+  state: { status: 'ready', honors, settings: { currency: 'MYR', defaultPrice: 4 }, clubs: [] },
   showSkeleton: false,
   retry: () => {},
 } // the load as the app hands it over
@@ -54,13 +69,34 @@ function Seed({ quantities }: { quantities: Record<string, number> }) {
 function renderScreen(quantities: Record<string, number>, data: CatalogueLoad = ready, onBack: () => void = () => {}) {
   render(
     <CartProvider honors={honors}>
-      <Seed quantities={quantities} />
-      <CartScreen data={data} onBack={onBack} />
+      <OrderFormProvider>
+        <Seed quantities={quantities} />
+        <CartScreen data={data} onBack={onBack} />
+      </OrderFormProvider>
     </CartProvider>,
   )
 }
 
 describe('CartScreen', () => {
+  it('shows the invoice note and the order form under the estimated total', () => {
+    // catches: the form above the total, or the note missing so the buyer does not know an invoice follows
+    renderScreen({ 'knot-tying': 1 })
+    const total = screen.getByText('Estimated total')
+    const note = screen.getByText("Estimated total at today's prices. The treasurer will email you the invoice.")
+    const name = screen.getByLabelText('Name')
+    expect(total.compareDocumentPosition(note) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    expect(note.compareDocumentPosition(name) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    expect(screen.getByRole('button', { name: 'Send order' })).toBeInTheDocument()
+  })
+
+  it('shows no note and no form on an empty cart', () => {
+    // catches: an order form that can be pressed with nothing to order
+    renderScreen({})
+    expect(screen.queryByLabelText('Name')).not.toBeInTheDocument()
+    expect(screen.queryByText(/The treasurer will email you the invoice/)).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Send order' })).not.toBeInTheDocument()
+  })
+
   it('lists order lines A to Z with price, quantity and line total, and the estimated total', () => {
     // catches: lines in cart order, a wrong line total, or a total that is not the sum of the lines
     renderScreen({ 'knot-tying': 2, ants: 3 })
@@ -237,13 +273,15 @@ describe('CartScreen notice for honors taken out', () => {
     window.localStorage.setItem(CART_STORAGE_KEY, JSON.stringify({ version: 1, quantities: stored }))
     render(
       <CartProvider honors={honorsNow}>
-        <CartScreen
-          data={{
-            ...ready,
-            state: { status: 'ready', honors: honorsNow, settings: { currency: 'MYR', defaultPrice: 4 } },
-          }}
-          onBack={() => {}}
-        />
+        <OrderFormProvider>
+          <CartScreen
+            data={{
+              ...ready,
+              state: { status: 'ready', honors: honorsNow, settings: { currency: 'MYR', defaultPrice: 4 }, clubs: [] },
+            }}
+            onBack={() => {}}
+          />
+        </OrderFormProvider>
       </CartProvider>,
     )
   }

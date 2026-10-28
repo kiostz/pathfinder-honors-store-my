@@ -7,6 +7,7 @@ import { useCart } from '@/features/cart/use-cart.ts' // clears the Unavailable 
 import { CartScreen } from '@/features/cart/CartScreen.tsx' // the cart screen
 import { Catalogue } from '@/features/catalogue/Catalogue.tsx' // the buyer's list of honors
 import { useCatalogueData } from '@/features/catalogue/use-catalogue-data.ts' // the one load
+import { OrderFormProvider } from '@/features/order/OrderFormProvider.tsx' // the order form's values, kept across screens
 import { CATALOGUE_HASH } from '@/shared/routes.ts' // the catalogue's address
 import { useHashRoute } from './use-hash-route.ts' // which screen the address names
 
@@ -100,30 +101,32 @@ export function App() {
 
   return (
     <CartProvider honors={data.state.status === 'ready' ? data.state.honors : null}>
-      <ClearUnavailableOnLeave route={route} /> {/* the notice goes when the buyer leaves the cart */}
-      <div className="bg-bg-app text-text-default min-h-screen">
-        {/* Site name; the only header content. */}
-        <header className="border-border-subtle bg-bg-surface border-b">
-          <h1 className="mx-auto max-w-3xl px-4 py-4 text-xl font-semibold">{SITE_TITLE}</h1>
-        </header>
-        <main ref={mainRef} tabIndex={-1} className="mx-auto max-w-3xl px-4 pt-6 pb-24 outline-none">
-          {/* Stays mounted but hidden while the cart shows, so search, category and pictures survive. */}
-          <div hidden={route === 'cart'}>
-            <Catalogue data={data} />
-          </div>
-          {/* Only while the address names it, so removed notes end when the buyer leaves. */}
-          {route === 'cart' && <CartScreen data={data} onBack={goBack} />}
-        </main>
-        {/* Only on the catalogue, once the honors are loaded; slides up when something is picked. */}
-        {route === 'catalogue' && data.state.status === 'ready' && (
-          <CartBar
-            honors={data.state.honors}
-            currency={data.state.settings.currency}
-            linkRef={barRef}
-            onOpen={markBarOpen}
-          />
-        )}
-      </div>
+      <OrderFormProvider>
+        <ClearUnavailableOnLeave route={route} /> {/* the notice goes when the buyer leaves the cart */}
+        <div className="bg-bg-app text-text-default min-h-screen">
+          {/* Site name; the only header content. */}
+          <header className="border-border-subtle bg-bg-surface border-b">
+            <h1 className="mx-auto max-w-3xl px-4 py-4 text-xl font-semibold">{SITE_TITLE}</h1>
+          </header>
+          <main ref={mainRef} tabIndex={-1} className="mx-auto max-w-3xl px-4 pt-6 pb-24 outline-none">
+            {/* Stays mounted but hidden while the cart shows, so search, category and pictures survive. */}
+            <div hidden={route === 'cart'}>
+              <Catalogue data={data} />
+            </div>
+            {/* Only while the address names it, so removed notes end when the buyer leaves. */}
+            {route === 'cart' && <CartScreen data={data} onBack={goBack} />}
+          </main>
+          {/* Only on the catalogue, once the honors are loaded; slides up when something is picked. */}
+          {route === 'catalogue' && data.state.status === 'ready' && (
+            <CartBar
+              honors={data.state.honors}
+              currency={data.state.settings.currency}
+              linkRef={barRef}
+              onOpen={markBarOpen}
+            />
+          )}
+        </div>
+      </OrderFormProvider>
     </CartProvider>
   )
 }

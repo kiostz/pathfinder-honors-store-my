@@ -28,5 +28,19 @@ export type Settings = {
   defaultPrice: number
 }
 
-// The club names offered in the order form, in clubs.json.
-export type ClubList = string[]
+// One Pathfinder club offered in the order form, in clubs.json; the four optional fields tell similar clubs apart and are null when unknown.
+export type Club = {
+  // Shown in the dropdown and sent in the order; non-empty and unique.
+  name: string
+  // The club's area, or null.
+  area: string | null
+  // The club's language, or null.
+  language: string | null
+  // Where the club meets, or null.
+  location: string | null
+  // The church the club belongs to, or null.
+  churchName: string | null
+}
+
+// The clubs offered in the order form, in file order, in clubs.json.
+export type ClubList = Club[]

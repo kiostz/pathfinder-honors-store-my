@@ -11,6 +11,15 @@ Needs Node 24 (see `.nvmrc`).
 
 Open the address Vite prints. For the production build: `npm run build && npm run preview`, then open http://localhost:4173/pathfinder-honors-shop-my/.
 
+## Order form settings
+
+The order form reads two keys from the committed `.env` files, which are public by design:
+
+- `VITE_WEB3FORMS_ACCESS_KEY` in `.env` (a placeholder until the order handler's Web3Forms key is pasted in; switching inbox later changes only this line).
+- `VITE_HCAPTCHA_SITEKEY`: `.env` holds Web3Forms' shared sitekey for the production build; `.env.development` holds hCaptcha's always-passing test key, because hCaptcha refuses `localhost` with a real key.
+
+`public/data/clubs.json` is a list of clubs: `name` plus `area`, `language`, `location` and `churchName` (each text or `null`). The seed's `--force` still writes `[]`, which is valid.
+
 ## Seed the data
 
 `npm run seed` writes `public/data/honors.json`, `clubs.json` and `settings.json` from `scripts/seed/adventist-honors.csv`. It refuses to overwrite existing files. To overwrite them, run:

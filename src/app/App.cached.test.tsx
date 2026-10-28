@@ -5,6 +5,20 @@ import { afterEach, describe, expect, it, vi } from 'vitest' // test API and moc
 import { CART_STORAGE_KEY } from '@/features/cart/cart-storage.ts' // the stored cart's key
 import { App } from './App.tsx' // code under test
 
+// The real captcha loads hCaptcha's script, which a test must not do; this stand-in ticks and expires on demand.
+vi.mock('@/features/order/Captcha.tsx', () => ({
+  Captcha: ({ onToken }: { onToken: (token: string | null) => void }) => (
+    <div>
+      <button type="button" onClick={() => onToken('token-1')}>
+        Tick captcha
+      </button>
+      <button type="button" onClick={() => onToken(null)}>
+        Expire captcha
+      </button>
+    </div>
+  ),
+}))
+
 // The one load answers at once, as a cache would: ready on the very first render.
 vi.mock('@/features/catalogue/use-catalogue-data.ts', () => {
   const honor = (id: string, name: string, enabled: boolean) => ({
@@ -22,6 +36,7 @@ vi.mock('@/features/catalogue/use-catalogue-data.ts', () => {
       status: 'ready',
       honors: [honor('knot-tying', 'Knot Tying', true), honor('africa-lore', 'Africa Lore', false)],
       settings: { currency: 'MYR', defaultPrice: 4 },
+      clubs: [],
     },
     showSkeleton: false,
     retry: () => {},

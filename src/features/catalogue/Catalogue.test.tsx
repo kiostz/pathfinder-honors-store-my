@@ -48,9 +48,11 @@ function serve(honors: unknown) {
   vi.stubGlobal(
     'fetch',
     vi.fn(async (url: string) =>
-      url.endsWith('settings.json')
-        ? new Response(JSON.stringify({ currency: 'MYR', defaultPrice: 4 }))
-        : new Response(JSON.stringify(honors)),
+      url.endsWith('clubs.json')
+        ? new Response('[]')
+        : url.endsWith('settings.json')
+          ? new Response(JSON.stringify({ currency: 'MYR', defaultPrice: 4 }))
+          : new Response(JSON.stringify(honors)),
     ),
   ) // 200 for both files
 }
@@ -219,9 +221,11 @@ describe('Catalogue', () => {
       .mockRejectedValueOnce(new TypeError('Failed to fetch')) // honors fail first
       .mockResolvedValueOnce(new Response(JSON.stringify({ currency: 'MYR', defaultPrice: 4 }))) // settings of the first attempt
       .mockImplementation(async (url: string) =>
-        url.endsWith('settings.json')
-          ? new Response(JSON.stringify({ currency: 'MYR', defaultPrice: 4 }))
-          : new Response(JSON.stringify([honor('Knot Tying', 'Recreation')])),
+        url.endsWith('clubs.json')
+          ? new Response('[]')
+          : url.endsWith('settings.json')
+            ? new Response(JSON.stringify({ currency: 'MYR', defaultPrice: 4 }))
+            : new Response(JSON.stringify([honor('Knot Tying', 'Recreation')])),
       ) // the retry succeeds
     vi.stubGlobal('fetch', fetchFn)
     render(<CatalogueWithCart />)

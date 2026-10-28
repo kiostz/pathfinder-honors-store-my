@@ -1,0 +1,107 @@
+// Tests for the Captcha wrapper with the hCaptcha package mocked at its boundary: what its callbacks hand the form, the reset handle and the theme.
+
+import { act, render } from '@testing-library/react' // render and flush updates
+import { createRef, useImperativeHandle, type Ref } from 'react' // the stand-in widget and a handle to reset it
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest' // test API and mocks
+import { Captcha, type CaptchaHandle } from './Captcha.tsx' // code under test
+
+type WidgetProps = {
+  theme: string
+  onVerify: (token: string) => void
+  onExpire: () => void
+  onError: () => void
+  ref?: Ref<{ resetCaptcha: () => void }>
+} // what the stand-in widget receives
+
+const widget = vi.hoisted(() => ({ props: null as WidgetProps | null, resetCaptcha: vi.fn() })) // the last props and the reset spy, shared with the mock
+
+// The package's widget replaced by one that records its props and exposes resetCaptcha through its ref.
+vi.mock('@hcaptcha/react-hcaptcha', () => {
+  /**
+   * The stand-in widget: records its props and exposes resetCaptcha through its ref.
+   * @param props what the wrapper passes the package's widget
+   * @return nothing to draw
+   */
+  function StandInWidget(props: WidgetProps) {
+    widget.props = props // remember what the wrapper passed
+    useImperativeHandle(props.ref, () => ({ resetCaptcha: widget.resetCaptcha }), []) // the package's own handle
+    return null
+  }
+  return { default: StandInWidget }
+})
+
+let dark = false // what the stand-in system scheme reports
+const schemeListeners = new Set<() => void>() // the wrapper's change listeners
+
+beforeEach(() => {
+  dark = false // light unless a test says otherwise
+  schemeListeners.clear() // no listeners left from an earlier test
+  widget.props = null // nothing rendered yet
+  widget.resetCaptcha.mockClear() // no earlier resets
+  // jsdom has no matchMedia; this one answers with the current scheme and lets a test switch it.
+  window.matchMedia = ((query: string) => ({
+    matches: dark, // the current scheme
+    media: query, // the asked query
+    addEventListener: (_type: string, listener: () => void) => schemeListeners.add(listener), // the scheme switch
+    removeEventListener: (_type: string, listener: () => void) => schemeListeners.delete(listener), // stop listening
+  })) as unknown as typeof window.matchMedia
+})
+
+afterEach(() => {
+  vi.restoreAllMocks() // spies from the test are removed
+})
+
+describe('Captcha', () => {
+  it('hands the token to onToken when the widget verifies', () => {
+    // catches: onVerify not wired, or the token dropped
+    const onToken = vi.fn()
+    render(<Captcha onToken={onToken} />)
+    act(() => widget.props?.onVerify('abc123'))
+    expect(onToken).toHaveBeenCalledWith('abc123')
+  })
+
+  it('hands null to onToken when the token expires', () => {
+    // catches: an expired token still counted, so Send order looks ready with a dead token
+    const onToken = vi.fn()
+    render(<Captcha onToken={onToken} />)
+    act(() => widget.props?.onExpire())
+    expect(onToken).toHaveBeenCalledExactlyOnceWith(null)
+  })
+
+  it('hands null to onToken when the widget fails', () => {
+    // catches: onError dropped, so a failed widget leaves the last token in place
+    const onToken = vi.fn()
+    render(<Captcha onToken={onToken} />)
+    act(() => widget.props?.onError())
+    expect(onToken).toHaveBeenCalledExactlyOnceWith(null)
+  })
+
+  it('reset() clears the widget through resetCaptcha', () => {
+    // catches: the handle not reaching the package, so a failed send leaves a used token
+    const handle = createRef<CaptchaHandle>()
+    render(<Captcha onToken={() => {}} ref={handle} />)
+    handle.current?.reset()
+    expect(widget.resetCaptcha).toHaveBeenCalledTimes(1)
+  })
+
+  it('uses the light theme when the system is light', () => {
+    // catches: a dark widget on a light page
+    render(<Captcha onToken={() => {}} />)
+    expect(widget.props?.theme).toBe('light')
+  })
+
+  it('uses the dark theme when the system is dark', () => {
+    // catches: a light widget on a dark page
+    dark = true
+    render(<Captcha onToken={() => {}} />)
+    expect(widget.props?.theme).toBe('dark')
+  })
+
+  it('follows the system when the scheme changes', () => {
+    // catches: the theme read once, so a switch while the cart is open leaves the wrong widget
+    render(<Captcha onToken={() => {}} />)
+    dark = true // the system switches to dark
+    act(() => schemeListeners.forEach((listener) => listener()))
+    expect(widget.props?.theme).toBe('dark')
+  })
+})

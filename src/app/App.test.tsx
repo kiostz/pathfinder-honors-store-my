@@ -5,6 +5,20 @@ import { afterEach, describe, expect, it, vi } from 'vitest' // test API and moc
 import { CART_STORAGE_KEY } from '@/features/cart/cart-storage.ts' // the stored cart's key
 import { App } from './App.tsx' // code under test
 
+// The real captcha loads hCaptcha's script, which a test must not do; this stand-in ticks and expires on demand.
+vi.mock('@/features/order/Captcha.tsx', () => ({
+  Captcha: ({ onToken }: { onToken: (token: string | null) => void }) => (
+    <div>
+      <button type="button" onClick={() => onToken('token-1')}>
+        Tick captcha
+      </button>
+      <button type="button" onClick={() => onToken(null)}>
+        Expire captcha
+      </button>
+    </div>
+  ),
+}))
+
 afterEach(() => {
   vi.unstubAllGlobals() // restore fetch
   vi.restoreAllMocks() // a spy left by a failed test must not leak into the next case
@@ -32,9 +46,11 @@ function serveTwoHonors() {
   vi.stubGlobal(
     'fetch',
     vi.fn(async (url: string) =>
-      url.endsWith('settings.json')
-        ? new Response(JSON.stringify({ currency: 'MYR', defaultPrice: 4 }))
-        : new Response(JSON.stringify([honor('knot-tying', 'Knot Tying'), honor('ants', 'Ants')])),
+      url.endsWith('clubs.json')
+        ? new Response('[]')
+        : url.endsWith('settings.json')
+          ? new Response(JSON.stringify({ currency: 'MYR', defaultPrice: 4 }))
+          : new Response(JSON.stringify([honor('knot-tying', 'Knot Tying'), honor('ants', 'Ants')])),
     ),
   ) // both files answer
 }
@@ -45,22 +61,24 @@ describe('App', () => {
     vi.stubGlobal(
       'fetch',
       vi.fn(async (url: string) =>
-        url.endsWith('settings.json')
-          ? new Response(JSON.stringify({ currency: 'MYR', defaultPrice: 4 }))
-          : new Response(
-              JSON.stringify([
-                {
-                  id: 'knot-tying',
-                  name: 'Knot Tying',
-                  category: 'Recreation',
-                  skillLevel: null,
-                  issuedBy: 'General Conference',
-                  enabled: true,
-                  price: 4,
-                  image: null,
-                },
-              ]),
-            ),
+        url.endsWith('clubs.json')
+          ? new Response('[]')
+          : url.endsWith('settings.json')
+            ? new Response(JSON.stringify({ currency: 'MYR', defaultPrice: 4 }))
+            : new Response(
+                JSON.stringify([
+                  {
+                    id: 'knot-tying',
+                    name: 'Knot Tying',
+                    category: 'Recreation',
+                    skillLevel: null,
+                    issuedBy: 'General Conference',
+                    enabled: true,
+                    price: 4,
+                    image: null,
+                  },
+                ]),
+              ),
       ),
     ) // one honor
     render(<App />)
@@ -73,22 +91,24 @@ describe('App', () => {
     vi.stubGlobal(
       'fetch',
       vi.fn(async (url: string) =>
-        url.endsWith('settings.json')
-          ? new Response(JSON.stringify({ currency: 'MYR', defaultPrice: 4 }))
-          : new Response(
-              JSON.stringify([
-                {
-                  id: 'knot-tying',
-                  name: 'Knot Tying',
-                  category: 'Recreation',
-                  skillLevel: null,
-                  issuedBy: 'General Conference',
-                  enabled: true,
-                  price: 4,
-                  image: null,
-                },
-              ]),
-            ),
+        url.endsWith('clubs.json')
+          ? new Response('[]')
+          : url.endsWith('settings.json')
+            ? new Response(JSON.stringify({ currency: 'MYR', defaultPrice: 4 }))
+            : new Response(
+                JSON.stringify([
+                  {
+                    id: 'knot-tying',
+                    name: 'Knot Tying',
+                    category: 'Recreation',
+                    skillLevel: null,
+                    issuedBy: 'General Conference',
+                    enabled: true,
+                    price: 4,
+                    image: null,
+                  },
+                ]),
+              ),
       ),
     ) // one honor at RM 4
     render(<App />)
@@ -267,11 +287,13 @@ describe('App', () => {
     vi.stubGlobal(
       'fetch',
       vi.fn(async (url: string) =>
-        url.endsWith('settings.json')
-          ? new Response(JSON.stringify({ currency: 'MYR', defaultPrice: 4 }))
-          : new Response(
-              JSON.stringify([honor('knot-tying', 'Knot Tying', true), honor('africa-lore', 'Africa Lore', false)]),
-            ),
+        url.endsWith('clubs.json')
+          ? new Response('[]')
+          : url.endsWith('settings.json')
+            ? new Response(JSON.stringify({ currency: 'MYR', defaultPrice: 4 }))
+            : new Response(
+                JSON.stringify([honor('knot-tying', 'Knot Tying', true), honor('africa-lore', 'Africa Lore', false)]),
+              ),
       ),
     ) // Africa Lore is switched off
     window.localStorage.setItem(CART_STORAGE_KEY, '{"version":1,"quantities":{"knot-tying":1,"africa-lore":1}}') // a saved cart holding it
@@ -289,5 +311,18 @@ describe('App', () => {
     serveTwoHonors()
     render(<App />)
     expect(window.history.scrollRestoration).toBe('manual')
+  })
+
+  it('keeps a typed name in the order form while the buyer goes back to add an honor and returns', async () => {
+    // catches: form values kept inside the cart screen, which unmounts when the buyer goes back to the catalogue
+    serveTwoHonors()
+    render(<App />)
+    fireEvent.click(await screen.findByRole('button', { name: 'One more Knot Tying' }))
+    fireEvent.click(screen.getByRole('link', { name: /View cart/ }))
+    fireEvent.change(await screen.findByLabelText('Name'), { target: { value: 'Jo Tan' } })
+    fireEvent.click(screen.getByRole('link', { name: 'Back to honors' }))
+    await waitFor(() => expect(screen.queryByRole('heading', { name: 'Your cart' })).not.toBeInTheDocument())
+    fireEvent.click(screen.getByRole('link', { name: /View cart/ }))
+    expect(await screen.findByLabelText('Name')).toHaveValue('Jo Tan')
   })
 })

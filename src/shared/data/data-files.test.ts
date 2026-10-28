@@ -3,7 +3,7 @@
 import { existsSync, readFileSync } from 'node:fs' // Node file reading
 import { describe, expect, it } from 'vitest' // test API
 import { patchImagePath } from './patch.ts' // the picture path rule
-import type { Honor, Settings } from './types.ts' // data shapes
+import type { Club, Honor, Settings } from './types.ts' // data shapes
 
 /** Reads and parses one file from public/data/. */
 function readData<T>(name: string): T {
@@ -98,15 +98,65 @@ describe('public/data/settings.json', () => {
 })
 
 describe('public/data/clubs.json', () => {
-  const clubs = readData<unknown>('clubs.json')
+  const clubs = readData<Club[]>('clubs.json') // committed clubs
 
-  it('is a list of non-empty, unique strings', () => {
+  // Bug caught: a club with an extra, missing or renamed key, which the loader would refuse on the live site.
+  it('gives every club exactly the five keys', () => {
     expect(Array.isArray(clubs)).toBe(true)
-    const list = clubs as unknown[]
-    for (const club of list) {
-      expect(typeof club).toBe('string')
-      expect((club as string).length).toBeGreaterThan(0)
+    for (const club of clubs) {
+      expect(Object.keys(club).sort()).toEqual([
+        'area',
+        'churchName',
+        'language',
+        'location',
+        'name',
+      ])
     }
-    expect(new Set(list).size).toBe(list.length)
+  })
+
+  // Bug caught: an empty or repeated name, or "" standing in for an absent field.
+  it('gives every club a unique non-empty name and optional fields that are non-empty or null', () => {
+    for (const club of clubs) {
+      expect(club.name.length).toBeGreaterThan(0)
+      for (const field of [
+        club.area,
+        club.language,
+        club.location,
+        club.churchName,
+      ]) {
+        expect(
+          field === null || (typeof field === 'string' && field.length > 0),
+        ).toBe(true)
+      }
+    }
+    expect(new Set(clubs.map((club) => club.name)).size).toBe(clubs.length)
+  })
+
+  // Bug caught: the starting list changed, reordered or losing a church name.
+  it('holds the 10 starting clubs in order with Gilead and Panda church names', () => {
+    expect(clubs.map((club) => club.name)).toEqual([
+      'Sunway Club',
+      'Gilead Pathfinder Club',
+      'Panda Club',
+      'Pheonix Club',
+      'SAPC Club',
+      'Nissi Club',
+      'PJCC Club',
+      'Living Hope Club',
+      'Fedora Club',
+      'Kuantan Pathfinder Club',
+    ])
+    expect(clubs.map((club) => club.churchName)).toEqual([
+      null,
+      'Klang BM SDA Church',
+      'Pandamaran SDA Church',
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+    ])
   })
 })

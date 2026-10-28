@@ -23,10 +23,17 @@ const settingsBody = { currency: 'MYR', defaultPrice: 4 } // a fake settings.jso
  * Makes the global fetch answer each data file separately.
  * @param honors response for honors.json
  * @param settings response for settings.json
+ * @param clubs response for clubs.json, an empty club list by default
  * @return the fetch mock, to count calls
  */
-function serve(honors: () => Promise<Response>, settings: () => Promise<Response>) {
-  const fetchFn = vi.fn((url: string) => (url.endsWith('settings.json') ? settings() : honors())) // route by file name
+function serve(
+  honors: () => Promise<Response>,
+  settings: () => Promise<Response>,
+  clubs: () => Promise<Response> = async () => new Response('[]'),
+) {
+  const fetchFn = vi.fn((url: string) =>
+    url.endsWith('clubs.json') ? clubs() : url.endsWith('settings.json') ? settings() : honors(),
+  ) // route by file name
   vi.stubGlobal('fetch', fetchFn) // install it
   return fetchFn
 }
@@ -55,12 +62,28 @@ describe('useCatalogueData', () => {
     serve(ok(honorsBody), ok(settingsBody))
     const { result } = renderHook(() => useCatalogueData())
     await waitFor(() => expect(result.current.state.status).toBe('ready'))
-    expect(result.current.state).toEqual({ status: 'ready', honors: honorsBody, settings: settingsBody })
+    expect(result.current.state).toEqual({ status: 'ready', honors: honorsBody, settings: settingsBody, clubs: [] })
   })
 
   it('is an error when honors fail', async () => {
     // catches: an honors outage showing an empty list instead of the error state
     serve(async () => new Response('', { status: 500 }), ok(settingsBody))
+    const { result } = renderHook(() => useCatalogueData())
+    await waitFor(() => expect(result.current.state.status).toBe('error'))
+  })
+
+  it('carries the clubs in the ready state', async () => {
+    // catches: clubs.json fetched but dropped, so the order form never gets its dropdown
+    const club = { name: 'Eagles', area: null, language: null, location: null, churchName: null }
+    serve(ok(honorsBody), ok(settingsBody), ok([club]))
+    const { result } = renderHook(() => useCatalogueData())
+    await waitFor(() => expect(result.current.state.status).toBe('ready'))
+    expect(result.current.state).toMatchObject({ clubs: [club] })
+  })
+
+  it('is the one error when clubs.json fails', async () => {
+    // catches: a broken club list leaving a half-loaded catalogue instead of the error screen
+    serve(ok(honorsBody), ok(settingsBody), async () => new Response('', { status: 500 }))
     const { result } = renderHook(() => useCatalogueData())
     await waitFor(() => expect(result.current.state.status).toBe('error'))
   })
