@@ -1,0 +1,6 @@
+# Installed dependencies, never committed.
+node_modules
+# Vite production build output.
+dist
+# TypeScript incremental build info caches.
+*.tsbuildinfo

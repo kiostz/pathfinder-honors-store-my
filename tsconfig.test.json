@@ -1,0 +1,15 @@
+// TypeScript project config for the tests under src/: the app settings plus Node types, so tests can read files.
+{
+  // Start from the app settings so tests are checked the same way as app code.
+  "extends": "./tsconfig.app.json",
+  "compilerOptions": {
+    // Separate build-info cache so this project does not overwrite the app's.
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.test.tsbuildinfo",
+    // Vite typings plus Node globals and modules (node:fs); only test files are included here.
+    "types": ["vite/client", "node"]
+  },
+  // Only the tests and their setup.
+  "include": ["src/**/*.test.ts", "src/**/*.test.tsx", "src/test"],
+  // Nothing to exclude; clears the exclude inherited from the app config.
+  "exclude": []
+}

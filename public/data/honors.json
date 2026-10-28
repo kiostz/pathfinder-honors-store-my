@@ -1,0 +1,4222 @@
+[
+  {
+    "id": "community-assessment",
+    "name": "Community Assessment",
+    "category": "ADRA",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "community-development",
+    "name": "Community Development",
+    "category": "ADRA",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "community-service",
+    "name": "Community Service",
+    "category": "ADRA",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "conflict-resolution",
+    "name": "Conflict Resolution",
+    "category": "ADRA",
+    "skillLevel": 3,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "disaster-response",
+    "name": "Disaster Response",
+    "category": "ADRA",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "disaster-response-advanced",
+    "name": "Disaster Response - Advanced",
+    "category": "ADRA",
+    "skillLevel": 3,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "hunger-relief",
+    "name": "Hunger Relief",
+    "category": "ADRA",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "literacy",
+    "name": "Literacy",
+    "category": "ADRA",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "refugee-resettlement",
+    "name": "Refugee Resettlement",
+    "category": "ADRA",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "rural-development",
+    "name": "Rural Development",
+    "category": "ADRA",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "urban-development",
+    "name": "Urban Development",
+    "category": "ADRA",
+    "skillLevel": 3,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "aboriginal-lore",
+    "name": "Aboriginal Lore",
+    "category": "Arts and Crafts",
+    "skillLevel": null,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "africa-lore",
+    "name": "Africa Lore",
+    "category": "Arts and Crafts",
+    "skillLevel": 1,
+    "issuedBy": "East Africa Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "airplane-modeling",
+    "name": "Airplane Modeling",
+    "category": "Arts and Crafts",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "basketry",
+    "name": "Basketry",
+    "category": "Arts and Crafts",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "block-printing",
+    "name": "Block Printing",
+    "category": "Arts and Crafts",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "braiding",
+    "name": "Braiding",
+    "category": "Arts and Crafts",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "braiding-advanced",
+    "name": "Braiding - Advanced",
+    "category": "Arts and Crafts",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "bread-dough",
+    "name": "Bread Dough",
+    "category": "Arts and Crafts",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "cake-decorating",
+    "name": "Cake Decorating",
+    "category": "Arts and Crafts",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "candlemaking",
+    "name": "Candlemaking",
+    "category": "Arts and Crafts",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "ceramics-general-conference",
+    "name": "Ceramics (General Conference)",
+    "category": "Arts and Crafts",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "ceramics-north-american-division",
+    "name": "Ceramics (North American Division)",
+    "category": "Arts and Crafts",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "copper-enameling",
+    "name": "Copper Enameling",
+    "category": "Arts and Crafts",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "copper-enameling-advanced",
+    "name": "Copper Enameling - Advanced",
+    "category": "Arts and Crafts",
+    "skillLevel": 3,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "counted-cross-stitch",
+    "name": "Counted Cross Stitch",
+    "category": "Arts and Crafts",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "crocheting",
+    "name": "Crocheting",
+    "category": "Arts and Crafts",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "crocheting-advanced",
+    "name": "Crocheting - Advanced",
+    "category": "Arts and Crafts",
+    "skillLevel": 3,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "currency",
+    "name": "Currency",
+    "category": "Arts and Crafts",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "currency-template",
+    "name": "Currency (Template)",
+    "category": "Arts and Crafts",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "currency-united-states",
+    "name": "Currency (United States)",
+    "category": "Arts and Crafts",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "currency-advanced",
+    "name": "Currency - Advanced",
+    "category": "Arts and Crafts",
+    "skillLevel": 3,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "currency-advanced-european-union",
+    "name": "Currency - Advanced (European Union)",
+    "category": "Arts and Crafts",
+    "skillLevel": 3,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "currency-advanced-template",
+    "name": "Currency - Advanced (Template)",
+    "category": "Arts and Crafts",
+    "skillLevel": 3,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "currency-advanced-united-states",
+    "name": "Currency - Advanced (United States)",
+    "category": "Arts and Crafts",
+    "skillLevel": 3,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "decoupage",
+    "name": "Decoupage",
+    "category": "Arts and Crafts",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "digital-photography",
+    "name": "Digital Photography",
+    "category": "Arts and Crafts",
+    "skillLevel": 2,
+    "issuedBy": "North American Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "drawing-painting",
+    "name": "Drawing & Painting",
+    "category": "Arts and Crafts",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "felt-craft",
+    "name": "Felt Craft",
+    "category": "Arts and Crafts",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "flower-arrangement",
+    "name": "Flower Arrangement",
+    "category": "Arts and Crafts",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "genealogy",
+    "name": "Genealogy",
+    "category": "Arts and Crafts",
+    "skillLevel": 2,
+    "issuedBy": "North American Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "genealogy-advanced",
+    "name": "Genealogy - Advanced",
+    "category": "Arts and Crafts",
+    "skillLevel": 3,
+    "issuedBy": "North American Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "glass-craft",
+    "name": "Glass Craft",
+    "category": "Arts and Crafts",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "glass-etching",
+    "name": "Glass Etching",
+    "category": "Arts and Crafts",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "glass-painting",
+    "name": "Glass Painting",
+    "category": "Arts and Crafts",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "knitting",
+    "name": "Knitting",
+    "category": "Arts and Crafts",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "knitting-advanced",
+    "name": "Knitting - Advanced",
+    "category": "Arts and Crafts",
+    "skillLevel": 3,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "lapidary",
+    "name": "Lapidary",
+    "category": "Arts and Crafts",
+    "skillLevel": 2,
+    "issuedBy": "North American Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "leather-craft",
+    "name": "Leather Craft",
+    "category": "Arts and Crafts",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "leather-craft-advanced",
+    "name": "Leather Craft - Advanced",
+    "category": "Arts and Crafts",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "lettering-poster-making",
+    "name": "Lettering & Poster Making",
+    "category": "Arts and Crafts",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "lighthouses",
+    "name": "Lighthouses",
+    "category": "Arts and Crafts",
+    "skillLevel": 1,
+    "issuedBy": "North American Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "lighthouses-advanced",
+    "name": "Lighthouses - Advanced",
+    "category": "Arts and Crafts",
+    "skillLevel": 3,
+    "issuedBy": "North American Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "macrame",
+    "name": "Macrame",
+    "category": "Arts and Crafts",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "metal-craft",
+    "name": "Metal Craft",
+    "category": "Arts and Crafts",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "model-boats",
+    "name": "Model Boats",
+    "category": "Arts and Crafts",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "model-cars",
+    "name": "Model Cars",
+    "category": "Arts and Crafts",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "model-hot-air-balloons",
+    "name": "Model Hot Air Balloons",
+    "category": "Arts and Crafts",
+    "skillLevel": null,
+    "issuedBy": "North American Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "model-railroad",
+    "name": "Model Railroad",
+    "category": "Arts and Crafts",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "model-rocketry",
+    "name": "Model Rocketry",
+    "category": "Arts and Crafts",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "model-rocketry-advanced",
+    "name": "Model Rocketry - Advanced",
+    "category": "Arts and Crafts",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "music-general-conference",
+    "name": "Music (General Conference)",
+    "category": "Arts and Crafts",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "music-south-pacific-division",
+    "name": "Music (South Pacific Division)",
+    "category": "Arts and Crafts",
+    "skillLevel": 2,
+    "issuedBy": "South Pacific Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "music-advanced",
+    "name": "Music - Advanced",
+    "category": "Arts and Crafts",
+    "skillLevel": null,
+    "issuedBy": "South Pacific Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "music-beginners",
+    "name": "Music - Beginners",
+    "category": "Arts and Crafts",
+    "skillLevel": 1,
+    "issuedBy": "South Pacific Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "native-american-lore",
+    "name": "Native American Lore",
+    "category": "Arts and Crafts",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "native-american-lore-advanced",
+    "name": "Native American Lore - Advanced",
+    "category": "Arts and Crafts",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "needlecraft",
+    "name": "Needlecraft",
+    "category": "Arts and Crafts",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "origami",
+    "name": "Origami",
+    "category": "Arts and Crafts",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "paper-mache",
+    "name": "Paper Maché",
+    "category": "Arts and Crafts",
+    "skillLevel": null,
+    "issuedBy": "East Africa Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "paper-quilling",
+    "name": "Paper Quilling",
+    "category": "Arts and Crafts",
+    "skillLevel": 2,
+    "issuedBy": "North American Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "paper-quilling-advanced",
+    "name": "Paper Quilling - Advanced",
+    "category": "Arts and Crafts",
+    "skillLevel": 2,
+    "issuedBy": "North American Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "photography",
+    "name": "Photography",
+    "category": "Arts and Crafts",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "pinewood-derby",
+    "name": "Pinewood Derby",
+    "category": "Arts and Crafts",
+    "skillLevel": 1,
+    "issuedBy": "North American Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "pinewood-derby-advanced",
+    "name": "Pinewood Derby - Advanced",
+    "category": "Arts and Crafts",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "plaster-craft",
+    "name": "Plaster Craft",
+    "category": "Arts and Crafts",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "plastic-canvas",
+    "name": "Plastic Canvas",
+    "category": "Arts and Crafts",
+    "skillLevel": 1,
+    "issuedBy": "North American Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "plastic-canvas-advanced",
+    "name": "Plastic Canvas - Advanced",
+    "category": "Arts and Crafts",
+    "skillLevel": 2,
+    "issuedBy": "North American Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "plastics",
+    "name": "Plastics",
+    "category": "Arts and Crafts",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "postcards",
+    "name": "Postcards",
+    "category": "Arts and Crafts",
+    "skillLevel": null,
+    "issuedBy": "North American Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "postcards-advanced",
+    "name": "Postcards - Advanced",
+    "category": "Arts and Crafts",
+    "skillLevel": null,
+    "issuedBy": "North American Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "pottery",
+    "name": "Pottery",
+    "category": "Arts and Crafts",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "scrapbooking",
+    "name": "Scrapbooking",
+    "category": "Arts and Crafts",
+    "skillLevel": 1,
+    "issuedBy": "North American Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "scrapbooking-advanced",
+    "name": "Scrapbooking - Advanced",
+    "category": "Arts and Crafts",
+    "skillLevel": 2,
+    "issuedBy": "North American Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "sculpturing",
+    "name": "Sculpturing",
+    "category": "Arts and Crafts",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "silk-screen-printing",
+    "name": "Silk Screen Printing",
+    "category": "Arts and Crafts",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "silk-screen-printing-advanced",
+    "name": "Silk Screen Printing - Advanced",
+    "category": "Arts and Crafts",
+    "skillLevel": 3,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "soap-craft-general-conference",
+    "name": "Soap Craft (General Conference)",
+    "category": "Arts and Crafts",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "soap-craft-south-pacific-division",
+    "name": "Soap Craft (South Pacific Division)",
+    "category": "Arts and Crafts",
+    "skillLevel": 1,
+    "issuedBy": "South Pacific Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "soap-craft-advanced",
+    "name": "Soap Craft - Advanced",
+    "category": "Arts and Crafts",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "stamps",
+    "name": "Stamps",
+    "category": "Arts and Crafts",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "stamps-australia",
+    "name": "Stamps (Australia)",
+    "category": "Arts and Crafts",
+    "skillLevel": 2,
+    "issuedBy": "South Pacific Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "stamps-template",
+    "name": "Stamps (Template)",
+    "category": "Arts and Crafts",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "stamps-united-states",
+    "name": "Stamps (United States)",
+    "category": "Arts and Crafts",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "stamps-advanced",
+    "name": "Stamps - Advanced",
+    "category": "Arts and Crafts",
+    "skillLevel": 3,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "string-art",
+    "name": "String Art",
+    "category": "Arts and Crafts",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "textile-painting",
+    "name": "Textile Painting",
+    "category": "Arts and Crafts",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "thatching",
+    "name": "Thatching",
+    "category": "Arts and Crafts",
+    "skillLevel": null,
+    "issuedBy": "East Africa Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "tie-dye",
+    "name": "Tie-Dye",
+    "category": "Arts and Crafts",
+    "skillLevel": 1,
+    "issuedBy": "North American Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "weaving",
+    "name": "Weaving",
+    "category": "Arts and Crafts",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "whistles",
+    "name": "Whistles",
+    "category": "Arts and Crafts",
+    "skillLevel": 1,
+    "issuedBy": "North American Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "whistles-advanced",
+    "name": "Whistles - Advanced",
+    "category": "Arts and Crafts",
+    "skillLevel": 2,
+    "issuedBy": "North American Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "wood-carving",
+    "name": "Wood Carving",
+    "category": "Arts and Crafts",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "wood-handicraft",
+    "name": "Wood Handicraft",
+    "category": "Arts and Crafts",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "basic-rescue",
+    "name": "Basic Rescue",
+    "category": "Health and Science",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "blood-and-the-bodys-defenses",
+    "name": "Blood and the Body's Defenses",
+    "category": "Health and Science",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "bones-muscles-and-movement",
+    "name": "Bones, Muscles, and Movement",
+    "category": "Health and Science",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "brain-and-behavior",
+    "name": "Brain and Behavior",
+    "category": "Health and Science",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "cpr",
+    "name": "CPR",
+    "category": "Health and Science",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "chemistry",
+    "name": "Chemistry",
+    "category": "Health and Science",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "child-care-babysitting",
+    "name": "Child Care (Babysitting)",
+    "category": "Health and Science",
+    "skillLevel": 1,
+    "issuedBy": "Other / regional",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "digestion",
+    "name": "Digestion",
+    "category": "Health and Science",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "first-aid-advanced",
+    "name": "First Aid, Advanced",
+    "category": "Health and Science",
+    "skillLevel": 3,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "first-aid-basic",
+    "name": "First Aid, Basic",
+    "category": "Health and Science",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "first-aid-standard",
+    "name": "First Aid, Standard",
+    "category": "Health and Science",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "health-and-healing",
+    "name": "Health and Healing",
+    "category": "Health and Science",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "heart-and-circulation",
+    "name": "Heart and Circulation",
+    "category": "Health and Science",
+    "skillLevel": 1,
+    "issuedBy": "North American Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "heredity",
+    "name": "Heredity",
+    "category": "Health and Science",
+    "skillLevel": 3,
+    "issuedBy": "North American Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "home-nursing",
+    "name": "Home Nursing",
+    "category": "Health and Science",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "optics",
+    "name": "Optics",
+    "category": "Health and Science",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "physics",
+    "name": "Physics",
+    "category": "Health and Science",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "red-alert",
+    "name": "Red Alert",
+    "category": "Health and Science",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "baking",
+    "name": "Baking",
+    "category": "Household Arts",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "basic-sewing",
+    "name": "Basic Sewing",
+    "category": "Household Arts",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "cooking",
+    "name": "Cooking",
+    "category": "Household Arts",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "cooking-advanced",
+    "name": "Cooking - Advanced",
+    "category": "Household Arts",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "cultural-food-preparation",
+    "name": "Cultural Food Preparation",
+    "category": "Household Arts",
+    "skillLevel": 1,
+    "issuedBy": "Other / regional",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "dressmaking",
+    "name": "Dressmaking",
+    "category": "Household Arts",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "dressmaking-advanced",
+    "name": "Dressmaking - Advanced",
+    "category": "Household Arts",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "food-canning",
+    "name": "Food - Canning",
+    "category": "Household Arts",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "food-drying",
+    "name": "Food - Drying",
+    "category": "Household Arts",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "food-freezing",
+    "name": "Food - Freezing",
+    "category": "Household Arts",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "housekeeping",
+    "name": "Housekeeping",
+    "category": "Household Arts",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "laundering",
+    "name": "Laundering",
+    "category": "Household Arts",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "mat-making",
+    "name": "Mat Making",
+    "category": "Household Arts",
+    "skillLevel": null,
+    "issuedBy": "Other / regional",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "nutrition",
+    "name": "Nutrition",
+    "category": "Household Arts",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "nutrition-advanced",
+    "name": "Nutrition - Advanced",
+    "category": "Household Arts",
+    "skillLevel": 3,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "quilting",
+    "name": "Quilting",
+    "category": "Household Arts",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "quilting-general-conference",
+    "name": "Quilting (General Conference)",
+    "category": "Household Arts",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "quilting-north-american-division",
+    "name": "Quilting (North American Division)",
+    "category": "Household Arts",
+    "skillLevel": 2,
+    "issuedBy": "North American Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "tailoring",
+    "name": "Tailoring",
+    "category": "Household Arts",
+    "skillLevel": 3,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "tapa-cloth",
+    "name": "Tapa Cloth",
+    "category": "Household Arts",
+    "skillLevel": null,
+    "issuedBy": "Other / regional",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "amphibians",
+    "name": "Amphibians",
+    "category": "Nature",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "amphibians-advanced",
+    "name": "Amphibians - Advanced",
+    "category": "Nature",
+    "skillLevel": 3,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "animal-tracking",
+    "name": "Animal Tracking",
+    "category": "Nature",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "animal-tracking-advanced",
+    "name": "Animal Tracking - Advanced",
+    "category": "Nature",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "antelopes",
+    "name": "Antelopes",
+    "category": "Nature",
+    "skillLevel": 1,
+    "issuedBy": "East Africa Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "antelopes-advanced",
+    "name": "Antelopes - Advanced",
+    "category": "Nature",
+    "skillLevel": null,
+    "issuedBy": "East Africa Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "bats",
+    "name": "Bats",
+    "category": "Nature",
+    "skillLevel": 1,
+    "issuedBy": "North American Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "bats-advanced",
+    "name": "Bats - Advanced",
+    "category": "Nature",
+    "skillLevel": 2,
+    "issuedBy": "North American Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "bird-pets",
+    "name": "Bird Pets",
+    "category": "Nature",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "birds",
+    "name": "Birds",
+    "category": "Nature",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "birds-advanced",
+    "name": "Birds - Advanced",
+    "category": "Nature",
+    "skillLevel": 3,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "cacti",
+    "name": "Cacti",
+    "category": "Nature",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "cacti-advanced",
+    "name": "Cacti - Advanced",
+    "category": "Nature",
+    "skillLevel": 3,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "cats-general-conference",
+    "name": "Cats (General Conference)",
+    "category": "Nature",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "cats-north-american-division",
+    "name": "Cats (North American Division)",
+    "category": "Nature",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "cats-advanced",
+    "name": "Cats - Advanced",
+    "category": "Nature",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "cetaceans",
+    "name": "Cetaceans",
+    "category": "Nature",
+    "skillLevel": 2,
+    "issuedBy": "South Pacific Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "dog-care-and-training",
+    "name": "Dog Care and Training",
+    "category": "Nature",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "dogs",
+    "name": "Dogs",
+    "category": "Nature",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "ecology",
+    "name": "Ecology",
+    "category": "Nature",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "ecology-advanced",
+    "name": "Ecology - Advanced",
+    "category": "Nature",
+    "skillLevel": 3,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "edible-wild-plants",
+    "name": "Edible Wild Plants",
+    "category": "Nature",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "endangered-animals",
+    "name": "Endangered Animals",
+    "category": "Nature",
+    "skillLevel": 2,
+    "issuedBy": "North American Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "environmental-conservation",
+    "name": "Environmental Conservation",
+    "category": "Nature",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "eucalypts",
+    "name": "Eucalypts",
+    "category": "Nature",
+    "skillLevel": 1,
+    "issuedBy": "South Pacific Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "ferns",
+    "name": "Ferns",
+    "category": "Nature",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "fishes",
+    "name": "Fishes",
+    "category": "Nature",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "flowers",
+    "name": "Flowers",
+    "category": "Nature",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "flowers-advanced",
+    "name": "Flowers - Advanced",
+    "category": "Nature",
+    "skillLevel": 3,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "fossils",
+    "name": "Fossils",
+    "category": "Nature",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "fungi",
+    "name": "Fungi",
+    "category": "Nature",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "geology",
+    "name": "Geology",
+    "category": "Nature",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "geology-advanced",
+    "name": "Geology - Advanced",
+    "category": "Nature",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "grasses",
+    "name": "Grasses",
+    "category": "Nature",
+    "skillLevel": 3,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "herbs",
+    "name": "Herbs",
+    "category": "Nature",
+    "skillLevel": 1,
+    "issuedBy": "South Pacific Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "house-plants",
+    "name": "House Plants",
+    "category": "Nature",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "insects",
+    "name": "Insects",
+    "category": "Nature",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "insects-advanced",
+    "name": "Insects - Advanced",
+    "category": "Nature",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "lichens-liverworts-mosses",
+    "name": "Lichens, Liverworts & Mosses",
+    "category": "Nature",
+    "skillLevel": 3,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "livestock",
+    "name": "Livestock",
+    "category": "Nature",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "mammals",
+    "name": "Mammals",
+    "category": "Nature",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "mammals-advanced",
+    "name": "Mammals - Advanced",
+    "category": "Nature",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "maple-sugar",
+    "name": "Maple Sugar",
+    "category": "Nature",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "maple-sugar-advanced",
+    "name": "Maple Sugar - Advanced",
+    "category": "Nature",
+    "skillLevel": 3,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "marine-algae",
+    "name": "Marine Algae",
+    "category": "Nature",
+    "skillLevel": 3,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "marine-invertebrates",
+    "name": "Marine Invertebrates",
+    "category": "Nature",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "marine-mammals",
+    "name": "Marine Mammals",
+    "category": "Nature",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "marsupials",
+    "name": "Marsupials",
+    "category": "Nature",
+    "skillLevel": null,
+    "issuedBy": "South Pacific Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "microscopic-life",
+    "name": "Microscopic Life",
+    "category": "Nature",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "moths-butterflies",
+    "name": "Moths & Butterflies",
+    "category": "Nature",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "odonates",
+    "name": "Odonates",
+    "category": "Nature",
+    "skillLevel": null,
+    "issuedBy": "North American Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "orchids",
+    "name": "Orchids",
+    "category": "Nature",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "palm-trees",
+    "name": "Palm Trees",
+    "category": "Nature",
+    "skillLevel": null,
+    "issuedBy": "Other / regional",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "parrots-and-cockatoos",
+    "name": "Parrots and Cockatoos",
+    "category": "Nature",
+    "skillLevel": null,
+    "issuedBy": "South Pacific Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "reptiles",
+    "name": "Reptiles",
+    "category": "Nature",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "reptiles-advanced",
+    "name": "Reptiles - Advanced",
+    "category": "Nature",
+    "skillLevel": 3,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "rivers-and-streams",
+    "name": "Rivers and Streams",
+    "category": "Nature",
+    "skillLevel": null,
+    "issuedBy": "North American Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "rocks-minerals",
+    "name": "Rocks & Minerals",
+    "category": "Nature",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "rocks-minerals-advanced",
+    "name": "Rocks & Minerals - Advanced",
+    "category": "Nature",
+    "skillLevel": 3,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "sand",
+    "name": "Sand",
+    "category": "Nature",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "seeds",
+    "name": "Seeds",
+    "category": "Nature",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "seeds-advanced",
+    "name": "Seeds - Advanced",
+    "category": "Nature",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "shells",
+    "name": "Shells",
+    "category": "Nature",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "shells-advanced",
+    "name": "Shells - Advanced",
+    "category": "Nature",
+    "skillLevel": 3,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "shrubs",
+    "name": "Shrubs",
+    "category": "Nature",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "small-mammal-pets",
+    "name": "Small Mammal Pets",
+    "category": "Nature",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "soils",
+    "name": "Soils",
+    "category": "Nature",
+    "skillLevel": 1,
+    "issuedBy": "North American Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "spiders",
+    "name": "Spiders",
+    "category": "Nature",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "stars-general-conference",
+    "name": "Stars (General Conference)",
+    "category": "Nature",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "stars-south-pacific-division",
+    "name": "Stars (South Pacific Division)",
+    "category": "Nature",
+    "skillLevel": 1,
+    "issuedBy": "South Pacific Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "stars-advanced-general-conference",
+    "name": "Stars - Advanced (General Conference)",
+    "category": "Nature",
+    "skillLevel": 3,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "stars-advanced-north-american-division",
+    "name": "Stars - Advanced (North American Division)",
+    "category": "Nature",
+    "skillLevel": 3,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "trees",
+    "name": "Trees",
+    "category": "Nature",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "trees-advanced",
+    "name": "Trees - Advanced",
+    "category": "Nature",
+    "skillLevel": 3,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "volcanoes",
+    "name": "Volcanoes",
+    "category": "Nature",
+    "skillLevel": 1,
+    "issuedBy": "Other / regional",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "waterfalls",
+    "name": "Waterfalls",
+    "category": "Nature",
+    "skillLevel": null,
+    "issuedBy": "North American Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "wattles",
+    "name": "Wattles",
+    "category": "Nature",
+    "skillLevel": 1,
+    "issuedBy": "South Pacific Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "weather",
+    "name": "Weather",
+    "category": "Nature",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "weather-advanced",
+    "name": "Weather - Advanced",
+    "category": "Nature",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "worms",
+    "name": "Worms",
+    "category": "Nature",
+    "skillLevel": 1,
+    "issuedBy": "North American Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "worms-advanced",
+    "name": "Worms - Advanced",
+    "category": "Nature",
+    "skillLevel": 2,
+    "issuedBy": "North American Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "agriculture",
+    "name": "Agriculture",
+    "category": "Outdoor Industries",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "beekeeping",
+    "name": "Beekeeping",
+    "category": "Outdoor Industries",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "cattle-husbandry",
+    "name": "Cattle Husbandry",
+    "category": "Outdoor Industries",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "dairying",
+    "name": "Dairying",
+    "category": "Outdoor Industries",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "flower-culture",
+    "name": "Flower Culture",
+    "category": "Outdoor Industries",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "fruit-growing",
+    "name": "Fruit Growing",
+    "category": "Outdoor Industries",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "gardening",
+    "name": "Gardening",
+    "category": "Outdoor Industries",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "goat-husbandry",
+    "name": "Goat Husbandry",
+    "category": "Outdoor Industries",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "horse-husbandry",
+    "name": "Horse Husbandry",
+    "category": "Outdoor Industries",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "island-fishing",
+    "name": "Island Fishing",
+    "category": "Outdoor Industries",
+    "skillLevel": null,
+    "issuedBy": "Other / regional",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "pigeon-raising",
+    "name": "Pigeon Raising",
+    "category": "Outdoor Industries",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "poultry-raising",
+    "name": "Poultry Raising",
+    "category": "Outdoor Industries",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "sheep-husbandry",
+    "name": "Sheep Husbandry",
+    "category": "Outdoor Industries",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "small-fruit-growing",
+    "name": "Small Fruit Growing",
+    "category": "Outdoor Industries",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "subsistence-farming",
+    "name": "Subsistence Farming",
+    "category": "Outdoor Industries",
+    "skillLevel": null,
+    "issuedBy": "Other / regional",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "adventurer-for-christ",
+    "name": "Adventurer for Christ",
+    "category": "Outreach",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "adventurer-for-christ-advanced",
+    "name": "Adventurer for Christ - Advanced",
+    "category": "Outreach",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "african-american-adventist-heritage-in-the-nad",
+    "name": "African American Adventist Heritage in the NAD",
+    "category": "Outreach",
+    "skillLevel": 1,
+    "issuedBy": "North American Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "african-american-adventist-heritage-in-the-nad-advanced",
+    "name": "African American Adventist Heritage in the NAD - Advanced",
+    "category": "Outreach",
+    "skillLevel": 2,
+    "issuedBy": "North American Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "bible-marking",
+    "name": "Bible Marking",
+    "category": "Outreach",
+    "skillLevel": null,
+    "issuedBy": "South Pacific Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "bible-marking-advanced",
+    "name": "Bible Marking - Advanced",
+    "category": "Outreach",
+    "skillLevel": null,
+    "issuedBy": "South Pacific Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "christian-citizenship",
+    "name": "Christian Citizenship",
+    "category": "Outreach",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "christian-citizenship-antigua-barbuda",
+    "name": "Christian Citizenship (Antigua & Barbuda)",
+    "category": "Outreach",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "christian-citizenship-australia",
+    "name": "Christian Citizenship (Australia)",
+    "category": "Outreach",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "christian-citizenship-guyana",
+    "name": "Christian Citizenship (Guyana)",
+    "category": "Outreach",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "christian-citizenship-india",
+    "name": "Christian Citizenship (India)",
+    "category": "Outreach",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "christian-citizenship-indonesia",
+    "name": "Christian Citizenship (Indonesia)",
+    "category": "Outreach",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "christian-citizenship-jamaica",
+    "name": "Christian Citizenship (Jamaica)",
+    "category": "Outreach",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "christian-citizenship-kenya",
+    "name": "Christian Citizenship (Kenya)",
+    "category": "Outreach",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "christian-citizenship-malaysia",
+    "name": "Christian Citizenship (Malaysia)",
+    "category": "Outreach",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "christian-citizenship-philippines",
+    "name": "Christian Citizenship (Philippines)",
+    "category": "Outreach",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "christian-citizenship-sint-maarten",
+    "name": "Christian Citizenship (Sint Maarten)",
+    "category": "Outreach",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "christian-citizenship-south-africa",
+    "name": "Christian Citizenship (South Africa)",
+    "category": "Outreach",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "christian-citizenship-template",
+    "name": "Christian Citizenship (Template)",
+    "category": "Outreach",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "christian-citizenship-trinidad-and-tobago",
+    "name": "Christian Citizenship (Trinidad and Tobago)",
+    "category": "Outreach",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "christian-citizenship-united-kingdom",
+    "name": "Christian Citizenship (United Kingdom)",
+    "category": "Outreach",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "christian-citizenship-united-states",
+    "name": "Christian Citizenship (United States)",
+    "category": "Outreach",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "christian-citizenship-zimbabwe",
+    "name": "Christian Citizenship (Zimbabwe)",
+    "category": "Outreach",
+    "skillLevel": 1,
+    "issuedBy": "Other / regional",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "christian-drama",
+    "name": "Christian Drama",
+    "category": "Outreach",
+    "skillLevel": 2,
+    "issuedBy": "North American Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "christian-grooming-manners",
+    "name": "Christian Grooming & Manners",
+    "category": "Outreach",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "christian-storytelling",
+    "name": "Christian Storytelling",
+    "category": "Outreach",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "crisis-intervention",
+    "name": "Crisis Intervention",
+    "category": "Outreach",
+    "skillLevel": 3,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "cultural-diversity-appreciation",
+    "name": "Cultural Diversity Appreciation",
+    "category": "Outreach",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "cultural-heritage",
+    "name": "Cultural Heritage",
+    "category": "Outreach",
+    "skillLevel": null,
+    "issuedBy": "Other / regional",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "family-life",
+    "name": "Family Life",
+    "category": "Outreach",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "junior-witness",
+    "name": "Junior Witness",
+    "category": "Outreach",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "junior-youth-leadership",
+    "name": "Junior Youth Leadership",
+    "category": "Outreach",
+    "skillLevel": 3,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "language-study",
+    "name": "Language Study",
+    "category": "Outreach",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "literature-evangelism",
+    "name": "Literature Evangelism",
+    "category": "Outreach",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "maori-lore",
+    "name": "Maori Lore",
+    "category": "Outreach",
+    "skillLevel": null,
+    "issuedBy": "South Pacific Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "parade-floats",
+    "name": "Parade Floats",
+    "category": "Outreach",
+    "skillLevel": 2,
+    "issuedBy": "North American Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "parade-floats-advanced",
+    "name": "Parade Floats - Advanced",
+    "category": "Outreach",
+    "skillLevel": 3,
+    "issuedBy": "North American Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "peace-maker",
+    "name": "Peace Maker",
+    "category": "Outreach",
+    "skillLevel": 1,
+    "issuedBy": "North American Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "peace-maker-advanced",
+    "name": "Peace Maker - Advanced",
+    "category": "Outreach",
+    "skillLevel": 2,
+    "issuedBy": "North American Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "personal-evangelism",
+    "name": "Personal Evangelism",
+    "category": "Outreach",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "preach-it",
+    "name": "Preach It",
+    "category": "Outreach",
+    "skillLevel": 2,
+    "issuedBy": "North American Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "preach-it-advanced",
+    "name": "Preach It - Advanced",
+    "category": "Outreach",
+    "skillLevel": 3,
+    "issuedBy": "North American Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "puppetry",
+    "name": "Puppetry",
+    "category": "Outreach",
+    "skillLevel": 2,
+    "issuedBy": "South Pacific Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "puppetry-advanced",
+    "name": "Puppetry - Advanced",
+    "category": "Outreach",
+    "skillLevel": null,
+    "issuedBy": "South Pacific Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "sanctuary",
+    "name": "Sanctuary",
+    "category": "Outreach",
+    "skillLevel": 1,
+    "issuedBy": "North American Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "sign-language",
+    "name": "Sign Language",
+    "category": "Outreach",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "sign-language-advanced",
+    "name": "Sign Language - Advanced",
+    "category": "Outreach",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "stewardship",
+    "name": "Stewardship",
+    "category": "Outreach",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "temperance",
+    "name": "Temperance",
+    "category": "Outreach",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "abseiling",
+    "name": "Abseiling",
+    "category": "Recreation",
+    "skillLevel": null,
+    "issuedBy": "South Pacific Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "abseiling-advanced",
+    "name": "Abseiling - Advanced",
+    "category": "Recreation",
+    "skillLevel": 3,
+    "issuedBy": "South Pacific Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "abseiling-instructor",
+    "name": "Abseiling - Instructor",
+    "category": "Recreation",
+    "skillLevel": null,
+    "issuedBy": "South Pacific Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "archery",
+    "name": "Archery",
+    "category": "Recreation",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "archery-advanced",
+    "name": "Archery - Advanced",
+    "category": "Recreation",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "backpacking",
+    "name": "Backpacking",
+    "category": "Recreation",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "basic-water-safety",
+    "name": "Basic Water Safety",
+    "category": "Recreation",
+    "skillLevel": 1,
+    "issuedBy": "North American Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "basic-water-safety-advanced",
+    "name": "Basic Water Safety - Advanced",
+    "category": "Recreation",
+    "skillLevel": null,
+    "issuedBy": "North American Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "basketball",
+    "name": "Basketball",
+    "category": "Recreation",
+    "skillLevel": 1,
+    "issuedBy": "North American Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "camp-craft",
+    "name": "Camp Craft",
+    "category": "Recreation",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "camp-safety",
+    "name": "Camp Safety",
+    "category": "Recreation",
+    "skillLevel": 2,
+    "issuedBy": "North American Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "camp-safety-advanced",
+    "name": "Camp Safety - Advanced",
+    "category": "Recreation",
+    "skillLevel": 3,
+    "issuedBy": "North American Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "camping-skills-i",
+    "name": "Camping Skills I",
+    "category": "Recreation",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "camping-skills-ii",
+    "name": "Camping Skills II",
+    "category": "Recreation",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "camping-skills-iii-general-conference",
+    "name": "Camping Skills III (General Conference)",
+    "category": "Recreation",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "camping-skills-iii-north-american-division",
+    "name": "Camping Skills III (North American Division)",
+    "category": "Recreation",
+    "skillLevel": 2,
+    "issuedBy": "North American Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "camping-skills-iv",
+    "name": "Camping Skills IV",
+    "category": "Recreation",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "canoe-building",
+    "name": "Canoe Building",
+    "category": "Recreation",
+    "skillLevel": null,
+    "issuedBy": "Other / regional",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "canoeing",
+    "name": "Canoeing",
+    "category": "Recreation",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "caving",
+    "name": "Caving",
+    "category": "Recreation",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "caving-advanced",
+    "name": "Caving - Advanced",
+    "category": "Recreation",
+    "skillLevel": 3,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "community-water-safety",
+    "name": "Community Water Safety",
+    "category": "Recreation",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "community-water-safety-advanced",
+    "name": "Community Water Safety - Advanced",
+    "category": "Recreation",
+    "skillLevel": 3,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "cycling",
+    "name": "Cycling",
+    "category": "Recreation",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "cycling-advanced",
+    "name": "Cycling - Advanced",
+    "category": "Recreation",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "drilling-marching",
+    "name": "Drilling & Marching",
+    "category": "Recreation",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "drilling-marching-advanced",
+    "name": "Drilling & Marching - Advanced",
+    "category": "Recreation",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "drumming-percussion",
+    "name": "Drumming & Percussion",
+    "category": "Recreation",
+    "skillLevel": 2,
+    "issuedBy": "North American Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "dutch-oven-cooking",
+    "name": "Dutch Oven Cooking",
+    "category": "Recreation",
+    "skillLevel": null,
+    "issuedBy": "North American Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "fire-building-camp-cookery",
+    "name": "Fire Building & Camp Cookery",
+    "category": "Recreation",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "geocaching",
+    "name": "Geocaching",
+    "category": "Recreation",
+    "skillLevel": 1,
+    "issuedBy": "North American Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "geocaching-advanced",
+    "name": "Geocaching - Advanced",
+    "category": "Recreation",
+    "skillLevel": null,
+    "issuedBy": "North American Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "gold-prospecting",
+    "name": "Gold Prospecting",
+    "category": "Recreation",
+    "skillLevel": 1,
+    "issuedBy": "North American Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "gold-prospecting-advanced",
+    "name": "Gold Prospecting - Advanced",
+    "category": "Recreation",
+    "skillLevel": 2,
+    "issuedBy": "North American Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "hiking",
+    "name": "Hiking",
+    "category": "Recreation",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "horsemanship",
+    "name": "Horsemanship",
+    "category": "Recreation",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "horsemanship-advanced",
+    "name": "Horsemanship - Advanced",
+    "category": "Recreation",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "kayaking",
+    "name": "Kayaking",
+    "category": "Recreation",
+    "skillLevel": 2,
+    "issuedBy": "South Pacific Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "kites",
+    "name": "Kites",
+    "category": "Recreation",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "knot-tying",
+    "name": "Knot Tying",
+    "category": "Recreation",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "letterboxing",
+    "name": "Letterboxing",
+    "category": "Recreation",
+    "skillLevel": 1,
+    "issuedBy": "North American Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "letterboxing-advanced",
+    "name": "Letterboxing - Advanced",
+    "category": "Recreation",
+    "skillLevel": 2,
+    "issuedBy": "North American Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "map-and-compass",
+    "name": "Map and Compass",
+    "category": "Recreation",
+    "skillLevel": 2,
+    "issuedBy": "South Pacific Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "mountain-biking",
+    "name": "Mountain Biking",
+    "category": "Recreation",
+    "skillLevel": 2,
+    "issuedBy": "North American Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "navigation",
+    "name": "Navigation",
+    "category": "Recreation",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "orienteering-general-conference",
+    "name": "Orienteering (General Conference)",
+    "category": "Recreation",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "orienteering-south-pacific-division",
+    "name": "Orienteering (South Pacific Division)",
+    "category": "Recreation",
+    "skillLevel": 2,
+    "issuedBy": "South Pacific Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "outdoor-leadership",
+    "name": "Outdoor Leadership",
+    "category": "Recreation",
+    "skillLevel": 3,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "outdoor-leadership-advanced",
+    "name": "Outdoor Leadership - Advanced",
+    "category": "Recreation",
+    "skillLevel": 3,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "physical-fitness-south-pacific-division",
+    "name": "Physical Fitness (South Pacific Division)",
+    "category": "Recreation",
+    "skillLevel": 2,
+    "issuedBy": "South Pacific Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "pioneering",
+    "name": "Pioneering",
+    "category": "Recreation",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "power-boating",
+    "name": "Power Boating",
+    "category": "Recreation",
+    "skillLevel": 2,
+    "issuedBy": "North American Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "rock-climbing",
+    "name": "Rock Climbing",
+    "category": "Recreation",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "rock-climbing-advanced",
+    "name": "Rock Climbing - Advanced",
+    "category": "Recreation",
+    "skillLevel": 3,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "rowing",
+    "name": "Rowing",
+    "category": "Recreation",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "sailing",
+    "name": "Sailing",
+    "category": "Recreation",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "scuba-diving",
+    "name": "Scuba Diving",
+    "category": "Recreation",
+    "skillLevel": 3,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "scuba-diving-advanced",
+    "name": "Scuba Diving - Advanced",
+    "category": "Recreation",
+    "skillLevel": 3,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "skateboarding",
+    "name": "Skateboarding",
+    "category": "Recreation",
+    "skillLevel": 2,
+    "issuedBy": "South Pacific Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "skiing-cross-country",
+    "name": "Skiing - Cross Country",
+    "category": "Recreation",
+    "skillLevel": 2,
+    "issuedBy": "North American Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "skiing-downhill",
+    "name": "Skiing Downhill",
+    "category": "Recreation",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "skin-diving",
+    "name": "Skin Diving",
+    "category": "Recreation",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "slow-pitch-softball",
+    "name": "Slow-Pitch Softball",
+    "category": "Recreation",
+    "skillLevel": 1,
+    "issuedBy": "North American Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "snowshoeing",
+    "name": "Snowshoeing",
+    "category": "Recreation",
+    "skillLevel": 1,
+    "issuedBy": "North American Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "snowshoeing-advanced",
+    "name": "Snowshoeing - Advanced",
+    "category": "Recreation",
+    "skillLevel": 1,
+    "issuedBy": "North American Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "soccer",
+    "name": "Soccer",
+    "category": "Recreation",
+    "skillLevel": 1,
+    "issuedBy": "North American Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "springboard-diving",
+    "name": "Springboard Diving",
+    "category": "Recreation",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "swimming",
+    "name": "Swimming",
+    "category": "Recreation",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "swimming-advanced",
+    "name": "Swimming - Advanced",
+    "category": "Recreation",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "swimming-advanced-beginner",
+    "name": "Swimming - Advanced Beginner",
+    "category": "Recreation",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "swimming-beginner-general-conference",
+    "name": "Swimming - Beginner (General Conference)",
+    "category": "Recreation",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "swimming-beginner-north-american-division",
+    "name": "Swimming - Beginner (North American Division)",
+    "category": "Recreation",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "swimming-intermediate",
+    "name": "Swimming - Intermediate",
+    "category": "Recreation",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "the-ultimate",
+    "name": "The Ultimate",
+    "category": "Recreation",
+    "skillLevel": null,
+    "issuedBy": "North American Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "the-ultimate-advanced",
+    "name": "The Ultimate - Advanced",
+    "category": "Recreation",
+    "skillLevel": null,
+    "issuedBy": "North American Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "track-field",
+    "name": "Track & Field",
+    "category": "Recreation",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "travel",
+    "name": "Travel",
+    "category": "Recreation",
+    "skillLevel": 1,
+    "issuedBy": "North American Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "travel-advanced",
+    "name": "Travel - Advanced",
+    "category": "Recreation",
+    "skillLevel": 2,
+    "issuedBy": "North American Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "tree-climbing",
+    "name": "Tree Climbing",
+    "category": "Recreation",
+    "skillLevel": null,
+    "issuedBy": "Other / regional",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "triathlon",
+    "name": "Triathlon",
+    "category": "Recreation",
+    "skillLevel": null,
+    "issuedBy": "South Pacific Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "triathlon-advanced",
+    "name": "Triathlon - Advanced",
+    "category": "Recreation",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "tumbling-balancing",
+    "name": "Tumbling & Balancing",
+    "category": "Recreation",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "tumbling-balancing-advanced",
+    "name": "Tumbling & Balancing - Advanced",
+    "category": "Recreation",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "unicycling",
+    "name": "Unicycling",
+    "category": "Recreation",
+    "skillLevel": 2,
+    "issuedBy": "North American Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "wakeboarding",
+    "name": "Wakeboarding",
+    "category": "Recreation",
+    "skillLevel": 1,
+    "issuedBy": "North American Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "water-safety-instructor",
+    "name": "Water Safety Instructor",
+    "category": "Recreation",
+    "skillLevel": null,
+    "issuedBy": "North American Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "water-safety-instructor-advanced",
+    "name": "Water Safety Instructor - Advanced",
+    "category": "Recreation",
+    "skillLevel": null,
+    "issuedBy": "North American Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "water-skiing",
+    "name": "Water Skiing",
+    "category": "Recreation",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "water-skiing-advanced",
+    "name": "Water Skiing - Advanced",
+    "category": "Recreation",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "wilderness-leadership",
+    "name": "Wilderness Leadership",
+    "category": "Recreation",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "wilderness-leadership-advanced",
+    "name": "Wilderness Leadership - Advanced",
+    "category": "Recreation",
+    "skillLevel": 3,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "wilderness-living",
+    "name": "Wilderness Living",
+    "category": "Recreation",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "wind-surfing",
+    "name": "Wind Surfing",
+    "category": "Recreation",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "winter-camping",
+    "name": "Winter Camping",
+    "category": "Recreation",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "accounting",
+    "name": "Accounting",
+    "category": "Vocational",
+    "skillLevel": 3,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "automobile-mechanics",
+    "name": "Automobile Mechanics",
+    "category": "Vocational",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "automobile-mechanics-advanced",
+    "name": "Automobile Mechanics - Advanced",
+    "category": "Vocational",
+    "skillLevel": 3,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "barbering",
+    "name": "Barbering",
+    "category": "Vocational",
+    "skillLevel": 3,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "bible-evangelism",
+    "name": "Bible Evangelism",
+    "category": "Vocational",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "bookbinding",
+    "name": "Bookbinding",
+    "category": "Vocational",
+    "skillLevel": 3,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "bookkeeping",
+    "name": "Bookkeeping",
+    "category": "Vocational",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "carpentry",
+    "name": "Carpentry",
+    "category": "Vocational",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "christian-sales-principles",
+    "name": "Christian Sales Principles",
+    "category": "Vocational",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "communications",
+    "name": "Communications",
+    "category": "Vocational",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "communications-advanced",
+    "name": "Communications - Advanced",
+    "category": "Vocational",
+    "skillLevel": 3,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "computer-general-conference",
+    "name": "Computer (General Conference)",
+    "category": "Vocational",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "computer-north-american-division",
+    "name": "Computer (North American Division)",
+    "category": "Vocational",
+    "skillLevel": 1,
+    "issuedBy": "North American Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "computer-advanced-general-conference",
+    "name": "Computer - Advanced (General Conference)",
+    "category": "Vocational",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "computer-advanced-north-american-division",
+    "name": "Computer - Advanced (North American Division)",
+    "category": "Vocational",
+    "skillLevel": 2,
+    "issuedBy": "North American Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "electricity",
+    "name": "Electricity",
+    "category": "Vocational",
+    "skillLevel": 1,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "forestry",
+    "name": "Forestry",
+    "category": "Vocational",
+    "skillLevel": 2,
+    "issuedBy": "North American Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "forestry-advanced",
+    "name": "Forestry - Advanced",
+    "category": "Vocational",
+    "skillLevel": 3,
+    "issuedBy": "North American Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "house-painting-exterior",
+    "name": "House Painting, Exterior",
+    "category": "Vocational",
+    "skillLevel": 3,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "house-painting-interior",
+    "name": "House Painting, Interior",
+    "category": "Vocational",
+    "skillLevel": 3,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "internet",
+    "name": "Internet",
+    "category": "Vocational",
+    "skillLevel": 2,
+    "issuedBy": "North American Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "internet-advanced",
+    "name": "Internet - Advanced",
+    "category": "Vocational",
+    "skillLevel": 3,
+    "issuedBy": "North American Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "journalism",
+    "name": "Journalism",
+    "category": "Vocational",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "masonry",
+    "name": "Masonry",
+    "category": "Vocational",
+    "skillLevel": 3,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "native-bush-construction",
+    "name": "Native Bush Construction",
+    "category": "Vocational",
+    "skillLevel": null,
+    "issuedBy": "Other / regional",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "paperhanging",
+    "name": "Paperhanging",
+    "category": "Vocational",
+    "skillLevel": 3,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "plumbing",
+    "name": "Plumbing",
+    "category": "Vocational",
+    "skillLevel": 3,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "printing",
+    "name": "Printing",
+    "category": "Vocational",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "radio",
+    "name": "Radio",
+    "category": "Vocational",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "radio-advanced",
+    "name": "Radio Advanced",
+    "category": "Vocational",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "radio-electronics",
+    "name": "Radio Electronics",
+    "category": "Vocational",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "shoe-repair",
+    "name": "Shoe Repair",
+    "category": "Vocational",
+    "skillLevel": 3,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "shorthand",
+    "name": "Shorthand",
+    "category": "Vocational",
+    "skillLevel": 3,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "small-engines",
+    "name": "Small Engines",
+    "category": "Vocational",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "teaching",
+    "name": "Teaching",
+    "category": "Vocational",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "typewriting",
+    "name": "Typewriting",
+    "category": "Vocational",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "upholstery",
+    "name": "Upholstery",
+    "category": "Vocational",
+    "skillLevel": null,
+    "issuedBy": "South Pacific Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "video",
+    "name": "Video",
+    "category": "Vocational",
+    "skillLevel": 2,
+    "issuedBy": "South Pacific Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "visual-media-critique",
+    "name": "Visual Media Critique",
+    "category": "Vocational",
+    "skillLevel": 2,
+    "issuedBy": "North American Division",
+    "enabled": false,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "welding",
+    "name": "Welding",
+    "category": "Vocational",
+    "skillLevel": 3,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  },
+  {
+    "id": "woodworking",
+    "name": "Woodworking",
+    "category": "Vocational",
+    "skillLevel": 2,
+    "issuedBy": "General Conference",
+    "enabled": true,
+    "price": 4,
+    "image": null
+  }
+]

@@ -1,0 +1,49 @@
+// TypeScript project config for the app source (src/), with the `@/*` → src/* alias.
+{
+  "compilerOptions": {
+    // Cache incremental build info outside src so it never gets linted or committed accidentally.
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
+    // Compile target: modern ES2023 syntax, matching what current evergreen browsers support.
+    "target": "es2023",
+    // Ambient lib typings available: ES2023 stdlib plus DOM and iterable DOM APIs (NodeList, etc.).
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    // Emit ESM-style modules (bundler consumes these, nothing is actually emitted since noEmit is true).
+    "module": "esnext",
+    // Ambient type packages to include globally: Vite's import.meta typings (Node types live in tsconfig.test.json).
+    "types": ["vite/client"],
+    // Don't type-check .d.ts files in node_modules; keeps builds fast and avoids third-party type noise.
+    "skipLibCheck": true,
+    // Resolve modules the way a bundler (Vite) does, not the legacy Node CommonJS algorithm.
+    "moduleResolution": "bundler",
+    // Allow importing other TS files with explicit .ts/.tsx extensions in source.
+    "allowImportingTsExtensions": true,
+    // Allow importing files with arbitrary (non-JS/TS) extensions, e.g. asset files handled by Vite.
+    "allowArbitraryExtensions": true,
+    // Allow importing .json files as modules with inferred types.
+    "resolveJsonModule": true,
+    // Require type-only imports/exports to be explicitly marked, so the bundler can safely elide them.
+    "verbatimModuleSyntax": true,
+    // Force each file to be treated as a module (avoids ambiguous global-script parsing).
+    "moduleDetection": "force",
+    // TypeScript only type-checks here; Vite/esbuild does the actual emit, so no .js output is written.
+    "noEmit": true,
+    // Use the automatic JSX runtime (no need to import React in every component file).
+    "jsx": "react-jsx",
+    // Enable all strict type-checking flags (strictNullChecks, noImplicitAny, etc.).
+    "strict": true,
+    // Error on local variables that are declared but never read.
+    "noUnusedLocals": true,
+    // Error on function parameters that are declared but never used.
+    "noUnusedParameters": true,
+    // Restrict to syntax that can be erased by transpilers without type info (e.g. disallows `enum`).
+    "erasableSyntaxOnly": true,
+    // Error on switch cases that fall through without an explicit break/return/throw.
+    "noFallthroughCasesInSwitch": true,
+    // Map the `@/*` import specifier to the src directory (e.g. `@/components/ui/button`).
+    "paths": { "@/*": ["./src/*"] }
+  },
+  // Files this project covers: everything under src except tests (see tsconfig.test.json).
+  "include": ["src"],
+  // Tests and their setup may use Node APIs, so they are checked by the test config instead.
+  "exclude": ["src/**/*.test.ts", "src/**/*.test.tsx", "src/test"]
+}

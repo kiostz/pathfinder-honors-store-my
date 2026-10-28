@@ -1,0 +1,37 @@
+// TypeScript project config for Node-context files: tool configs and the seed scripts.
+{
+  "compilerOptions": {
+    // Cache incremental build info outside src so it never gets linted or committed accidentally.
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
+    // Compile target: modern ES2023 syntax, matching the Node version these config files run under.
+    "target": "es2023",
+    // Ambient lib typings available: ES2023 stdlib only (no DOM, since this runs in Node, not a browser).
+    "lib": ["ES2023"],
+    // Ambient type packages to include globally: Node's built-in globals (process, __dirname, etc.).
+    "types": ["node"],
+    // Don't type-check .d.ts files in node_modules; keeps builds fast and avoids third-party type noise.
+    "skipLibCheck": true,
+    // Emit Node's native ESM/CJS-aware module resolution and output format.
+    "module": "nodenext",
+    // Allow importing other TS files with explicit .ts extensions in source.
+    "allowImportingTsExtensions": true,
+    // Require type-only imports/exports to be explicitly marked, so the bundler can safely elide them.
+    "verbatimModuleSyntax": true,
+    // Force each file to be treated as a module (avoids ambiguous global-script parsing).
+    "moduleDetection": "force",
+    // TypeScript only type-checks here; nothing is actually emitted from these config files.
+    "noEmit": true,
+    // Enable all strict type-checking flags (strictNullChecks, noImplicitAny, etc.).
+    "strict": true,
+    // Error on local variables that are declared but never read.
+    "noUnusedLocals": true,
+    // Error on function parameters that are declared but never used.
+    "noUnusedParameters": true,
+    // Restrict to syntax that can be erased by transpilers without type info (e.g. disallows `enum`).
+    "erasableSyntaxOnly": true,
+    // Error on switch cases that fall through without an explicit break/return/throw.
+    "noFallthroughCasesInSwitch": true
+  },
+  // Files this project covers: tool configs and scripts.
+  "include": ["vite.config.ts", "vitest.config.ts", "scripts"]
+}

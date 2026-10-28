@@ -1,0 +1,11 @@
+// Root TypeScript solution file: holds no compiler options, only references the three project configs.
+{
+  // No files are compiled directly by this root config.
+  "files": [],
+  // `tsc -b` builds the app config, the test config and the node (tooling and scripts) config.
+  "references": [
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.test.json" },
+    { "path": "./tsconfig.node.json" }
+  ]
+}
