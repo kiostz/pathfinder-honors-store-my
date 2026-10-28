@@ -17,6 +17,10 @@ Open the address Vite prints. For the production build: `npm run build && npm ru
 
     npm run seed -- --force
 
+## Patch pictures
+
+`npm run patches` copies each honor's patch picture from the Pathfinder Wiki into `public/patches/`, sets `image` in `public/data/honors.json` and writes `scripts/patches/import-report.md`. It needs `cwebp` (`brew install webp`). If it ends with failed requests, run it again: it only fetches the honors that still have no picture.
+
 ## Test
 
     npm run lint

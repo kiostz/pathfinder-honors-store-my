@@ -1,7 +1,8 @@
 // Shape checks on the committed data files in public/data/, which every screen and the admin save rely on.
 
-import { readFileSync } from 'node:fs' // Node file reading
+import { existsSync, readFileSync } from 'node:fs' // Node file reading
 import { describe, expect, it } from 'vitest' // test API
+import { patchImagePath } from './patch.ts' // the picture path rule
 import type { Honor, Settings } from './types.ts' // data shapes
 
 /** Reads and parses one file from public/data/. */
@@ -55,6 +56,30 @@ describe('public/data/honors.json shape', () => {
     const text = readFileSync('public/data/honors.json', 'utf8') // raw file
     expect(text.endsWith('\n')).toBe(true)
     expect(text).toBe(JSON.stringify(JSON.parse(text), null, 2) + '\n')
+  })
+})
+
+describe('patch pictures named in honors.json', () => {
+  const named = readData<Honor[]>('honors.json').filter(
+    (h): h is Honor & { image: string } => h.image !== null,
+  ) // honors that claim a picture
+
+  // Bug caught: a JSON pointing at a missing picture goes live as a broken image.
+  it('names an existing file at the patchImagePath location', () => {
+    for (const honor of named) {
+      expect(honor.image).toBe(patchImagePath(honor.id))
+      expect(existsSync(`public/${honor.image}`), honor.id).toBe(true)
+    }
+  })
+
+  // Bug caught: a full-size PNG renamed .webp bloats the site.
+  it('is a WebP file under 100 KB', () => {
+    for (const honor of named) {
+      const file = readFileSync(`public/${honor.image}`) // picture bytes
+      expect(file.subarray(0, 4).toString('latin1'), honor.id).toBe('RIFF')
+      expect(file.subarray(8, 12).toString('latin1'), honor.id).toBe('WEBP')
+      expect(file.length, honor.id).toBeLessThan(100 * 1024)
+    }
   })
 })
 

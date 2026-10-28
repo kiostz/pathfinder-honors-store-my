@@ -15,7 +15,8 @@
     "test": "vitest run",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "seed": "node scripts/seed/seed-data.ts"
+    "seed": "node scripts/seed/seed-data.ts",
+    "patches": "node scripts/patches/import-patches.ts"
   },
   "dependencies": {
     "react": "^19.2.8",
