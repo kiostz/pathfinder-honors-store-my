@@ -1,0 +1,62 @@
+# Builds the site and deploys it to GitHub Pages on every push to main; lint, typecheck and tests gate the build, and a separate deploy job holds the publish rights.
+name: Deploy to GitHub Pages # name shown in the Actions tab
+
+on: # when the workflow runs
+  push: # on every push
+    branches: ['main'] # only the main branch
+  workflow_dispatch: # also from the Actions tab by hand
+
+permissions: # default for every job: none beyond reading the repository
+  contents: read # read the repository
+
+concurrency: # one deploy at a time
+  group: pages # shared group name
+  cancel-in-progress: false # a running deploy finishes; only the newest queued run waits its turn
+
+jobs: # the jobs of this workflow
+  build: # check and build; holds no deploy rights
+    runs-on: ubuntu-latest # runner image
+    timeout-minutes: 15 # a hung test cannot hold the runner for hours
+    permissions: # what this job token may do
+      contents: read # read the repository
+      pages: read # configure-pages reads the Pages settings
+    steps: # run in order; a failure stops the job, so deploy never starts and the old site stays up
+      - name: Checkout # fetch the code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with: # action inputs
+          persist-credentials: false # do not leave the job token in .git/config
+      - name: Set up Node # Node from .nvmrc with the npm cache
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with: # action inputs
+          node-version-file: .nvmrc # same Node as local
+          cache: 'npm' # cache npm downloads
+      - name: Install dependencies # exact versions from the lockfile
+        run: npm ci # clean install
+      - name: Lint # code style and rules
+        run: npm run lint # eslint
+      - name: Typecheck # types
+        run: npm run typecheck # tsc -b
+      - name: Test # unit tests
+        run: npm test # vitest run
+      - name: Build # production bundle into dist
+        run: npm run build # tsc -b and vite build
+      - name: Setup Pages # Pages metadata
+        uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6
+      - name: Upload artifact # package dist for Pages
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5
+        with: # action inputs
+          path: './dist' # the build output
+  deploy: # publish the artifact the build job made
+    needs: build # runs only if lint, typecheck, tests and build passed
+    runs-on: ubuntu-latest # runner image
+    timeout-minutes: 5 # publishing is quick
+    permissions: # what this job token may do
+      pages: write # publish to Pages
+      id-token: write # let deploy-pages prove the deploy is genuine
+    environment: # the Pages environment
+      name: github-pages # required environment name
+      url: ${{ steps.deployment.outputs.page_url }} # link shown on the run
+    steps: # run in order
+      - name: Deploy to GitHub Pages # publish the artifact
+        id: deployment # lets the environment url read page_url
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5
