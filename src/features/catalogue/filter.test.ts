@@ -1,8 +1,8 @@
-// Tests for the catalogue's search, chip filter, grouping and chip list over plain honor arrays.
+// Tests for the catalogue's search, category filter, A to Z sort and category list over plain honor arrays.
 
 import { describe, expect, it } from 'vitest' // test API
 import type { Honor } from '@/shared/data/types.ts' // the honor shape
-import { categoryNames, filterHonors, groupByCategory } from './filter.ts' // code under test
+import { categoryNames, filterHonors, sortByName } from './filter.ts' // code under test
 
 /**
  * Builds an honor with defaults.
@@ -24,7 +24,7 @@ function honor(name: string, category = 'Nature', enabled = true): Honor {
   } // fixed values for the fields the filter ignores
 }
 
-const all = { query: '', category: null } // no search, All chip
+const all = { query: '', category: null } // no search, All categories
 
 describe('filterHonors', () => {
   it('drops switched-off honors', () => {
@@ -73,7 +73,7 @@ describe('filterHonors', () => {
       filterHonors(list, { query: '', category: 'Outreach' }).map(
         (h) => h.name,
       ),
-    ).toEqual(['B']) // catches an ignored chip
+    ).toEqual(['B']) // catches an ignored category
   })
 
   it('combines category and query', () => {
@@ -95,30 +95,42 @@ describe('filterHonors', () => {
         query: 'knot',
         category: 'Outreach',
       }),
-    ).toEqual([]) // catches a query that ignores the chip
+    ).toEqual([]) // catches a query that ignores the category
   })
 })
 
-describe('groupByCategory', () => {
-  it('sorts categories and names A to Z from unsorted input', () => {
+describe('sortByName', () => {
+  it('puts unsorted honors from several categories A to Z by name', () => {
     const list = [
-      honor('Zebra', 'Nature'),
-      honor('Ant', 'Recreation'),
-      honor('Bee', 'Nature'),
+      honor('Leaves', 'Nature'),
+      honor('Ants', 'Nature'),
+      honor('Knot Tying', 'Recreation'),
+      honor('Braiding - Advanced', 'Arts and Crafts'),
     ]
-    expect(
-      groupByCategory(list).map((g) => [
-        g.category,
-        g.honors.map((h) => h.name),
-      ]),
-    ).toEqual([
-      ['Nature', ['Bee', 'Zebra']],
-      ['Recreation', ['Ant']],
-    ]) // catches file-order output
+    expect(sortByName(list).map((h) => h.name)).toEqual([
+      'Ants',
+      'Braiding - Advanced',
+      'Knot Tying',
+      'Leaves',
+    ]) // catches file-order output or a sort by category first
+  })
+
+  it('puts a short name before the longer name that starts with it', () => {
+    const list = [honor('Braiding - Advanced'), honor('Braiding')]
+    expect(sortByName(list).map((h) => h.name)).toEqual([
+      'Braiding',
+      'Braiding - Advanced',
+    ]) // catches a sort that puts the longer name first
+  })
+
+  it('leaves the input array as it was', () => {
+    const list = [honor('B'), honor('A')]
+    sortByName(list)
+    expect(list.map((h) => h.name)).toEqual(['B', 'A']) // catches an in-place sort that reorders the caller's array
   })
 
   it('returns an empty list for no honors', () => {
-    expect(groupByCategory([])).toEqual([]) // catches a crash or an empty group
+    expect(sortByName([])).toEqual([]) // catches a crash on an empty list
   })
 })
 
@@ -134,6 +146,6 @@ describe('categoryNames', () => {
 
   it('leaves out a category with only switched-off honors', () => {
     const list = [honor('A', 'Nature'), honor('B', 'Outreach', false)]
-    expect(categoryNames(list)).toEqual(['Nature']) // catches a chip that leads to an empty list
+    expect(categoryNames(list)).toEqual(['Nature']) // catches an option that leads to an empty list
   })
 })

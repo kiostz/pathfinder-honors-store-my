@@ -67,3 +67,79 @@
     --duration-exit: 0.01ms;
   }
 }
+
+/* Category filter: the select shows the site's own popup list where the browser supports base-select (Chrome 135+, Safari 27); elsewhere it stays the plain select. */
+@supports (appearance: base-select) {
+  .category-filter,
+  .category-filter::picker(select) {
+    appearance: base-select; /* opt the closed control and its popup into custom styling */
+  }
+
+  /* The closed control: its text centred in the 44 px box, like the search box's. */
+  .category-filter {
+    align-items: center; /* vertical centring of the chosen text */
+  }
+
+  /* The closed control's chevron, muted like the label text. */
+  .category-filter::picker-icon {
+    color: var(--color-text-muted); /* quieter than the chosen text */
+  }
+
+  /* The popup list: its own surface, at least the control's width, scrolls past about 10 options. */
+  .category-filter::picker(select) {
+    box-sizing: border-box; /* so max-height counts the border */
+    min-width: anchor-size(width); /* never narrower than the closed control */
+    max-height: calc(
+      27.5rem + 2px
+    ); /* 10 options of 44 px plus the 2 px of border, so 10 do not scroll */
+    margin-block: 0.25rem; /* a 4 px gap between the control and the list */
+    padding: 0; /* options run to the edges */
+    background: var(--color-bg-surface); /* its own surface above the page */
+    color: var(
+      --color-text-default
+    ); /* readable on that surface in both modes */
+    border: 1px solid var(--color-border-subtle); /* the same hairline as the search box */
+    border-radius: 0.375rem; /* the same corners as the search box */
+    opacity: 0; /* the closed state the fade runs back to and the open state starts from */
+  }
+  .category-filter:open::picker(select) {
+    opacity: 1; /* fully visible while open */
+  }
+  @starting-style {
+    .category-filter:open::picker(select) {
+      opacity: 0; /* where the fade-in begins */
+    }
+  }
+
+  /* The fade-in only when motion is welcome; the duration and easing are the tokens'. */
+  @media (prefers-reduced-motion: no-preference) {
+    .category-filter::picker(select) {
+      transition:
+        opacity var(--duration-fast) var(--ease-out-soft),
+        display var(--duration-fast) allow-discrete,
+        overlay var(--duration-fast) allow-discrete; /* allow-discrete keeps the popup shown until the fade ends */
+    }
+  }
+
+  /* One option: 44 px tall, 16 px text; the check mark and a heavier weight show the chosen one. */
+  .category-filter option {
+    display: flex; /* lays the check mark and the text in a row */
+    align-items: center; /* centres them in the 44 px */
+    gap: 0.5rem; /* space between the check mark and the text */
+    min-height: 2.75rem; /* 44 px tap target */
+    padding-inline: 0.75rem; /* the same inset as the closed control */
+    font-size: 1rem; /* 16 px text */
+    cursor: pointer; /* shows it can be chosen */
+  }
+  .category-filter option:checked {
+    font-weight: 500; /* the chosen option is heavier, as well as ticked */
+  }
+  .category-filter option:hover,
+  .category-filter option:focus-visible {
+    background: var(--color-border-subtle); /* the highlighted option */
+  }
+  .category-filter option:focus-visible {
+    outline: 2px solid var(--color-focus-ring); /* replaces the browser's orange ring */
+    outline-offset: -2px; /* inside the option so the list does not clip it */
+  }
+}

@@ -8,9 +8,9 @@ const LOADER_DELAY_MS = 300 // how long a load runs before the skeleton may show
 
 // What the page knows about the load.
 export type CatalogueData =
-  | { status: 'loading' }
-  | { status: 'error' }
-  | { status: 'ready'; honors: Honor[]; settings: Settings }
+  | { status: 'loading' } // the request is running
+  | { status: 'error' } // either file failed
+  | { status: 'ready'; honors: Honor[]; settings: Settings } // both files arrived
 
 /**
  * Loads honors and settings together; either failing is one error.
@@ -42,14 +42,14 @@ export function useCatalogueData(): {
       // cleanup: runs on unmount and before the next attempt
       cancelled = true // stop this attempt from touching state
     }
-  }, [attempt])
+  }, [attempt]) // run again on every retry
 
   // Start the skeleton only after the loader delay, so a fast load shows no flash.
   useEffect(() => {
-    if (state.status !== 'loading') return
+    if (state.status !== 'loading') return // only a running load needs the delay
     const timer = setTimeout(() => setLoaderDelayPassed(true), LOADER_DELAY_MS) // wait the loader delay
     return () => clearTimeout(timer) // a load that ends first cancels the skeleton
-  }, [state.status, attempt])
+  }, [state.status, attempt]) // restart the delay after a retry
 
   /** Runs the load again, from the error state. */
   const retry = useCallback(() => {
