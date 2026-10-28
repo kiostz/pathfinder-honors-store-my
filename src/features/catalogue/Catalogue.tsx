@@ -4,7 +4,9 @@ import { useRef, useState } from 'react' // the filter, and handles on the list 
 import { sortByName } from '@/shared/sort/sort-by-name.ts' // names A to Z
 import { CategoryFilter } from './CategoryFilter.tsx' // the category filter
 import { categoryNames, filterHonors } from './filter.ts' // search and category filter
-import { HONOR_ROW_BOX, HONOR_ROW_END_BOX, HonorRow } from './HonorRow.tsx' // one list row and its box classes
+import { HONOR_ROW_BOX, HONOR_ROW_END_BOX } from '@/shared/ui/honor-row-box.ts' // the line's box classes
+import { LOAD_ERROR_TEXT } from '@/shared/ui/load-error-text.ts' // the failed-load message
+import { HonorRow } from './HonorRow.tsx' // one list row
 import { SearchBox } from './SearchBox.tsx' // the labelled search input
 import type { CatalogueLoad } from './use-catalogue-data.ts' // the load, made by the app
 
@@ -128,11 +130,7 @@ export function Catalogue({ data }: { data: CatalogueLoad }) {
           </p>
         )}
         {/* The error copy; the Try again button follows below. */}
-        {state.status === 'error' && (
-          <p className={`${COUNT_BOX} text-danger`}>
-            We couldn't load the honors. Check your connection and try again.
-          </p>
-        )}
+        {state.status === 'error' && <p className={`${COUNT_BOX} text-danger`}>{LOAD_ERROR_TEXT}</p>}
       </div>
       {/* The only action on the screen, shown only after a failed load. */}
       {state.status === 'error' && (

@@ -4,10 +4,8 @@ import type { Honor } from '@/shared/data/types.ts' // the shape of an honor
 import { formatPrice } from '@/shared/format/price.ts' // "RM 4.00"
 import { useCart } from '@/features/cart/use-cart.ts' // the cart the stepper edits
 import { QuantityStepper } from '@/features/cart/QuantityStepper.tsx' // the quantity control
-import { PatchPicture } from './PatchPicture.tsx' // picture or category mark
-
-export const HONOR_ROW_BOX = 'border-border-subtle flex min-h-14 items-center gap-3 border-b py-2' // one row's box, shared with the loading rows so the list does not jump
-export const HONOR_ROW_END_BOX = 'flex shrink-0 flex-col items-end gap-1' // the price-over-stepper column, shared with the loading rows
+import { HONOR_ROW_BOX, HONOR_ROW_END_BOX } from '@/shared/ui/honor-row-box.ts' // the line's box classes
+import { PatchPicture } from '@/shared/ui/PatchPicture.tsx' // picture or category mark
 
 /**
  * Draws one list row.
