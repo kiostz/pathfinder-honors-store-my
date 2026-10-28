@@ -7,7 +7,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/community-assessment.webp"
   },
   {
     "id": "community-development",
@@ -17,7 +17,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/community-development.webp"
   },
   {
     "id": "community-service",
@@ -27,7 +27,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/community-service.webp"
   },
   {
     "id": "conflict-resolution",
@@ -37,7 +37,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/conflict-resolution.webp"
   },
   {
     "id": "disaster-response",
@@ -47,7 +47,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/disaster-response.webp"
   },
   {
     "id": "disaster-response-advanced",
@@ -57,7 +57,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/disaster-response-advanced.webp"
   },
   {
     "id": "hunger-relief",
@@ -67,7 +67,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/hunger-relief.webp"
   },
   {
     "id": "literacy",
@@ -77,7 +77,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/literacy.webp"
   },
   {
     "id": "refugee-resettlement",
@@ -87,7 +87,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/refugee-resettlement.webp"
   },
   {
     "id": "rural-development",
@@ -97,7 +97,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/rural-development.webp"
   },
   {
     "id": "urban-development",
@@ -117,7 +117,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/aboriginal-lore.webp"
   },
   {
     "id": "africa-lore",
@@ -137,7 +137,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/airplane-modeling.webp"
   },
   {
     "id": "basketry",
@@ -147,7 +147,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/basketry.webp"
   },
   {
     "id": "block-printing",
@@ -157,7 +157,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/block-printing.webp"
   },
   {
     "id": "braiding",
@@ -167,7 +167,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/braiding.webp"
   },
   {
     "id": "braiding-advanced",
@@ -177,7 +177,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/braiding-advanced.webp"
   },
   {
     "id": "bread-dough",
@@ -187,7 +187,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/bread-dough.webp"
   },
   {
     "id": "cake-decorating",
@@ -197,7 +197,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/cake-decorating.webp"
   },
   {
     "id": "candlemaking",
@@ -217,7 +217,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/ceramics-general-conference.webp"
   },
   {
     "id": "ceramics-north-american-division",
@@ -227,7 +227,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/ceramics-north-american-division.webp"
   },
   {
     "id": "copper-enameling",
@@ -237,7 +237,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/copper-enameling.webp"
   },
   {
     "id": "copper-enameling-advanced",
@@ -247,7 +247,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/copper-enameling-advanced.webp"
   },
   {
     "id": "counted-cross-stitch",
@@ -257,7 +257,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/counted-cross-stitch.webp"
   },
   {
     "id": "crocheting",
@@ -267,7 +267,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/crocheting.webp"
   },
   {
     "id": "crocheting-advanced",
@@ -277,7 +277,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/crocheting-advanced.webp"
   },
   {
     "id": "currency",
@@ -287,7 +287,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/currency.webp"
   },
   {
     "id": "currency-template",
@@ -297,7 +297,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/currency-template.webp"
   },
   {
     "id": "currency-united-states",
@@ -307,7 +307,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/currency-united-states.webp"
   },
   {
     "id": "currency-advanced",
@@ -317,7 +317,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/currency-advanced.webp"
   },
   {
     "id": "currency-advanced-european-union",
@@ -327,7 +327,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/currency-advanced-european-union.webp"
   },
   {
     "id": "currency-advanced-template",
@@ -337,7 +337,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/currency-advanced-template.webp"
   },
   {
     "id": "currency-advanced-united-states",
@@ -347,7 +347,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/currency-advanced-united-states.webp"
   },
   {
     "id": "decoupage",
@@ -357,7 +357,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/decoupage.webp"
   },
   {
     "id": "digital-photography",
@@ -367,7 +367,7 @@
     "issuedBy": "North American Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/digital-photography.webp"
   },
   {
     "id": "drawing-painting",
@@ -387,7 +387,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/felt-craft.webp"
   },
   {
     "id": "flower-arrangement",
@@ -397,7 +397,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/flower-arrangement.webp"
   },
   {
     "id": "genealogy",
@@ -407,7 +407,7 @@
     "issuedBy": "North American Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/genealogy.webp"
   },
   {
     "id": "genealogy-advanced",
@@ -417,7 +417,7 @@
     "issuedBy": "North American Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/genealogy-advanced.webp"
   },
   {
     "id": "glass-craft",
@@ -427,7 +427,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/glass-craft.webp"
   },
   {
     "id": "glass-etching",
@@ -437,7 +437,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/glass-etching.webp"
   },
   {
     "id": "glass-painting",
@@ -447,7 +447,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/glass-painting.webp"
   },
   {
     "id": "knitting",
@@ -457,7 +457,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/knitting.webp"
   },
   {
     "id": "knitting-advanced",
@@ -467,7 +467,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/knitting-advanced.webp"
   },
   {
     "id": "lapidary",
@@ -477,7 +477,7 @@
     "issuedBy": "North American Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/lapidary.webp"
   },
   {
     "id": "leather-craft",
@@ -487,7 +487,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/leather-craft.webp"
   },
   {
     "id": "leather-craft-advanced",
@@ -497,7 +497,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/leather-craft-advanced.webp"
   },
   {
     "id": "lettering-poster-making",
@@ -507,7 +507,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/lettering-poster-making.webp"
   },
   {
     "id": "lighthouses",
@@ -517,7 +517,7 @@
     "issuedBy": "North American Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/lighthouses.webp"
   },
   {
     "id": "lighthouses-advanced",
@@ -527,7 +527,7 @@
     "issuedBy": "North American Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/lighthouses-advanced.webp"
   },
   {
     "id": "macrame",
@@ -547,7 +547,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/metal-craft.webp"
   },
   {
     "id": "model-boats",
@@ -557,7 +557,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/model-boats.webp"
   },
   {
     "id": "model-cars",
@@ -567,7 +567,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/model-cars.webp"
   },
   {
     "id": "model-hot-air-balloons",
@@ -587,7 +587,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/model-railroad.webp"
   },
   {
     "id": "model-rocketry",
@@ -597,7 +597,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/model-rocketry.webp"
   },
   {
     "id": "model-rocketry-advanced",
@@ -607,7 +607,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/model-rocketry-advanced.webp"
   },
   {
     "id": "music-general-conference",
@@ -617,7 +617,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/music-general-conference.webp"
   },
   {
     "id": "music-south-pacific-division",
@@ -627,7 +627,7 @@
     "issuedBy": "South Pacific Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/music-south-pacific-division.webp"
   },
   {
     "id": "music-advanced",
@@ -637,7 +637,7 @@
     "issuedBy": "South Pacific Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/music-advanced.webp"
   },
   {
     "id": "music-beginners",
@@ -647,7 +647,7 @@
     "issuedBy": "South Pacific Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/music-beginners.webp"
   },
   {
     "id": "native-american-lore",
@@ -657,7 +657,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/native-american-lore.webp"
   },
   {
     "id": "native-american-lore-advanced",
@@ -667,7 +667,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/native-american-lore-advanced.webp"
   },
   {
     "id": "needlecraft",
@@ -677,7 +677,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/needlecraft.webp"
   },
   {
     "id": "origami",
@@ -687,7 +687,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/origami.webp"
   },
   {
     "id": "paper-mache",
@@ -697,7 +697,7 @@
     "issuedBy": "East Africa Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/paper-mache.webp"
   },
   {
     "id": "paper-quilling",
@@ -707,7 +707,7 @@
     "issuedBy": "North American Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/paper-quilling.webp"
   },
   {
     "id": "paper-quilling-advanced",
@@ -717,7 +717,7 @@
     "issuedBy": "North American Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/paper-quilling-advanced.webp"
   },
   {
     "id": "photography",
@@ -727,7 +727,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/photography.webp"
   },
   {
     "id": "pinewood-derby",
@@ -757,7 +757,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/plaster-craft.webp"
   },
   {
     "id": "plastic-canvas",
@@ -767,7 +767,7 @@
     "issuedBy": "North American Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/plastic-canvas.webp"
   },
   {
     "id": "plastic-canvas-advanced",
@@ -777,7 +777,7 @@
     "issuedBy": "North American Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/plastic-canvas-advanced.webp"
   },
   {
     "id": "plastics",
@@ -787,7 +787,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/plastics.webp"
   },
   {
     "id": "postcards",
@@ -797,7 +797,7 @@
     "issuedBy": "North American Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/postcards.webp"
   },
   {
     "id": "postcards-advanced",
@@ -807,7 +807,7 @@
     "issuedBy": "North American Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/postcards-advanced.webp"
   },
   {
     "id": "pottery",
@@ -817,7 +817,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/pottery.webp"
   },
   {
     "id": "scrapbooking",
@@ -827,7 +827,7 @@
     "issuedBy": "North American Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/scrapbooking.webp"
   },
   {
     "id": "scrapbooking-advanced",
@@ -837,7 +837,7 @@
     "issuedBy": "North American Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/scrapbooking-advanced.webp"
   },
   {
     "id": "sculpturing",
@@ -847,7 +847,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/sculpturing.webp"
   },
   {
     "id": "silk-screen-printing",
@@ -857,7 +857,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/silk-screen-printing.webp"
   },
   {
     "id": "silk-screen-printing-advanced",
@@ -867,7 +867,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/silk-screen-printing-advanced.webp"
   },
   {
     "id": "soap-craft-general-conference",
@@ -877,7 +877,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/soap-craft-general-conference.webp"
   },
   {
     "id": "soap-craft-south-pacific-division",
@@ -887,7 +887,7 @@
     "issuedBy": "South Pacific Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/soap-craft-south-pacific-division.webp"
   },
   {
     "id": "soap-craft-advanced",
@@ -897,7 +897,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/soap-craft-advanced.webp"
   },
   {
     "id": "stamps",
@@ -907,7 +907,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/stamps.webp"
   },
   {
     "id": "stamps-australia",
@@ -917,7 +917,7 @@
     "issuedBy": "South Pacific Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/stamps-australia.webp"
   },
   {
     "id": "stamps-template",
@@ -927,7 +927,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/stamps-template.webp"
   },
   {
     "id": "stamps-united-states",
@@ -937,7 +937,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/stamps-united-states.webp"
   },
   {
     "id": "stamps-advanced",
@@ -947,7 +947,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/stamps-advanced.webp"
   },
   {
     "id": "string-art",
@@ -957,7 +957,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/string-art.webp"
   },
   {
     "id": "textile-painting",
@@ -967,7 +967,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/textile-painting.webp"
   },
   {
     "id": "thatching",
@@ -977,7 +977,7 @@
     "issuedBy": "East Africa Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/thatching.webp"
   },
   {
     "id": "tie-dye",
@@ -987,7 +987,7 @@
     "issuedBy": "North American Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/tie-dye.webp"
   },
   {
     "id": "weaving",
@@ -997,7 +997,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/weaving.webp"
   },
   {
     "id": "whistles",
@@ -1007,7 +1007,7 @@
     "issuedBy": "North American Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/whistles.webp"
   },
   {
     "id": "whistles-advanced",
@@ -1017,7 +1017,7 @@
     "issuedBy": "North American Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/whistles-advanced.webp"
   },
   {
     "id": "wood-carving",
@@ -1027,7 +1027,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/wood-carving.webp"
   },
   {
     "id": "wood-handicraft",
@@ -1037,7 +1037,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/wood-handicraft.webp"
   },
   {
     "id": "basic-rescue",
@@ -1047,7 +1047,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/basic-rescue.webp"
   },
   {
     "id": "blood-and-the-bodys-defenses",
@@ -1057,7 +1057,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/blood-and-the-bodys-defenses.webp"
   },
   {
     "id": "bones-muscles-and-movement",
@@ -1067,7 +1067,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/bones-muscles-and-movement.webp"
   },
   {
     "id": "brain-and-behavior",
@@ -1077,7 +1077,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/brain-and-behavior.webp"
   },
   {
     "id": "cpr",
@@ -1087,7 +1087,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/cpr.webp"
   },
   {
     "id": "chemistry",
@@ -1097,7 +1097,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/chemistry.webp"
   },
   {
     "id": "child-care-babysitting",
@@ -1107,7 +1107,7 @@
     "issuedBy": "Other / regional",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/child-care-babysitting.webp"
   },
   {
     "id": "digestion",
@@ -1117,7 +1117,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/digestion.webp"
   },
   {
     "id": "first-aid-advanced",
@@ -1137,7 +1137,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/first-aid-basic.webp"
   },
   {
     "id": "first-aid-standard",
@@ -1147,7 +1147,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/first-aid-standard.webp"
   },
   {
     "id": "health-and-healing",
@@ -1157,7 +1157,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/health-and-healing.webp"
   },
   {
     "id": "heart-and-circulation",
@@ -1167,7 +1167,7 @@
     "issuedBy": "North American Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/heart-and-circulation.webp"
   },
   {
     "id": "heredity",
@@ -1177,7 +1177,7 @@
     "issuedBy": "North American Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/heredity.webp"
   },
   {
     "id": "home-nursing",
@@ -1187,7 +1187,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/home-nursing.webp"
   },
   {
     "id": "optics",
@@ -1197,7 +1197,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/optics.webp"
   },
   {
     "id": "physics",
@@ -1207,7 +1207,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/physics.webp"
   },
   {
     "id": "red-alert",
@@ -1217,7 +1217,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/red-alert.webp"
   },
   {
     "id": "baking",
@@ -1227,7 +1227,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/baking.webp"
   },
   {
     "id": "basic-sewing",
@@ -1237,7 +1237,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/basic-sewing.webp"
   },
   {
     "id": "cooking",
@@ -1247,7 +1247,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/cooking.webp"
   },
   {
     "id": "cooking-advanced",
@@ -1257,7 +1257,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/cooking-advanced.webp"
   },
   {
     "id": "cultural-food-preparation",
@@ -1267,7 +1267,7 @@
     "issuedBy": "Other / regional",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/cultural-food-preparation.webp"
   },
   {
     "id": "dressmaking",
@@ -1277,7 +1277,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/dressmaking.webp"
   },
   {
     "id": "dressmaking-advanced",
@@ -1287,7 +1287,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/dressmaking-advanced.webp"
   },
   {
     "id": "food-canning",
@@ -1297,7 +1297,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/food-canning.webp"
   },
   {
     "id": "food-drying",
@@ -1307,7 +1307,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/food-drying.webp"
   },
   {
     "id": "food-freezing",
@@ -1317,7 +1317,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/food-freezing.webp"
   },
   {
     "id": "housekeeping",
@@ -1327,7 +1327,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/housekeeping.webp"
   },
   {
     "id": "laundering",
@@ -1337,7 +1337,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/laundering.webp"
   },
   {
     "id": "mat-making",
@@ -1347,7 +1347,7 @@
     "issuedBy": "Other / regional",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/mat-making.webp"
   },
   {
     "id": "nutrition",
@@ -1357,7 +1357,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/nutrition.webp"
   },
   {
     "id": "nutrition-advanced",
@@ -1367,7 +1367,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/nutrition-advanced.webp"
   },
   {
     "id": "quilting",
@@ -1377,7 +1377,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/quilting.webp"
   },
   {
     "id": "quilting-general-conference",
@@ -1387,7 +1387,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/quilting-general-conference.webp"
   },
   {
     "id": "quilting-north-american-division",
@@ -1397,7 +1397,7 @@
     "issuedBy": "North American Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/quilting-north-american-division.webp"
   },
   {
     "id": "tailoring",
@@ -1407,7 +1407,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/tailoring.webp"
   },
   {
     "id": "tapa-cloth",
@@ -1417,7 +1417,7 @@
     "issuedBy": "Other / regional",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/tapa-cloth.webp"
   },
   {
     "id": "amphibians",
@@ -1427,7 +1427,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/amphibians.webp"
   },
   {
     "id": "amphibians-advanced",
@@ -1437,7 +1437,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/amphibians-advanced.webp"
   },
   {
     "id": "animal-tracking",
@@ -1447,7 +1447,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/animal-tracking.webp"
   },
   {
     "id": "animal-tracking-advanced",
@@ -1457,7 +1457,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/animal-tracking-advanced.webp"
   },
   {
     "id": "antelopes",
@@ -1467,7 +1467,7 @@
     "issuedBy": "East Africa Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/antelopes.webp"
   },
   {
     "id": "antelopes-advanced",
@@ -1477,7 +1477,7 @@
     "issuedBy": "East Africa Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/antelopes-advanced.webp"
   },
   {
     "id": "bats",
@@ -1487,7 +1487,7 @@
     "issuedBy": "North American Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/bats.webp"
   },
   {
     "id": "bats-advanced",
@@ -1497,7 +1497,7 @@
     "issuedBy": "North American Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/bats-advanced.webp"
   },
   {
     "id": "bird-pets",
@@ -1507,7 +1507,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/bird-pets.webp"
   },
   {
     "id": "birds",
@@ -1517,7 +1517,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/birds.webp"
   },
   {
     "id": "birds-advanced",
@@ -1527,7 +1527,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/birds-advanced.webp"
   },
   {
     "id": "cacti",
@@ -1537,7 +1537,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/cacti.webp"
   },
   {
     "id": "cacti-advanced",
@@ -1547,7 +1547,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/cacti-advanced.webp"
   },
   {
     "id": "cats-general-conference",
@@ -1557,7 +1557,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/cats-general-conference.webp"
   },
   {
     "id": "cats-north-american-division",
@@ -1567,7 +1567,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/cats-north-american-division.webp"
   },
   {
     "id": "cats-advanced",
@@ -1577,7 +1577,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/cats-advanced.webp"
   },
   {
     "id": "cetaceans",
@@ -1587,7 +1587,7 @@
     "issuedBy": "South Pacific Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/cetaceans.webp"
   },
   {
     "id": "dog-care-and-training",
@@ -1597,7 +1597,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/dog-care-and-training.webp"
   },
   {
     "id": "dogs",
@@ -1607,7 +1607,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/dogs.webp"
   },
   {
     "id": "ecology",
@@ -1617,7 +1617,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/ecology.webp"
   },
   {
     "id": "ecology-advanced",
@@ -1627,7 +1627,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/ecology-advanced.webp"
   },
   {
     "id": "edible-wild-plants",
@@ -1637,7 +1637,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/edible-wild-plants.webp"
   },
   {
     "id": "endangered-animals",
@@ -1657,7 +1657,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/environmental-conservation.webp"
   },
   {
     "id": "eucalypts",
@@ -1667,7 +1667,7 @@
     "issuedBy": "South Pacific Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/eucalypts.webp"
   },
   {
     "id": "ferns",
@@ -1677,7 +1677,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/ferns.webp"
   },
   {
     "id": "fishes",
@@ -1687,7 +1687,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/fishes.webp"
   },
   {
     "id": "flowers",
@@ -1697,7 +1697,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/flowers.webp"
   },
   {
     "id": "flowers-advanced",
@@ -1707,7 +1707,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/flowers-advanced.webp"
   },
   {
     "id": "fossils",
@@ -1717,7 +1717,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/fossils.webp"
   },
   {
     "id": "fungi",
@@ -1727,7 +1727,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/fungi.webp"
   },
   {
     "id": "geology",
@@ -1737,7 +1737,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/geology.webp"
   },
   {
     "id": "geology-advanced",
@@ -1747,7 +1747,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/geology-advanced.webp"
   },
   {
     "id": "grasses",
@@ -1757,7 +1757,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/grasses.webp"
   },
   {
     "id": "herbs",
@@ -1767,7 +1767,7 @@
     "issuedBy": "South Pacific Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/herbs.webp"
   },
   {
     "id": "house-plants",
@@ -1777,7 +1777,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/house-plants.webp"
   },
   {
     "id": "insects",
@@ -1787,7 +1787,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/insects.webp"
   },
   {
     "id": "insects-advanced",
@@ -1797,7 +1797,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/insects-advanced.webp"
   },
   {
     "id": "lichens-liverworts-mosses",
@@ -1807,7 +1807,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/lichens-liverworts-mosses.webp"
   },
   {
     "id": "livestock",
@@ -1817,7 +1817,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/livestock.webp"
   },
   {
     "id": "mammals",
@@ -1827,7 +1827,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/mammals.webp"
   },
   {
     "id": "mammals-advanced",
@@ -1837,7 +1837,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/mammals-advanced.webp"
   },
   {
     "id": "maple-sugar",
@@ -1847,7 +1847,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/maple-sugar.webp"
   },
   {
     "id": "maple-sugar-advanced",
@@ -1857,7 +1857,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/maple-sugar-advanced.webp"
   },
   {
     "id": "marine-algae",
@@ -1867,7 +1867,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/marine-algae.webp"
   },
   {
     "id": "marine-invertebrates",
@@ -1877,7 +1877,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/marine-invertebrates.webp"
   },
   {
     "id": "marine-mammals",
@@ -1887,7 +1887,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/marine-mammals.webp"
   },
   {
     "id": "marsupials",
@@ -1897,7 +1897,7 @@
     "issuedBy": "South Pacific Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/marsupials.webp"
   },
   {
     "id": "microscopic-life",
@@ -1907,7 +1907,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/microscopic-life.webp"
   },
   {
     "id": "moths-butterflies",
@@ -1917,7 +1917,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/moths-butterflies.webp"
   },
   {
     "id": "odonates",
@@ -1927,7 +1927,7 @@
     "issuedBy": "North American Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/odonates.webp"
   },
   {
     "id": "orchids",
@@ -1937,7 +1937,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/orchids.webp"
   },
   {
     "id": "palm-trees",
@@ -1947,7 +1947,7 @@
     "issuedBy": "Other / regional",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/palm-trees.webp"
   },
   {
     "id": "parrots-and-cockatoos",
@@ -1957,7 +1957,7 @@
     "issuedBy": "South Pacific Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/parrots-and-cockatoos.webp"
   },
   {
     "id": "reptiles",
@@ -1967,7 +1967,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/reptiles.webp"
   },
   {
     "id": "reptiles-advanced",
@@ -1977,7 +1977,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/reptiles-advanced.webp"
   },
   {
     "id": "rivers-and-streams",
@@ -1987,7 +1987,7 @@
     "issuedBy": "North American Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/rivers-and-streams.webp"
   },
   {
     "id": "rocks-minerals",
@@ -1997,7 +1997,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/rocks-minerals.webp"
   },
   {
     "id": "rocks-minerals-advanced",
@@ -2007,7 +2007,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/rocks-minerals-advanced.webp"
   },
   {
     "id": "sand",
@@ -2017,7 +2017,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/sand.webp"
   },
   {
     "id": "seeds",
@@ -2027,7 +2027,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/seeds.webp"
   },
   {
     "id": "seeds-advanced",
@@ -2037,7 +2037,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/seeds-advanced.webp"
   },
   {
     "id": "shells",
@@ -2047,7 +2047,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/shells.webp"
   },
   {
     "id": "shells-advanced",
@@ -2057,7 +2057,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/shells-advanced.webp"
   },
   {
     "id": "shrubs",
@@ -2067,7 +2067,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/shrubs.webp"
   },
   {
     "id": "small-mammal-pets",
@@ -2077,7 +2077,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/small-mammal-pets.webp"
   },
   {
     "id": "soils",
@@ -2087,7 +2087,7 @@
     "issuedBy": "North American Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/soils.webp"
   },
   {
     "id": "spiders",
@@ -2097,7 +2097,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/spiders.webp"
   },
   {
     "id": "stars-general-conference",
@@ -2107,7 +2107,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/stars-general-conference.webp"
   },
   {
     "id": "stars-south-pacific-division",
@@ -2117,7 +2117,7 @@
     "issuedBy": "South Pacific Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/stars-south-pacific-division.webp"
   },
   {
     "id": "stars-advanced-general-conference",
@@ -2127,7 +2127,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/stars-advanced-general-conference.webp"
   },
   {
     "id": "stars-advanced-north-american-division",
@@ -2137,7 +2137,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/stars-advanced-north-american-division.webp"
   },
   {
     "id": "trees",
@@ -2147,7 +2147,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/trees.webp"
   },
   {
     "id": "trees-advanced",
@@ -2157,7 +2157,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/trees-advanced.webp"
   },
   {
     "id": "volcanoes",
@@ -2167,7 +2167,7 @@
     "issuedBy": "Other / regional",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/volcanoes.webp"
   },
   {
     "id": "waterfalls",
@@ -2177,7 +2177,7 @@
     "issuedBy": "North American Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/waterfalls.webp"
   },
   {
     "id": "wattles",
@@ -2187,7 +2187,7 @@
     "issuedBy": "South Pacific Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/wattles.webp"
   },
   {
     "id": "weather",
@@ -2197,7 +2197,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/weather.webp"
   },
   {
     "id": "weather-advanced",
@@ -2207,7 +2207,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/weather-advanced.webp"
   },
   {
     "id": "worms",
@@ -2217,7 +2217,7 @@
     "issuedBy": "North American Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/worms.webp"
   },
   {
     "id": "worms-advanced",
@@ -2227,7 +2227,7 @@
     "issuedBy": "North American Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/worms-advanced.webp"
   },
   {
     "id": "agriculture",
@@ -2237,7 +2237,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/agriculture.webp"
   },
   {
     "id": "beekeeping",
@@ -2247,7 +2247,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/beekeeping.webp"
   },
   {
     "id": "cattle-husbandry",
@@ -2257,7 +2257,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/cattle-husbandry.webp"
   },
   {
     "id": "dairying",
@@ -2267,7 +2267,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/dairying.webp"
   },
   {
     "id": "flower-culture",
@@ -2277,7 +2277,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/flower-culture.webp"
   },
   {
     "id": "fruit-growing",
@@ -2287,7 +2287,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/fruit-growing.webp"
   },
   {
     "id": "gardening",
@@ -2297,7 +2297,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/gardening.webp"
   },
   {
     "id": "goat-husbandry",
@@ -2307,7 +2307,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/goat-husbandry.webp"
   },
   {
     "id": "horse-husbandry",
@@ -2317,7 +2317,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/horse-husbandry.webp"
   },
   {
     "id": "island-fishing",
@@ -2327,7 +2327,7 @@
     "issuedBy": "Other / regional",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/island-fishing.webp"
   },
   {
     "id": "pigeon-raising",
@@ -2337,7 +2337,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/pigeon-raising.webp"
   },
   {
     "id": "poultry-raising",
@@ -2347,7 +2347,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/poultry-raising.webp"
   },
   {
     "id": "sheep-husbandry",
@@ -2357,7 +2357,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/sheep-husbandry.webp"
   },
   {
     "id": "small-fruit-growing",
@@ -2367,7 +2367,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/small-fruit-growing.webp"
   },
   {
     "id": "subsistence-farming",
@@ -2377,7 +2377,7 @@
     "issuedBy": "Other / regional",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/subsistence-farming.webp"
   },
   {
     "id": "adventurer-for-christ",
@@ -2387,7 +2387,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/adventurer-for-christ.webp"
   },
   {
     "id": "adventurer-for-christ-advanced",
@@ -2397,7 +2397,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/adventurer-for-christ-advanced.webp"
   },
   {
     "id": "african-american-adventist-heritage-in-the-nad",
@@ -2407,7 +2407,7 @@
     "issuedBy": "North American Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/african-american-adventist-heritage-in-the-nad.webp"
   },
   {
     "id": "african-american-adventist-heritage-in-the-nad-advanced",
@@ -2417,7 +2417,7 @@
     "issuedBy": "North American Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/african-american-adventist-heritage-in-the-nad-advanced.webp"
   },
   {
     "id": "bible-marking",
@@ -2427,7 +2427,7 @@
     "issuedBy": "South Pacific Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/bible-marking.webp"
   },
   {
     "id": "bible-marking-advanced",
@@ -2437,7 +2437,7 @@
     "issuedBy": "South Pacific Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/bible-marking-advanced.webp"
   },
   {
     "id": "christian-citizenship",
@@ -2447,7 +2447,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/christian-citizenship.webp"
   },
   {
     "id": "christian-citizenship-antigua-barbuda",
@@ -2457,7 +2457,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/christian-citizenship-antigua-barbuda.webp"
   },
   {
     "id": "christian-citizenship-australia",
@@ -2467,7 +2467,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/christian-citizenship-australia.webp"
   },
   {
     "id": "christian-citizenship-guyana",
@@ -2477,7 +2477,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/christian-citizenship-guyana.webp"
   },
   {
     "id": "christian-citizenship-india",
@@ -2487,7 +2487,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/christian-citizenship-india.webp"
   },
   {
     "id": "christian-citizenship-indonesia",
@@ -2497,7 +2497,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/christian-citizenship-indonesia.webp"
   },
   {
     "id": "christian-citizenship-jamaica",
@@ -2507,7 +2507,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/christian-citizenship-jamaica.webp"
   },
   {
     "id": "christian-citizenship-kenya",
@@ -2517,7 +2517,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/christian-citizenship-kenya.webp"
   },
   {
     "id": "christian-citizenship-malaysia",
@@ -2527,7 +2527,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/christian-citizenship-malaysia.webp"
   },
   {
     "id": "christian-citizenship-philippines",
@@ -2537,7 +2537,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/christian-citizenship-philippines.webp"
   },
   {
     "id": "christian-citizenship-sint-maarten",
@@ -2547,7 +2547,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/christian-citizenship-sint-maarten.webp"
   },
   {
     "id": "christian-citizenship-south-africa",
@@ -2557,7 +2557,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/christian-citizenship-south-africa.webp"
   },
   {
     "id": "christian-citizenship-template",
@@ -2567,7 +2567,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/christian-citizenship-template.webp"
   },
   {
     "id": "christian-citizenship-trinidad-and-tobago",
@@ -2577,7 +2577,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/christian-citizenship-trinidad-and-tobago.webp"
   },
   {
     "id": "christian-citizenship-united-kingdom",
@@ -2587,7 +2587,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/christian-citizenship-united-kingdom.webp"
   },
   {
     "id": "christian-citizenship-united-states",
@@ -2597,7 +2597,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/christian-citizenship-united-states.webp"
   },
   {
     "id": "christian-citizenship-zimbabwe",
@@ -2607,7 +2607,7 @@
     "issuedBy": "Other / regional",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/christian-citizenship-zimbabwe.webp"
   },
   {
     "id": "christian-drama",
@@ -2617,7 +2617,7 @@
     "issuedBy": "North American Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/christian-drama.webp"
   },
   {
     "id": "christian-grooming-manners",
@@ -2627,7 +2627,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/christian-grooming-manners.webp"
   },
   {
     "id": "christian-storytelling",
@@ -2637,7 +2637,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/christian-storytelling.webp"
   },
   {
     "id": "crisis-intervention",
@@ -2647,7 +2647,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/crisis-intervention.webp"
   },
   {
     "id": "cultural-diversity-appreciation",
@@ -2657,7 +2657,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/cultural-diversity-appreciation.webp"
   },
   {
     "id": "cultural-heritage",
@@ -2667,7 +2667,7 @@
     "issuedBy": "Other / regional",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/cultural-heritage.webp"
   },
   {
     "id": "family-life",
@@ -2677,7 +2677,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/family-life.webp"
   },
   {
     "id": "junior-witness",
@@ -2687,7 +2687,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/junior-witness.webp"
   },
   {
     "id": "junior-youth-leadership",
@@ -2697,7 +2697,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/junior-youth-leadership.webp"
   },
   {
     "id": "language-study",
@@ -2707,7 +2707,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/language-study.webp"
   },
   {
     "id": "literature-evangelism",
@@ -2717,7 +2717,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/literature-evangelism.webp"
   },
   {
     "id": "maori-lore",
@@ -2727,7 +2727,7 @@
     "issuedBy": "South Pacific Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/maori-lore.webp"
   },
   {
     "id": "parade-floats",
@@ -2737,7 +2737,7 @@
     "issuedBy": "North American Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/parade-floats.webp"
   },
   {
     "id": "parade-floats-advanced",
@@ -2747,7 +2747,7 @@
     "issuedBy": "North American Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/parade-floats-advanced.webp"
   },
   {
     "id": "peace-maker",
@@ -2757,7 +2757,7 @@
     "issuedBy": "North American Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/peace-maker.webp"
   },
   {
     "id": "peace-maker-advanced",
@@ -2767,7 +2767,7 @@
     "issuedBy": "North American Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/peace-maker-advanced.webp"
   },
   {
     "id": "personal-evangelism",
@@ -2777,7 +2777,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/personal-evangelism.webp"
   },
   {
     "id": "preach-it",
@@ -2787,7 +2787,7 @@
     "issuedBy": "North American Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/preach-it.webp"
   },
   {
     "id": "preach-it-advanced",
@@ -2797,7 +2797,7 @@
     "issuedBy": "North American Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/preach-it-advanced.webp"
   },
   {
     "id": "puppetry",
@@ -2807,7 +2807,7 @@
     "issuedBy": "South Pacific Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/puppetry.webp"
   },
   {
     "id": "puppetry-advanced",
@@ -2817,7 +2817,7 @@
     "issuedBy": "South Pacific Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/puppetry-advanced.webp"
   },
   {
     "id": "sanctuary",
@@ -2827,7 +2827,7 @@
     "issuedBy": "North American Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/sanctuary.webp"
   },
   {
     "id": "sign-language",
@@ -2837,7 +2837,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/sign-language.webp"
   },
   {
     "id": "sign-language-advanced",
@@ -2847,7 +2847,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/sign-language-advanced.webp"
   },
   {
     "id": "stewardship",
@@ -2857,7 +2857,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/stewardship.webp"
   },
   {
     "id": "temperance",
@@ -2867,7 +2867,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/temperance.webp"
   },
   {
     "id": "abseiling",
@@ -2877,7 +2877,7 @@
     "issuedBy": "South Pacific Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/abseiling.webp"
   },
   {
     "id": "abseiling-advanced",
@@ -2887,7 +2887,7 @@
     "issuedBy": "South Pacific Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/abseiling-advanced.webp"
   },
   {
     "id": "abseiling-instructor",
@@ -2897,7 +2897,7 @@
     "issuedBy": "South Pacific Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/abseiling-instructor.webp"
   },
   {
     "id": "archery",
@@ -2907,7 +2907,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/archery.webp"
   },
   {
     "id": "archery-advanced",
@@ -2917,7 +2917,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/archery-advanced.webp"
   },
   {
     "id": "backpacking",
@@ -2927,7 +2927,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/backpacking.webp"
   },
   {
     "id": "basic-water-safety",
@@ -2937,7 +2937,7 @@
     "issuedBy": "North American Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/basic-water-safety.webp"
   },
   {
     "id": "basic-water-safety-advanced",
@@ -2957,7 +2957,7 @@
     "issuedBy": "North American Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/basketball.webp"
   },
   {
     "id": "camp-craft",
@@ -2967,7 +2967,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/camp-craft.webp"
   },
   {
     "id": "camp-safety",
@@ -2977,7 +2977,7 @@
     "issuedBy": "North American Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/camp-safety.webp"
   },
   {
     "id": "camp-safety-advanced",
@@ -2987,7 +2987,7 @@
     "issuedBy": "North American Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/camp-safety-advanced.webp"
   },
   {
     "id": "camping-skills-i",
@@ -2997,7 +2997,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/camping-skills-i.webp"
   },
   {
     "id": "camping-skills-ii",
@@ -3007,7 +3007,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/camping-skills-ii.webp"
   },
   {
     "id": "camping-skills-iii-general-conference",
@@ -3017,7 +3017,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/camping-skills-iii-general-conference.webp"
   },
   {
     "id": "camping-skills-iii-north-american-division",
@@ -3027,7 +3027,7 @@
     "issuedBy": "North American Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/camping-skills-iii-north-american-division.webp"
   },
   {
     "id": "camping-skills-iv",
@@ -3037,7 +3037,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/camping-skills-iv.webp"
   },
   {
     "id": "canoe-building",
@@ -3047,7 +3047,7 @@
     "issuedBy": "Other / regional",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/canoe-building.webp"
   },
   {
     "id": "canoeing",
@@ -3057,7 +3057,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/canoeing.webp"
   },
   {
     "id": "caving",
@@ -3067,7 +3067,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/caving.webp"
   },
   {
     "id": "caving-advanced",
@@ -3077,7 +3077,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/caving-advanced.webp"
   },
   {
     "id": "community-water-safety",
@@ -3087,7 +3087,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/community-water-safety.webp"
   },
   {
     "id": "community-water-safety-advanced",
@@ -3097,7 +3097,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/community-water-safety-advanced.webp"
   },
   {
     "id": "cycling",
@@ -3107,7 +3107,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/cycling.webp"
   },
   {
     "id": "cycling-advanced",
@@ -3117,7 +3117,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/cycling-advanced.webp"
   },
   {
     "id": "drilling-marching",
@@ -3127,7 +3127,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/drilling-marching.webp"
   },
   {
     "id": "drilling-marching-advanced",
@@ -3137,7 +3137,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/drilling-marching-advanced.webp"
   },
   {
     "id": "drumming-percussion",
@@ -3147,7 +3147,7 @@
     "issuedBy": "North American Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/drumming-percussion.webp"
   },
   {
     "id": "dutch-oven-cooking",
@@ -3157,7 +3157,7 @@
     "issuedBy": "North American Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/dutch-oven-cooking.webp"
   },
   {
     "id": "fire-building-camp-cookery",
@@ -3167,7 +3167,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/fire-building-camp-cookery.webp"
   },
   {
     "id": "geocaching",
@@ -3177,7 +3177,7 @@
     "issuedBy": "North American Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/geocaching.webp"
   },
   {
     "id": "geocaching-advanced",
@@ -3187,7 +3187,7 @@
     "issuedBy": "North American Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/geocaching-advanced.webp"
   },
   {
     "id": "gold-prospecting",
@@ -3197,7 +3197,7 @@
     "issuedBy": "North American Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/gold-prospecting.webp"
   },
   {
     "id": "gold-prospecting-advanced",
@@ -3207,7 +3207,7 @@
     "issuedBy": "North American Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/gold-prospecting-advanced.webp"
   },
   {
     "id": "hiking",
@@ -3217,7 +3217,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/hiking.webp"
   },
   {
     "id": "horsemanship",
@@ -3227,7 +3227,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/horsemanship.webp"
   },
   {
     "id": "horsemanship-advanced",
@@ -3237,7 +3237,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/horsemanship-advanced.webp"
   },
   {
     "id": "kayaking",
@@ -3247,7 +3247,7 @@
     "issuedBy": "South Pacific Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/kayaking.webp"
   },
   {
     "id": "kites",
@@ -3257,7 +3257,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/kites.webp"
   },
   {
     "id": "knot-tying",
@@ -3267,7 +3267,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/knot-tying.webp"
   },
   {
     "id": "letterboxing",
@@ -3277,7 +3277,7 @@
     "issuedBy": "North American Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/letterboxing.webp"
   },
   {
     "id": "letterboxing-advanced",
@@ -3287,7 +3287,7 @@
     "issuedBy": "North American Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/letterboxing-advanced.webp"
   },
   {
     "id": "map-and-compass",
@@ -3297,7 +3297,7 @@
     "issuedBy": "South Pacific Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/map-and-compass.webp"
   },
   {
     "id": "mountain-biking",
@@ -3307,7 +3307,7 @@
     "issuedBy": "North American Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/mountain-biking.webp"
   },
   {
     "id": "navigation",
@@ -3317,7 +3317,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/navigation.webp"
   },
   {
     "id": "orienteering-general-conference",
@@ -3327,7 +3327,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/orienteering-general-conference.webp"
   },
   {
     "id": "orienteering-south-pacific-division",
@@ -3337,7 +3337,7 @@
     "issuedBy": "South Pacific Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/orienteering-south-pacific-division.webp"
   },
   {
     "id": "outdoor-leadership",
@@ -3347,7 +3347,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/outdoor-leadership.webp"
   },
   {
     "id": "outdoor-leadership-advanced",
@@ -3357,7 +3357,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/outdoor-leadership-advanced.webp"
   },
   {
     "id": "physical-fitness-south-pacific-division",
@@ -3367,7 +3367,7 @@
     "issuedBy": "South Pacific Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/physical-fitness-south-pacific-division.webp"
   },
   {
     "id": "pioneering",
@@ -3377,7 +3377,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/pioneering.webp"
   },
   {
     "id": "power-boating",
@@ -3387,7 +3387,7 @@
     "issuedBy": "North American Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/power-boating.webp"
   },
   {
     "id": "rock-climbing",
@@ -3397,7 +3397,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/rock-climbing.webp"
   },
   {
     "id": "rock-climbing-advanced",
@@ -3407,7 +3407,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/rock-climbing-advanced.webp"
   },
   {
     "id": "rowing",
@@ -3417,7 +3417,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/rowing.webp"
   },
   {
     "id": "sailing",
@@ -3427,7 +3427,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/sailing.webp"
   },
   {
     "id": "scuba-diving",
@@ -3437,7 +3437,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/scuba-diving.webp"
   },
   {
     "id": "scuba-diving-advanced",
@@ -3447,7 +3447,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/scuba-diving-advanced.webp"
   },
   {
     "id": "skateboarding",
@@ -3457,7 +3457,7 @@
     "issuedBy": "South Pacific Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/skateboarding.webp"
   },
   {
     "id": "skiing-cross-country",
@@ -3467,7 +3467,7 @@
     "issuedBy": "North American Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/skiing-cross-country.webp"
   },
   {
     "id": "skiing-downhill",
@@ -3477,7 +3477,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/skiing-downhill.webp"
   },
   {
     "id": "skin-diving",
@@ -3487,7 +3487,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/skin-diving.webp"
   },
   {
     "id": "slow-pitch-softball",
@@ -3497,7 +3497,7 @@
     "issuedBy": "North American Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/slow-pitch-softball.webp"
   },
   {
     "id": "snowshoeing",
@@ -3507,7 +3507,7 @@
     "issuedBy": "North American Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/snowshoeing.webp"
   },
   {
     "id": "snowshoeing-advanced",
@@ -3517,7 +3517,7 @@
     "issuedBy": "North American Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/snowshoeing-advanced.webp"
   },
   {
     "id": "soccer",
@@ -3527,7 +3527,7 @@
     "issuedBy": "North American Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/soccer.webp"
   },
   {
     "id": "springboard-diving",
@@ -3537,7 +3537,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/springboard-diving.webp"
   },
   {
     "id": "swimming",
@@ -3547,7 +3547,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/swimming.webp"
   },
   {
     "id": "swimming-advanced",
@@ -3557,7 +3557,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/swimming-advanced.webp"
   },
   {
     "id": "swimming-advanced-beginner",
@@ -3577,7 +3577,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/swimming-beginner-general-conference.webp"
   },
   {
     "id": "swimming-beginner-north-american-division",
@@ -3587,7 +3587,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/swimming-beginner-north-american-division.webp"
   },
   {
     "id": "swimming-intermediate",
@@ -3597,7 +3597,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/swimming-intermediate.webp"
   },
   {
     "id": "the-ultimate",
@@ -3627,7 +3627,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/track-field.webp"
   },
   {
     "id": "travel",
@@ -3637,7 +3637,7 @@
     "issuedBy": "North American Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/travel.webp"
   },
   {
     "id": "travel-advanced",
@@ -3647,7 +3647,7 @@
     "issuedBy": "North American Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/travel-advanced.webp"
   },
   {
     "id": "tree-climbing",
@@ -3657,7 +3657,7 @@
     "issuedBy": "Other / regional",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/tree-climbing.webp"
   },
   {
     "id": "triathlon",
@@ -3667,7 +3667,7 @@
     "issuedBy": "South Pacific Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/triathlon.webp"
   },
   {
     "id": "triathlon-advanced",
@@ -3677,7 +3677,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/triathlon-advanced.webp"
   },
   {
     "id": "tumbling-balancing",
@@ -3687,7 +3687,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/tumbling-balancing.webp"
   },
   {
     "id": "tumbling-balancing-advanced",
@@ -3697,7 +3697,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/tumbling-balancing-advanced.webp"
   },
   {
     "id": "unicycling",
@@ -3707,7 +3707,7 @@
     "issuedBy": "North American Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/unicycling.webp"
   },
   {
     "id": "wakeboarding",
@@ -3717,7 +3717,7 @@
     "issuedBy": "North American Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/wakeboarding.webp"
   },
   {
     "id": "water-safety-instructor",
@@ -3727,7 +3727,7 @@
     "issuedBy": "North American Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/water-safety-instructor.webp"
   },
   {
     "id": "water-safety-instructor-advanced",
@@ -3737,7 +3737,7 @@
     "issuedBy": "North American Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/water-safety-instructor-advanced.webp"
   },
   {
     "id": "water-skiing",
@@ -3747,7 +3747,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/water-skiing.webp"
   },
   {
     "id": "water-skiing-advanced",
@@ -3757,7 +3757,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/water-skiing-advanced.webp"
   },
   {
     "id": "wilderness-leadership",
@@ -3767,7 +3767,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/wilderness-leadership.webp"
   },
   {
     "id": "wilderness-leadership-advanced",
@@ -3777,7 +3777,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/wilderness-leadership-advanced.webp"
   },
   {
     "id": "wilderness-living",
@@ -3787,7 +3787,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/wilderness-living.webp"
   },
   {
     "id": "wind-surfing",
@@ -3797,7 +3797,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/wind-surfing.webp"
   },
   {
     "id": "winter-camping",
@@ -3807,7 +3807,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/winter-camping.webp"
   },
   {
     "id": "accounting",
@@ -3817,7 +3817,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/accounting.webp"
   },
   {
     "id": "automobile-mechanics",
@@ -3827,7 +3827,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/automobile-mechanics.webp"
   },
   {
     "id": "automobile-mechanics-advanced",
@@ -3837,7 +3837,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/automobile-mechanics-advanced.webp"
   },
   {
     "id": "barbering",
@@ -3857,7 +3857,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/bible-evangelism.webp"
   },
   {
     "id": "bookbinding",
@@ -3867,7 +3867,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/bookbinding.webp"
   },
   {
     "id": "bookkeeping",
@@ -3877,7 +3877,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/bookkeeping.webp"
   },
   {
     "id": "carpentry",
@@ -3887,7 +3887,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/carpentry.webp"
   },
   {
     "id": "christian-sales-principles",
@@ -3897,7 +3897,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/christian-sales-principles.webp"
   },
   {
     "id": "communications",
@@ -3907,7 +3907,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/communications.webp"
   },
   {
     "id": "communications-advanced",
@@ -3917,7 +3917,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/communications-advanced.webp"
   },
   {
     "id": "computer-general-conference",
@@ -3967,7 +3967,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/electricity.webp"
   },
   {
     "id": "forestry",
@@ -3977,7 +3977,7 @@
     "issuedBy": "North American Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/forestry.webp"
   },
   {
     "id": "forestry-advanced",
@@ -3987,7 +3987,7 @@
     "issuedBy": "North American Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/forestry-advanced.webp"
   },
   {
     "id": "house-painting-exterior",
@@ -3997,7 +3997,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/house-painting-exterior.webp"
   },
   {
     "id": "house-painting-interior",
@@ -4007,7 +4007,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/house-painting-interior.webp"
   },
   {
     "id": "internet",
@@ -4017,7 +4017,7 @@
     "issuedBy": "North American Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/internet.webp"
   },
   {
     "id": "internet-advanced",
@@ -4027,7 +4027,7 @@
     "issuedBy": "North American Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/internet-advanced.webp"
   },
   {
     "id": "journalism",
@@ -4037,7 +4037,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/journalism.webp"
   },
   {
     "id": "masonry",
@@ -4047,7 +4047,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/masonry.webp"
   },
   {
     "id": "native-bush-construction",
@@ -4067,7 +4067,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/paperhanging.webp"
   },
   {
     "id": "plumbing",
@@ -4077,7 +4077,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/plumbing.webp"
   },
   {
     "id": "printing",
@@ -4087,7 +4087,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/printing.webp"
   },
   {
     "id": "radio",
@@ -4097,7 +4097,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/radio.webp"
   },
   {
     "id": "radio-advanced",
@@ -4117,7 +4117,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/radio-electronics.webp"
   },
   {
     "id": "shoe-repair",
@@ -4127,7 +4127,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/shoe-repair.webp"
   },
   {
     "id": "shorthand",
@@ -4137,7 +4137,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/shorthand.webp"
   },
   {
     "id": "small-engines",
@@ -4147,7 +4147,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/small-engines.webp"
   },
   {
     "id": "teaching",
@@ -4157,7 +4157,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/teaching.webp"
   },
   {
     "id": "typewriting",
@@ -4167,7 +4167,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/typewriting.webp"
   },
   {
     "id": "upholstery",
@@ -4177,7 +4177,7 @@
     "issuedBy": "South Pacific Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/upholstery.webp"
   },
   {
     "id": "video",
@@ -4187,7 +4187,7 @@
     "issuedBy": "South Pacific Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/video.webp"
   },
   {
     "id": "visual-media-critique",
@@ -4197,7 +4197,7 @@
     "issuedBy": "North American Division",
     "enabled": false,
     "price": 4,
-    "image": null
+    "image": "patches/visual-media-critique.webp"
   },
   {
     "id": "welding",
@@ -4207,7 +4207,7 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/welding.webp"
   },
   {
     "id": "woodworking",
@@ -4217,6 +4217,6 @@
     "issuedBy": "General Conference",
     "enabled": true,
     "price": 4,
-    "image": null
+    "image": "patches/woodworking.webp"
   }
 ]
