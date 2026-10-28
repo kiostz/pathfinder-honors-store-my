@@ -6,6 +6,7 @@ import { App } from './App.tsx' // code under test
 
 afterEach(() => {
   vi.unstubAllGlobals() // restore fetch
+  vi.restoreAllMocks() // a spy left by a failed test must not leak into the next case
   window.location.hash = '' // back to the catalogue address
 })
 
@@ -187,25 +188,34 @@ describe('App', () => {
     back.mockRestore() // put history back
   })
 
-  it('does not mark a cart entry after a modified click on View cart that opens another tab', async () => {
-    // catches: a stale bar-click flag from a Ctrl-click marking a later address-opened cart, so Back to honors leaves the store
-    serveTwoHonors() // two honors
-    window.location.hash = '#/cart' // opened by address
-    render(<App />) // draw the app
-    fireEvent.click(await screen.findByRole('link', { name: 'Back to honors' })) // to the catalogue
-    fireEvent.click(await screen.findByRole('button', { name: 'One more Knot Tying' })) // pick one
-    const bar = screen.getByRole('link', { name: /View cart/ }) // the bar's link
-    bar.addEventListener('click', (event) => event.preventDefault()) // a browser opens a new tab: this tab's address stays
-    fireEvent.click(bar, { ctrlKey: true }) // Ctrl-click
-    fireEvent.click(bar, { button: 1 }) // middle click
-    act(() => window.history.back()) // the buyer presses the browser's Back: the address-opened cart
-    await screen.findByRole('heading', { name: 'Your cart' }) // the cart shows
-    const back = vi.spyOn(window.history, 'back') // count history moves
-    fireEvent.click(screen.getByRole('link', { name: 'Back to honors' })) // the link under test
-    expect(back).not.toHaveBeenCalled() // went home instead
-    expect(await screen.findByRole('searchbox', { name: 'Search honors' })).toBeInTheDocument() // on the catalogue
-    back.mockRestore() // put history back
-  })
+  it.each([
+    ['Ctrl click', 'click', { ctrlKey: true }],
+    ['Meta click', 'click', { metaKey: true }],
+    ['Shift click', 'click', { shiftKey: true }],
+    ['Alt click', 'click', { altKey: true }],
+    ['middle auxclick', 'auxclick', { button: 1 }],
+    ['click with button 1 (defensive: real browsers send auxclick for a middle button)', 'click', { button: 1 }],
+  ])(
+    'does not mark a cart entry after a %s on View cart that opens another tab',
+    async (_label, eventType, eventInit) => {
+      // catches: a stale bar-click flag from this click marking a later address-opened cart, so Back to honors leaves the store
+      serveTwoHonors() // two honors
+      window.location.hash = '#/cart' // opened by address
+      render(<App />) // draw the app
+      fireEvent.click(await screen.findByRole('link', { name: 'Back to honors' })) // to the catalogue
+      fireEvent.click(await screen.findByRole('button', { name: 'One more Knot Tying' })) // pick one
+      const bar = screen.getByRole('link', { name: /View cart/ }) // the bar's link
+      bar.addEventListener('click', (event) => event.preventDefault()) // a browser opens a new tab: this tab's address stays
+      fireEvent(bar, new MouseEvent(eventType, { ...eventInit, bubbles: true, cancelable: true })) // the click under test
+      act(() => window.history.back()) // the buyer presses the browser's Back: the address-opened cart
+      await screen.findByRole('heading', { name: 'Your cart' }) // the cart shows
+      const back = vi.spyOn(window.history, 'back') // count history moves
+      fireEvent.click(screen.getByRole('link', { name: 'Back to honors' })) // the link under test
+      expect(back).not.toHaveBeenCalled() // went home instead
+      expect(await screen.findByRole('searchbox', { name: 'Search honors' })).toBeInTheDocument() // on the catalogue
+      back.mockRestore() // put history back
+    },
+  )
 
   it('goes back in history from a cart opened by the bar', async () => {
     // catches: Back to honors pushing a new entry when the bar opened the cart, so back and the link disagree
