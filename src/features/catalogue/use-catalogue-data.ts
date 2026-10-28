@@ -12,6 +12,9 @@ export type CatalogueData =
   | { status: 'error' } // either file failed
   | { status: 'ready'; honors: Honor[]; settings: Settings } // both files arrived
 
+// What useCatalogueData returns, passed to every screen that lists honors.
+export type CatalogueLoad = ReturnType<typeof useCatalogueData>
+
 /**
  * Loads honors and settings together; either failing is one error.
  * @return the load state, whether the skeleton may show, and retry to load again

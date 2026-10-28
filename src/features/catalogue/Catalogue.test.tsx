@@ -2,7 +2,22 @@
 
 import { act, fireEvent, render, screen, within } from '@testing-library/react' // render and query the screen
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest' // test API and mocks
+import { CartProvider } from '@/features/cart/CartProvider.tsx' // the cart state the steppers edit
 import { Catalogue } from './Catalogue.tsx' // code under test
+import { useCatalogueData } from './use-catalogue-data.ts' // the load the catalogue now receives
+
+/**
+ * Loads the data and renders the catalogue inside a cart, as the app does.
+ * @return the catalogue under a CartProvider
+ */
+function CatalogueWithCart() {
+  const data = useCatalogueData() // the one load
+  return (
+    <CartProvider>
+      <Catalogue data={data} />
+    </CartProvider>
+  )
+}
 
 /**
  * Builds one honor for the fake file.
@@ -65,7 +80,7 @@ describe('Catalogue', () => {
       honor('Ants', 'Nature'),
       honor('Braiding - Advanced', 'Arts and Crafts'),
     ])
-    render(<Catalogue />)
+    render(<CatalogueWithCart />)
     const list = await screen.findByRole('list')
     expect(within(list).queryByRole('heading')).not.toBeInTheDocument()
     expect(screen.getAllByRole('list')).toHaveLength(1)
@@ -79,17 +94,17 @@ describe('Catalogue', () => {
   it('shows each row its category label, and the label is not a button', async () => {
     // catches: a missing label, or a label that looks and acts like a control
     serve([honor('Ants', 'Nature'), honor('Knot Tying', 'Recreation')])
-    render(<Catalogue />)
+    render(<CatalogueWithCart />)
     const row = (await screen.findByText('Ants')).closest('li')!
     expect(within(row).getByText('Nature')).toBeInTheDocument()
-    expect(within(row).queryByRole('button')).not.toBeInTheDocument()
+    expect(within(row).queryByRole('button', { name: 'Nature' })).not.toBeInTheDocument() // the stepper buttons are the row's only buttons
     expect(within(row).queryByRole('link')).not.toBeInTheDocument()
   })
 
   it('leaves out switched-off honors', async () => {
     // catches: hidden honors being orderable
     serve([honor('Knot Tying', 'Recreation'), honor('Secret Honor', 'Recreation', false)])
-    render(<Catalogue />)
+    render(<CatalogueWithCart />)
     expect(await screen.findByText('Knot Tying')).toBeInTheDocument()
     expect(screen.queryByText('Secret Honor')).not.toBeInTheDocument()
   })
@@ -97,22 +112,35 @@ describe('Catalogue', () => {
   it('shows each honor name and its price', async () => {
     // catches: a missing or unformatted price
     serve([honor('Knot Tying', 'Recreation')])
-    render(<Catalogue />)
+    render(<CatalogueWithCart />)
     const row = (await screen.findByText('Knot Tying')).closest('li')!
     expect(row).toHaveTextContent(/RM\s?4\.00/)
+  })
+
+  it('gives every row a quantity stepper at 0', async () => {
+    // catches: a row with no way to order, or a stepper that starts above 0
+    serve([honor('Ants', 'Nature'), honor('Knot Tying', 'Recreation')])
+    render(<CatalogueWithCart />)
+    await screen.findByText('Ants')
+    const fields = screen.getAllByRole('textbox', { name: /^Quantity of / })
+    expect(fields.map((field) => field.getAttribute('aria-label'))).toEqual([
+      'Quantity of Ants',
+      'Quantity of Knot Tying',
+    ])
+    expect(fields.every((field) => (field as HTMLInputElement).value === '0')).toBe(true)
   })
 
   it('counts the honors, singular for one', async () => {
     // catches: "1 honors" and a count that includes switched-off honors
     serve([honor('Knot Tying', 'Recreation'), honor('Off', 'Recreation', false)])
-    render(<Catalogue />)
+    render(<CatalogueWithCart />)
     expect(await screen.findByText('1 honor')).toBeInTheDocument()
   })
 
   it('renders all 299 switched-on honors among 422 at once, with no Load more and lazy pictures', async () => {
     // catches: pagination or a Load more button creeping back, rows dropped at full size, or pictures that load eagerly
     serve(Array.from({ length: 422 }, (_, i) => honor(`Honor ${i}`, 'Nature', i < 299, `patches/${i}.png`)))
-    render(<Catalogue />)
+    render(<CatalogueWithCart />)
     expect(await screen.findByText('299 honors')).toBeInTheDocument()
     expect(screen.getAllByRole('listitem')).toHaveLength(299)
     expect(screen.queryByRole('button', { name: /load more/i })).not.toBeInTheDocument()
@@ -124,7 +152,7 @@ describe('Catalogue', () => {
   it('renders every row when every image is null', async () => {
     // catches: rows dropped or broken when no picture exists
     serve([honor('A', 'Nature'), honor('B', 'Nature'), honor('C', 'Nature')])
-    render(<Catalogue />)
+    render(<CatalogueWithCart />)
     await screen.findByText('A')
     expect(screen.getAllByRole('listitem')).toHaveLength(3)
     expect(screen.getAllByTestId('category-mark')).toHaveLength(3)
@@ -133,7 +161,7 @@ describe('Catalogue', () => {
   it('says so when no honor is switched on', async () => {
     // catches: a blank page when the list is empty
     serve([honor('Off', 'Nature', false)])
-    render(<Catalogue />)
+    render(<CatalogueWithCart />)
     expect(await screen.findByText('No honors are switched on yet. Check back soon.')).toBeInTheDocument()
   })
 
@@ -143,7 +171,7 @@ describe('Catalogue', () => {
       'fetch',
       vi.fn(() => new Promise(() => {})),
     ) // requests that never answer
-    render(<Catalogue />)
+    render(<CatalogueWithCart />)
     expect(screen.queryByTestId('catalogue-skeleton')).not.toBeInTheDocument()
     act(() => {
       vi.advanceTimersByTime(300)
@@ -168,18 +196,20 @@ describe('Catalogue', () => {
       'fetch',
       vi.fn(() => new Promise(() => {})),
     ) // requests that never answer
-    const first = render(<Catalogue />)
+    const first = render(<CatalogueWithCart />)
     act(() => {
       vi.advanceTimersByTime(300)
     })
     expect(screen.getByTestId('catalogue-skeleton-count')).toHaveClass('mt-3', 'min-h-6')
     const skeletonRowClass = screen.getAllByTestId('catalogue-skeleton-row')[0].className // the skeleton row's box
+    const skeletonRowEndClass = screen.getAllByTestId('catalogue-skeleton-row-end')[0].className // the skeleton's right column
     first.unmount()
     vi.unstubAllGlobals() // drop the never-answering fetch
     serve([honor('Knot Tying', 'Recreation')])
-    render(<Catalogue />)
+    render(<CatalogueWithCart />)
     expect(await screen.findByText('1 honor')).toHaveClass('mt-3', 'min-h-6')
     expect(screen.getByRole('listitem').className).toBe(skeletonRowClass) // the honor row and the skeleton row share one box
+    expect(screen.getByTestId('honor-row-end').className).toBe(skeletonRowEndClass) // and the price-and-stepper column
   })
 
   it('shows the error and Try again, and Try again shows the list', async () => {
@@ -194,7 +224,7 @@ describe('Catalogue', () => {
           : new Response(JSON.stringify([honor('Knot Tying', 'Recreation')])),
       ) // the retry succeeds
     vi.stubGlobal('fetch', fetchFn)
-    render(<Catalogue />)
+    render(<CatalogueWithCart />)
     expect(
       await screen.findByText("We couldn't load the honors. Check your connection and try again."),
     ).toBeInTheDocument()
@@ -205,7 +235,7 @@ describe('Catalogue', () => {
   it('keeps the toolbar space on the error state so the message does not jump after the skeleton', async () => {
     // catches: the error message landing 61 px above where the skeleton stood
     vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new TypeError('Failed to fetch'))) // every request fails
-    render(<Catalogue />)
+    render(<CatalogueWithCart />)
     await screen.findByText("We couldn't load the honors. Check your connection and try again.")
     expect(screen.getByTestId('catalogue-toolbar-space')).toHaveClass('border-b', 'px-4', 'py-2') // the toolbar's box, empty
     expect(screen.getByText("We couldn't load the honors. Check your connection and try again.")).toHaveClass(
@@ -217,7 +247,7 @@ describe('Catalogue', () => {
   it('keeps the toolbar space when no honor is switched on', async () => {
     // catches: the empty message landing 61 px above where the skeleton stood
     serve([honor('Off', 'Nature', false)])
-    render(<Catalogue />)
+    render(<CatalogueWithCart />)
     await screen.findByText('No honors are switched on yet. Check back soon.')
     expect(screen.getByTestId('catalogue-toolbar-space')).toBeInTheDocument()
     expect(screen.queryByRole('combobox', { name: 'Category' })).not.toBeInTheDocument() // no real toolbar to filter with
@@ -226,7 +256,7 @@ describe('Catalogue', () => {
   it('has no toolbar space once the real toolbar shows', async () => {
     // catches: a blank 61 px band above the real toolbar
     serve([honor('Knot Tying', 'Recreation')])
-    render(<Catalogue />)
+    render(<CatalogueWithCart />)
     await screen.findByText('Knot Tying')
     expect(screen.queryByTestId('catalogue-toolbar-space')).not.toBeInTheDocument()
   })
@@ -241,7 +271,7 @@ describe('Catalogue', () => {
         honor('Ants', 'Nature'),
         honor('Hidden', 'Vocational', false),
       ])
-      render(<Catalogue />)
+      render(<CatalogueWithCart />)
       await screen.findByText('Ants')
     }
 

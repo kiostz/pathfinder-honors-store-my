@@ -1,11 +1,12 @@
 // The catalogue screen: a sticky search and category toolbar over one A to Z list of the switched-on honors, plus its loading, error, empty and no-match states.
 
 import { useRef, useState } from 'react' // the filter, and handles on the list and the search box
+import { sortByName } from '@/shared/sort/sort-by-name.ts' // names A to Z
 import { CategoryFilter } from './CategoryFilter.tsx' // the category filter
-import { categoryNames, filterHonors, sortByName } from './filter.ts' // search, category filter, A to Z sort
-import { HONOR_ROW_BOX, HonorRow } from './HonorRow.tsx' // one list row and its box classes
+import { categoryNames, filterHonors } from './filter.ts' // search and category filter
+import { HONOR_ROW_BOX, HONOR_ROW_END_BOX, HonorRow } from './HonorRow.tsx' // one list row and its box classes
 import { SearchBox } from './SearchBox.tsx' // the labelled search input
-import { useCatalogueData } from './use-catalogue-data.ts' // the load
+import type { CatalogueLoad } from './use-catalogue-data.ts' // the load, made by the app
 
 const SKELETON_ROWS = 6 // how many skeleton rows the loading state shows
 const TOOLBAR_BOX = 'border-border-subtle -mx-4 -mt-6 flex items-start gap-2 border-b px-4 py-2' // the toolbar's box, shared with its skeleton so the list does not jump
@@ -15,10 +16,11 @@ const LIST_BOX = 'mt-2' // the list's top, shared by the real list and the skele
 
 /**
  * The buyer's list of honors.
+ * @param data the load: state, skeleton gate and retry
  * @return the toolbar, the status line, the retry or Clear filters button, and the A to Z list
  */
-export function Catalogue() {
-  const { state, showSkeleton, retry } = useCatalogueData() // load state, skeleton gate and retry
+export function Catalogue({ data }: { data: CatalogueLoad }) {
+  const { state, showSkeleton, retry } = data // load state, skeleton gate and retry
   const [query, setQuery] = useState('') // what the buyer typed
   const [category, setCategory] = useState<string | null>(null) // the chosen category, null for All categories
   const searchRef = useRef<HTMLInputElement>(null) // the search box, focused by Clear filters
@@ -101,6 +103,11 @@ export function Catalogue() {
                   <div data-skeleton-part="name" className="bg-border-subtle h-6 w-3/5 rounded-sm" />
                   {/* Stands where the category label will be. */}
                   <div data-skeleton-part="label" className="bg-border-subtle h-4 w-24 rounded-sm" />
+                </div>
+                {/* Stands where the price and the stepper will be: the same column as a real row. */}
+                <div data-testid="catalogue-skeleton-row-end" className={HONOR_ROW_END_BOX}>
+                  <div className="bg-border-subtle h-6 w-14 rounded-sm" /> {/* the price */}
+                  <div className="bg-border-subtle h-11 w-33 rounded-md" /> {/* the stepper, 132 px */}
                 </div>
               </div>
             ))}

@@ -1,17 +1,10 @@
 // Search, category filter and A to Z sort for the catalogue, as plain functions so the screen only renders their result.
 
 import type { Honor } from '@/shared/data/types.ts' // the shape of one honor
+import { byText } from '@/shared/sort/sort-by-name.ts' // A to Z compare
 
 // What the buyer has typed and picked; a null category is All categories.
 export type CatalogueFilter = { query: string; category: string | null }
-
-/**
- * Compares two strings A to Z for display order.
- * @param a first string
- * @param b second string
- * @return negative, zero or positive for sort()
- */
-const byText = (a: string, b: string): number => a.localeCompare(b, 'en') // locale-aware A to Z
 
 /**
  * Keeps the switched-on honors that match the search words and the category.
@@ -30,17 +23,6 @@ export function filterHonors(
       (filter.category === null || honor.category === filter.category) && // the category
       words.every((word) => honor.name.toLowerCase().includes(word)), // every word somewhere in the name
   )
-}
-
-/**
- * Puts honors A to Z by name.
- * @param honors the honors to sort
- * @return a new array, names A to Z; the input is left as it was
- */
-export function sortByName(
-  honors: Honor[], // the honors to sort
-): Honor[] {
-  return [...honors].sort((a, b) => byText(a.name, b.name)) // copy first so the caller's array keeps its order
 }
 
 /**

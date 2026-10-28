@@ -1,8 +1,8 @@
-// Tests for the catalogue's search, category filter, A to Z sort and category list over plain honor arrays.
+// Tests for the catalogue's search, category filter and category list over plain honor arrays.
 
 import { describe, expect, it } from 'vitest' // test API
 import type { Honor } from '@/shared/data/types.ts' // the honor shape
-import { categoryNames, filterHonors, sortByName } from './filter.ts' // code under test
+import { categoryNames, filterHonors } from './filter.ts' // code under test
 
 /**
  * Builds an honor with defaults.
@@ -96,41 +96,6 @@ describe('filterHonors', () => {
         category: 'Outreach',
       }),
     ).toEqual([]) // catches a query that ignores the category
-  })
-})
-
-describe('sortByName', () => {
-  it('puts unsorted honors from several categories A to Z by name', () => {
-    const list = [
-      honor('Leaves', 'Nature'),
-      honor('Ants', 'Nature'),
-      honor('Knot Tying', 'Recreation'),
-      honor('Braiding - Advanced', 'Arts and Crafts'),
-    ]
-    expect(sortByName(list).map((h) => h.name)).toEqual([
-      'Ants',
-      'Braiding - Advanced',
-      'Knot Tying',
-      'Leaves',
-    ]) // catches file-order output or a sort by category first
-  })
-
-  it('puts a short name before the longer name that starts with it', () => {
-    const list = [honor('Braiding - Advanced'), honor('Braiding')]
-    expect(sortByName(list).map((h) => h.name)).toEqual([
-      'Braiding',
-      'Braiding - Advanced',
-    ]) // catches a sort that puts the longer name first
-  })
-
-  it('leaves the input array as it was', () => {
-    const list = [honor('B'), honor('A')]
-    sortByName(list)
-    expect(list.map((h) => h.name)).toEqual(['B', 'A']) // catches an in-place sort that reorders the caller's array
-  })
-
-  it('returns an empty list for no honors', () => {
-    expect(sortByName([])).toEqual([]) // catches a crash on an empty list
   })
 })
 

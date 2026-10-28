@@ -1,0 +1,108 @@
+// Tests for the quantity stepper: buttons, the typed field, limits and labels, through the rendered component.
+
+import { fireEvent, render, screen } from '@testing-library/react' // render and query
+import { describe, expect, it, vi } from 'vitest' // test API and mocks
+import { QuantityStepper } from './QuantityStepper.tsx' // code under test
+
+/**
+ * Renders a stepper for Knot Tying.
+ * @param quantity the quantity shown
+ * @return the change spy and the three controls
+ */
+function setup(quantity: number) {
+  const onChange = vi.fn() // records every committed quantity
+  render(<QuantityStepper honorName="Knot Tying" quantity={quantity} onChange={onChange} />)
+  return {
+    onChange,
+    field: screen.getByRole('textbox', { name: 'Quantity of Knot Tying' }),
+    fewer: screen.getByRole('button', { name: 'One fewer Knot Tying' }),
+    more: screen.queryByRole('button', { name: 'One more Knot Tying' }),
+  } // more is null at 99, where its label changes
+}
+
+describe('QuantityStepper', () => {
+  it('names the group, the field and the buttons after the honor', () => {
+    // catches: unlabelled controls a screen reader cannot tell apart row by row
+    const { field, fewer, more } = setup(3)
+    expect(screen.getByRole('group', { name: 'Quantity of Knot Tying' })).toBeInTheDocument()
+    expect(field).toHaveValue('3')
+    expect(fewer).toBeInTheDocument()
+    expect(more).toBeInTheDocument()
+  })
+
+  it('adds one with + from 0', () => {
+    // catches: + that does nothing from an empty cart line
+    const { onChange, more } = setup(0)
+    fireEvent.click(more!)
+    expect(onChange).toHaveBeenCalledWith(1)
+  })
+
+  it('takes one away with minus', () => {
+    // catches: minus wired to plus
+    const { onChange, fewer } = setup(5)
+    fireEvent.click(fewer)
+    expect(onChange).toHaveBeenCalledWith(4)
+  })
+
+  it('does nothing and keeps focus on minus at 0, which is aria-disabled and not disabled', () => {
+    // catches: a disabled button that drops focus, or minus going below 0
+    const { onChange, fewer } = setup(0)
+    fewer.focus()
+    fireEvent.click(fewer)
+    expect(onChange).not.toHaveBeenCalled()
+    expect(fewer).toHaveAttribute('aria-disabled', 'true')
+    expect(fewer).not.toBeDisabled()
+    expect(fewer).toHaveFocus()
+  })
+
+  it('does nothing at 99 and says 99 is the most', () => {
+    // catches: 100 reachable by +, or a silent dead button
+    const { onChange } = setup(99)
+    const more = screen.getByRole('button', { name: /99 is the most/ })
+    fireEvent.click(more)
+    expect(onChange).not.toHaveBeenCalled()
+    expect(more).toHaveAttribute('aria-disabled', 'true')
+    expect(more).not.toBeDisabled()
+  })
+
+  it('commits a typed 24 on Enter', () => {
+    // catches: typed numbers ignored
+    const { onChange, field } = setup(0)
+    fireEvent.change(field, { target: { value: '24' } })
+    fireEvent.keyDown(field, { key: 'Enter' })
+    expect(onChange).toHaveBeenCalledWith(24)
+  })
+
+  it('turns a typed 150 into 99', () => {
+    // catches: a quantity over the limit committed
+    const { onChange, field } = setup(0)
+    fireEvent.change(field, { target: { value: '150' } })
+    fireEvent.blur(field)
+    expect(onChange).toHaveBeenCalledWith(99)
+  })
+
+  it('commits 0 when the field is cleared and left', () => {
+    // catches: an empty field leaving the old quantity in place
+    const { onChange, field } = setup(7)
+    fireEvent.change(field, { target: { value: '' } })
+    fireEvent.blur(field)
+    expect(onChange).toHaveBeenCalledWith(0)
+  })
+
+  it('calls nothing while the field is cleared and not yet left', () => {
+    // catches: clearing the field to retype removing the line at once
+    const { onChange, field } = setup(7)
+    fireEvent.change(field, { target: { value: '' } })
+    expect(onChange).not.toHaveBeenCalled()
+  })
+
+  it('ignores letters', () => {
+    // catches: "abc" or "2x" reaching the cart
+    const { onChange, field } = setup(0)
+    fireEvent.change(field, { target: { value: 'ab' } })
+    expect(field).toHaveValue('')
+    fireEvent.change(field, { target: { value: '2x' } })
+    fireEvent.blur(field)
+    expect(onChange).toHaveBeenCalledWith(2)
+  })
+})
