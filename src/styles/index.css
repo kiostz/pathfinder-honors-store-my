@@ -1,21 +1,34 @@
-/* Tailwind entry and design tokens: motion timings, easing and a small semantic colour set with dark values. */
+/* Tailwind entry and design tokens: navy-and-gold colours with light and dark values, the system font stack, type, radius and motion. */
 @import 'tailwindcss';
 
-/* Tokens, named by role. Neutral greys and one blue accent until a brand colour is chosen. */
+/* Tokens, named by role. Light values here; the dark values follow below. */
 @theme {
-  /* Light colour values (dark values are set below). */
-  --color-bg-app: #fafafa;
-  --color-bg-surface: #ffffff;
-  --color-text-default: #171717;
-  --color-text-muted: #525252;
-  --color-border-subtle: #e5e5e5;
-  --color-accent: #1d4ed8;
-  --color-on-accent: #ffffff;
-  --color-danger: #b91c1c;
-  --color-focus-ring: #0369a1;
+  /* Light colour values. */
+  --color-bg-app: #f5f5f2; /* page */
+  --color-bg-surface: #ffffff; /* cards, popups */
+  --color-text-default: #1d1d1f; /* ink */
+  --color-text-muted: #6e6e73; /* grey text, 4.6:1 on the page */
+  --color-border-subtle: #d2d2d7; /* hairline */
+  --color-accent: #162447; /* navy: buttons */
+  --color-on-accent: #f2c14e; /* gold lettering on navy, 9.1:1 */
+  --color-header: #162447; /* the navy band */
+  --color-on-header: #f2c14e; /* the gold title and control on the band */
+  --color-danger: #b91c1c; /* errors only */
+  --color-focus-ring: #3b82f6; /* a blue that is neither navy nor gold, 3:1 or more on page, card and band */
   --color-category-mark-border: rgb(
     0 0 0 / 0.12
   ); /* hairline round the category mark, light mode */
+
+  /* Type: the system stack, no font download. */
+  --font-sans:
+    system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; /* each platform's own face */
+  --text-title: 1.75rem; /* 28 px: screen titles, big and bold */
+  --text-title--line-height: 1.2; /* tight for a short title */
+  --text-title--font-weight: 700; /* bold */
+
+  /* Radius: large for cards, full for buttons. */
+  --radius-card: 1rem; /* 16 px */
+  --radius-pill: 9999px; /* buttons and controls */
 
   /* Motion durations (read by animation and duration utilities through var()). */
   --duration-press: 100ms;
@@ -40,23 +53,65 @@
   }
 }
 
-/* Dark values for the semantic colours, following the system setting. */
-@media (prefers-color-scheme: dark) {
-  :root {
-    color-scheme: dark;
-    --color-bg-app: #0a0a0a;
-    --color-bg-surface: #171717;
-    --color-text-default: #f5f5f5;
-    --color-text-muted: #a3a3a3;
-    --color-border-subtle: #262626;
-    --color-accent: #60a5fa;
-    --color-on-accent: #0a0a0a;
-    --color-danger: #f87171;
-    --color-focus-ring: #7dd3fc;
+/* Light controls (scrollbars, form widgets) unless the buyer picks Dark or the system is dark. */
+:root {
+  color-scheme: light; /* the browser draws light controls */
+}
+
+/* The page colour on the body itself, so the first paint, before React draws, is already the right theme. */
+body {
+  background: var(--color-bg-app); /* the page colour of the current theme */
+  color: var(--color-text-default); /* the ink of the current theme */
+}
+
+/* Dark values, screen only so print always gets the light values below. Picked by the theme control: data-theme="dark" on <html>. */
+@media screen {
+  :root[data-theme='dark'] {
+    color-scheme: dark; /* the browser draws dark controls */
+    --color-bg-app: #000000; /* black page */
+    --color-bg-surface: #1c1c1e; /* dark cards and popups */
+    --color-text-default: #f5f5f7; /* near-white ink, 19.3:1 on the page */
+    --color-text-muted: #a1a1a6; /* grey text, 8.2:1 on the page */
+    --color-border-subtle: #38383a; /* hairline */
+    --color-accent: #f2c14e; /* gold buttons */
+    --color-on-accent: #162447; /* navy lettering, 9.1:1 */
+    --color-header: #0d1730; /* the darker navy band */
+    --color-on-header: #f2c14e; /* the gold title and control on the band */
+    --color-danger: #f87171; /* errors only, 7.6:1 on the page */
+    --color-focus-ring: #8ab4ff; /* a light blue, neither navy nor gold, 10:1 on the page */
     --color-category-mark-border: rgb(
       255 255 255 / 0.2
     ); /* hairline round the category mark, dark mode */
   }
+}
+
+/* The same dark values while the buyer's pick is System and the system is dark; screen only, because browsers keep the dark setting while printing. */
+@media screen and (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    color-scheme: dark; /* the browser draws dark controls */
+    --color-bg-app: #000000; /* black page */
+    --color-bg-surface: #1c1c1e; /* dark cards and popups */
+    --color-text-default: #f5f5f7; /* near-white ink, 19.3:1 on the page */
+    --color-text-muted: #a1a1a6; /* grey text, 8.2:1 on the page */
+    --color-border-subtle: #38383a; /* hairline */
+    --color-accent: #f2c14e; /* gold buttons */
+    --color-on-accent: #162447; /* navy lettering, 9.1:1 */
+    --color-header: #0d1730; /* the darker navy band */
+    --color-on-header: #f2c14e; /* the gold title and control on the band */
+    --color-danger: #f87171; /* errors only, 7.6:1 on the page */
+    --color-focus-ring: #8ab4ff; /* a light blue, neither navy nor gold, 10:1 on the page */
+    --color-category-mark-border: rgb(
+      255 255 255 / 0.2
+    ); /* hairline round the category mark, dark mode */
+  }
+}
+
+/* The theme control's list, where the browser draws a plain popup: readable text on the popup's own surface, not the band's gold. */
+.theme-select option {
+  color: var(
+    --color-text-default
+  ); /* ink, not the gold the closed control uses */
+  background: var(--color-bg-surface); /* white or dark card */
 }
 
 /* Category filter: the select shows the site's own popup list where the browser supports base-select (Chrome 135+, Safari 27); elsewhere it stays the plain select. */
@@ -64,13 +119,16 @@
   .category-filter,
   .category-filter::picker(select),
   .club-select,
-  .club-select::picker(select) {
+  .club-select::picker(select),
+  .theme-select,
+  .theme-select::picker(select) {
     appearance: base-select; /* opt the closed control and its popup into custom styling */
   }
 
   /* The closed control: its text centred in the 44 px box, like the search box's. */
   .category-filter,
-  .club-select {
+  .club-select,
+  .theme-select {
     align-items: center; /* vertical centring of the chosen text */
   }
 
@@ -79,10 +137,15 @@
   .club-select::picker-icon {
     color: var(--color-text-muted); /* quieter than the chosen text */
   }
+  /* The theme control's chevron takes the band's gold. */
+  .theme-select::picker-icon {
+    color: var(--color-on-header); /* readable on the navy band */
+  }
 
   /* The popup list: its own surface, at least the control's width, scrolls past about 10 options. */
   .category-filter::picker(select),
-  .club-select::picker(select) {
+  .club-select::picker(select),
+  .theme-select::picker(select) {
     box-sizing: border-box; /* so max-height counts the border */
     min-width: anchor-size(width); /* never narrower than the closed control */
     max-height: calc(
@@ -99,19 +162,22 @@
     opacity: 0; /* the closed state the fade runs back to and the open state starts from */
   }
   .category-filter:open::picker(select),
-  .club-select:open::picker(select) {
+  .club-select:open::picker(select),
+  .theme-select:open::picker(select) {
     opacity: 1; /* fully visible while open */
   }
   @starting-style {
     .category-filter:open::picker(select),
-    .club-select:open::picker(select) {
+    .club-select:open::picker(select),
+    .theme-select:open::picker(select) {
       opacity: 0; /* where the fade-in begins */
     }
   }
 
   /* The fade-in; the duration and easing are the tokens'. */
   .category-filter::picker(select),
-  .club-select::picker(select) {
+  .club-select::picker(select),
+  .theme-select::picker(select) {
     transition:
       opacity var(--duration-fast) var(--ease-out-soft),
       display var(--duration-fast) allow-discrete,
@@ -120,7 +186,8 @@
 
   /* One option: 44 px tall, 16 px text; the check mark and a heavier weight show the chosen one. */
   .category-filter option,
-  .club-select option {
+  .club-select option,
+  .theme-select option {
     display: flex; /* lays the check mark and the text in a row */
     align-items: center; /* centres them in the 44 px */
     gap: 0.5rem; /* space between the check mark and the text */
@@ -130,17 +197,21 @@
     cursor: pointer; /* shows it can be chosen */
   }
   .category-filter option:checked,
-  .club-select option:checked {
+  .club-select option:checked,
+  .theme-select option:checked {
     font-weight: 500; /* the chosen option is heavier, as well as ticked */
   }
   .category-filter option:hover,
   .category-filter option:focus-visible,
   .club-select option:hover,
-  .club-select option:focus-visible {
+  .club-select option:focus-visible,
+  .theme-select option:hover,
+  .theme-select option:focus-visible {
     background: var(--color-border-subtle); /* the highlighted option */
   }
   .category-filter option:focus-visible,
-  .club-select option:focus-visible {
+  .club-select option:focus-visible,
+  .theme-select option:focus-visible {
     outline: 2px solid var(--color-focus-ring); /* replaces the browser's orange ring */
     outline-offset: -2px; /* inside the option so the list does not clip it */
   }
@@ -209,17 +280,20 @@
   }
 }
 
-/* Print: always the light colour values, so dark mode never prints light text on white paper. */
+/* Print: the light colour values, whatever the theme; the dark rules above are screen only, so paper never gets light text. */
 @media print {
-  :root {
+  :root,
+  :root[data-theme] {
     color-scheme: light; /* the browser draws light controls */
     --color-bg-app: #ffffff; /* white page */
     --color-bg-surface: #ffffff; /* white cards */
-    --color-text-default: #171717; /* near-black text */
-    --color-text-muted: #525252; /* grey text, 7:1 on white */
-    --color-border-subtle: #e5e5e5; /* light rule lines */
-    --color-accent: #1d4ed8; /* the light-mode blue */
-    --color-on-accent: #ffffff; /* text on that blue */
+    --color-text-default: #1d1d1f; /* near-black text */
+    --color-text-muted: #6e6e73; /* grey text, 5:1 on white */
+    --color-border-subtle: #d2d2d7; /* light rule lines */
+    --color-accent: #162447; /* the light-mode navy */
+    --color-on-accent: #f2c14e; /* text on that navy */
+    --color-header: #162447; /* the light-mode band */
+    --color-on-header: #f2c14e; /* text on that band */
     --color-danger: #b91c1c; /* the light-mode red */
   }
 }

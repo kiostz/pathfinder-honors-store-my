@@ -3,6 +3,7 @@
 import { useState, type MouseEvent, type Ref } from 'react' // the last non-empty numbers, and the ref and click types
 import type { Honor } from '@/shared/data/types.ts' // the shape of an honor
 import { formatPrice } from '@/shared/format/price.ts' // "RM 20.00"
+import { PILL_BOX } from '@/shared/ui/button-box.ts' // the pill shape
 import { CART_HASH } from '@/shared/routes.ts' // the cart screen's address
 import { cartCount, estimatedTotalCents, resolveCart } from './cart.ts' // the cart maths
 import { useCart } from './use-cart.ts' // the cart
@@ -47,23 +48,21 @@ export function CartBar({
         onClick={onOpen} // tells the app the cart is opened from the catalogue
         data-testid="cart-bar"
         inert={!visible} // out of reach and out of the accessibility tree while hidden
-        className={`border-border-subtle bg-bg-surface text-text-default focus-visible:outline-focus-ring fixed inset-x-0 bottom-0 z-20 mx-auto flex h-16 max-w-3xl items-center justify-between gap-3 border-t px-4 transition-transform focus-visible:outline-2 focus-visible:-outline-offset-4 ${
+        className={`bg-header text-on-header border-on-header/20 focus-visible:outline-focus-ring rounded-pill fixed inset-x-4 bottom-4 z-20 mx-auto flex max-w-292 items-center justify-between gap-3 border py-2 pr-2 pl-6 transition-transform focus-visible:outline-2 focus-visible:outline-offset-2 print:hidden ${
           visible
             ? 'translate-y-0 duration-(--duration-enter) ease-(--ease-out-soft)'
-            : 'translate-y-full duration-(--duration-exit) ease-(--ease-in-soft)'
-        }`} // enter and exit tokens
+            : 'translate-y-[calc(100%+1rem)] duration-(--duration-exit) ease-(--ease-in-soft)'
+        }`} // a navy pill floating in the page column; enter and exit tokens; it slides below the bottom gap
       >
         {/* Count and estimated total as last shown; the status above does the announcing. */}
         <div className="min-w-0">
           {/* The Item count, the only place "item" shows. */}
           <p className="font-medium">{`${shown.count} ${shown.count === 1 ? 'item' : 'items'}`}</p>
           {/* The estimated total under it. */}
-          <p className="text-text-muted text-sm">{`Estimated total ${formatPrice(shown.totalCents / 100, currency)}`}</p>
+          <p className="text-on-header/80 text-sm">{`Estimated total ${formatPrice(shown.totalCents / 100, currency)}`}</p>
         </div>
-        {/* The one primary action, drawn as a button inside the link. */}
-        <span className="bg-accent text-on-accent inline-flex min-h-11 items-center rounded-md px-6 font-medium">
-          View cart
-        </span>
+        {/* The one primary action, drawn as a button inside the link: gold on the navy pill. */}
+        <span className={`${PILL_BOX} bg-on-header text-header shrink-0`}>View cart</span>
       </a>
     </>
   ) // the status and the bar

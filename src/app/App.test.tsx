@@ -1,6 +1,6 @@
 // Tests for App: the header and the catalogue under it, with fetch mocked at the boundary.
 
-import { act, fireEvent, render, screen, waitFor } from '@testing-library/react' // render and query the page
+import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react' // render and query the page
 import { afterEach, describe, expect, it, vi } from 'vitest' // test API and mocks
 import { CART_STORAGE_KEY } from '@/features/cart/cart-storage.ts' // the stored cart's key
 import { writeSentOrder } from '@/features/order/sent-order-storage.ts' // fills the stored order
@@ -58,8 +58,8 @@ function serveTwoHonors() {
 }
 
 describe('App', () => {
-  it('shows the header and the catalogue', async () => {
-    // catches: the shell rendering without the catalogue, or without its header
+  it('shows the header with the site name and the theme control, and the catalogue', async () => {
+    // catches: the shell rendering without the catalogue, without its header, or without the theme control in it
     vi.stubGlobal(
       'fetch',
       vi.fn(async (url: string) =>
@@ -84,7 +84,9 @@ describe('App', () => {
       ),
     ) // one honor
     render(<App />)
-    expect(screen.getByRole('heading', { name: 'Pathfinder Honors' })).toBeInTheDocument()
+    const header = screen.getByRole('banner') // the header band
+    expect(within(header).getByRole('heading', { name: 'Pathfinder Honors' })).toBeInTheDocument()
+    expect(within(header).getByRole('combobox', { name: 'Theme' })).toHaveValue('system')
     expect(await screen.findByText('Knot Tying')).toBeInTheDocument()
   })
 

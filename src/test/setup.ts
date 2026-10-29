@@ -26,6 +26,16 @@ if (typeof window !== 'undefined') {
   }) as typeof document.createElement
 }
 
+// jsdom has no matchMedia, and the theme hook asks for it on every screen; this default says the system is light. A test that needs another answer replaces it.
+if (typeof window !== 'undefined' && typeof window.matchMedia !== 'function') {
+  window.matchMedia = ((query: string) => ({
+    matches: false, // a light system
+    media: query, // the asked query
+    addEventListener: () => undefined, // nothing ever changes
+    removeEventListener: () => undefined, // nothing to remove
+  })) as unknown as typeof window.matchMedia
+}
+
 // Remove anything a test rendered so tests do not leak into each other.
 afterEach(() => {
   cleanup() // unmount

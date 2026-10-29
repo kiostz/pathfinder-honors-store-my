@@ -10,6 +10,7 @@ import { useCatalogueData } from '@/features/catalogue/use-catalogue-data.ts' //
 import { ConfirmationScreen } from '@/features/order/ConfirmationScreen.tsx' // the screen after a sent order
 import { OrderFormProvider } from '@/features/order/OrderFormProvider.tsx' // the order form's values, kept across screens
 import { CATALOGUE_HASH } from '@/shared/routes.ts' // the catalogue's address
+import { ThemeControl } from '@/shared/theme/ThemeControl.tsx' // System, Light or Dark
 import { useHashRoute } from './use-hash-route.ts' // which screen the address names
 
 const SITE_TITLE = 'Pathfinder Honors' // the catalogue's tab title
@@ -112,11 +113,14 @@ export function App() {
       <OrderFormProvider>
         <ClearUnavailableOnLeave route={route} /> {/* the notice goes when the buyer leaves the cart */}
         <div className="bg-bg-app text-text-default min-h-screen">
-          {/* Site name; the only header content. */}
-          <header className="border-border-subtle bg-bg-surface border-b">
-            <h1 className="mx-auto max-w-3xl px-4 py-4 text-xl font-semibold">{SITE_TITLE}</h1>
+          {/* The navy band: the gold site name and the theme control, in the same 1,200 px column as the page. */}
+          <header className="bg-header text-on-header">
+            <div className="mx-auto flex max-w-300 items-center justify-between gap-3 px-4 py-3">
+              <h1 className="sm:text-title text-xl font-bold">{SITE_TITLE}</h1>
+              <ThemeControl />
+            </div>
           </header>
-          <main ref={mainRef} tabIndex={-1} className="mx-auto max-w-3xl px-4 pt-6 pb-24 outline-none">
+          <main ref={mainRef} tabIndex={-1} className="mx-auto max-w-300 px-4 pt-6 pb-28 outline-none">
             {/* Stays mounted but hidden while the cart shows, so search, category and pictures survive. */}
             <div hidden={route !== 'catalogue'}>
               <Catalogue data={data} />

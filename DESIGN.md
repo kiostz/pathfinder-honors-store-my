@@ -41,7 +41,8 @@ Seed: exact tokens in Task 06 Part A, full file from the built screens at the en
 
 ## Type
 
-- Public Sans (OFL, from the US Web Design System), self-hosted as one variable woff2 file in the repo, with the system font stack as a fallback.
+- For now, the system font stack: `system-ui, -apple-system, "Segoe UI", Roboto, sans-serif`. No web font is downloaded.
+- Public Sans (OFL) is the intended face, added later.
 - Big, bold screen titles; plain body text; prices in tabular figures.
 - Exact sizes are set in Task 06 Part A.
 
