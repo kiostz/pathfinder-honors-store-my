@@ -14,6 +14,12 @@
   --color-header: #162447; /* the navy band */
   --color-on-header: #f2c14e; /* the gold title and control on the band */
   --color-danger: #b91c1c; /* errors only */
+  --color-bg-soft: #ece6e1; /* soft fill: the cart's stepper pill, 12.3:1 under the navy symbols */
+  --color-trash: #c62828; /* the trash icon, 4.5:1 on the soft fill, 5.6:1 on a card */
+  --color-tag-warning: #fdf0dc; /* the Unavailable tag's fill */
+  --color-on-tag-warning: #8a4b00; /* the Unavailable tag's text, 6.1:1 */
+  --color-bg-inverse: #1d1d1f; /* the Removed note's fill */
+  --color-on-inverse: #f3f0ec; /* text on the Removed note, 14.8:1 */
   --color-focus-ring: #3b82f6; /* a blue that is neither navy nor gold, 3:1 or more on page, card and band */
   --color-category-mark-border: rgb(
     0 0 0 / 0.12
@@ -29,6 +35,7 @@
   /* Radius: large for cards, full for buttons. */
   --radius-card: 1rem; /* 16 px */
   --radius-pill: 9999px; /* buttons and controls */
+  --radius-picture: 0.625rem; /* 10 px: the cart row's Patch picture */
 
   /* Motion durations (read by animation and duration utilities through var()). */
   --duration-press: 100ms;
@@ -49,6 +56,19 @@
     }
     to {
       opacity: 1;
+    }
+  }
+
+  /* The Removed note's entrance: slides up while it fades in (reduced motion swaps in the fade alone). */
+  --animate-note-in: note-in var(--duration-enter) var(--ease-out-soft) both;
+  @keyframes note-in {
+    from {
+      opacity: 0;
+      transform: translateY(1rem);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
     }
   }
 }
@@ -78,6 +98,12 @@ body {
     --color-header: #0d1730; /* the darker navy band */
     --color-on-header: #f2c14e; /* the gold title and control on the band */
     --color-danger: #f87171; /* errors only, 7.6:1 on the page */
+    --color-bg-soft: #2c2c2e; /* the stepper pill, 8.3:1 under the gold symbols */
+    --color-trash: #ff6b6b; /* the trash icon, 5.0:1 on the soft fill, 4.1:1 on the note */
+    --color-tag-warning: #3d2a0f; /* the Unavailable tag's fill */
+    --color-on-tag-warning: #f5c26b; /* the tag's text, 8.3:1 */
+    --color-bg-inverse: #3a3a3c; /* the Removed note, raised above the black page */
+    --color-on-inverse: #f5f5f7; /* text on the note, 10.4:1 */
     --color-focus-ring: #8ab4ff; /* a light blue, neither navy nor gold, 10:1 on the page */
     --color-category-mark-border: rgb(
       255 255 255 / 0.2
@@ -99,6 +125,12 @@ body {
     --color-header: #0d1730; /* the darker navy band */
     --color-on-header: #f2c14e; /* the gold title and control on the band */
     --color-danger: #f87171; /* errors only, 7.6:1 on the page */
+    --color-bg-soft: #2c2c2e; /* the stepper pill, 8.3:1 under the gold symbols */
+    --color-trash: #ff6b6b; /* the trash icon, 5.0:1 on the soft fill, 4.1:1 on the note */
+    --color-tag-warning: #3d2a0f; /* the Unavailable tag's fill */
+    --color-on-tag-warning: #f5c26b; /* the tag's text, 8.3:1 */
+    --color-bg-inverse: #3a3a3c; /* the Removed note, raised above the black page */
+    --color-on-inverse: #f5f5f7; /* text on the note, 10.4:1 */
     --color-focus-ring: #8ab4ff; /* a light blue, neither navy nor gold, 10:1 on the page */
     --color-category-mark-border: rgb(
       255 255 255 / 0.2
@@ -296,5 +328,11 @@ body {
     --color-header: #162447; /* the light-mode band */
     --color-on-header: #f2c14e; /* text on that band */
     --color-danger: #b91c1c; /* the light-mode red */
+    --color-bg-soft: #ece6e1; /* the light-mode soft fill */
+    --color-trash: #c62828; /* the light-mode trash red */
+    --color-tag-warning: #fdf0dc; /* the light-mode tag fill */
+    --color-on-tag-warning: #8a4b00; /* the light-mode tag text */
+    --color-bg-inverse: #1d1d1f; /* the light-mode note fill */
+    --color-on-inverse: #f3f0ec; /* the light-mode note text */
   }
 }

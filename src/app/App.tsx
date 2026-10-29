@@ -1,39 +1,24 @@
-// App shell: the site header and the screen the address names (catalogue, cart or order confirmation), so every screen hangs off one frame.
+// App shell: the site header and the screen the address names (catalogue, cart, details page or order confirmation), so every screen hangs off one frame.
 
 import { useEffect, useLayoutEffect, useRef, type MouseEvent } from 'react' // scroll, focus and title around a screen change, and the click's type
 import { CartBar } from '@/features/cart/CartBar.tsx' // the fixed bar with the item count
 import { CartProvider } from '@/features/cart/CartProvider.tsx' // the cart state
-import { useCart } from '@/features/cart/use-cart.ts' // clears the Unavailable notice
 import { CartScreen } from '@/features/cart/CartScreen.tsx' // the cart screen
 import { Catalogue } from '@/features/catalogue/Catalogue.tsx' // the buyer's list of honors
 import { useCatalogueData } from '@/features/catalogue/use-catalogue-data.ts' // the one load
 import { ConfirmationScreen } from '@/features/order/ConfirmationScreen.tsx' // the screen after a sent order
+import { DetailsScreen } from '@/features/order/DetailsScreen.tsx' // the order form's page
 import { OrderFormProvider } from '@/features/order/OrderFormProvider.tsx' // the order form's values, kept across screens
-import { CATALOGUE_HASH } from '@/shared/routes.ts' // the catalogue's address
+import { CART_HASH, CATALOGUE_HASH } from '@/shared/routes.ts' // the catalogue's and the cart's addresses
 import { ThemeControl } from '@/shared/theme/ThemeControl.tsx' // System, Light or Dark
 import { useHashRoute } from './use-hash-route.ts' // which screen the address names
 
 const SITE_TITLE = 'Pathfinder Honors' // the catalogue's tab title
 const FROM_CATALOGUE_STATE = { fromCatalogue: true } // marks a cart history entry the bar pushed, so history back leads to the catalogue
+const FROM_CART_STATE = { fromCart: true } // marks a details history entry Checkout pushed, so history back leads to the cart
 
 /**
- * Ends the Unavailable notice when the address goes from the cart screen to the catalogue; inside the provider so it can reach the cart.
- * @param route the screen the address names
- * @return nothing drawn
- */
-function ClearUnavailableOnLeave({ route }: { route: 'catalogue' | 'cart' | 'order-sent' }) {
-  const { clearUnavailable } = useCart() // the cart's way to end the notice
-  const previous = useRef(route) // the screen before this one
-  // runs after each route change
-  useEffect(() => {
-    if (previous.current === 'cart' && route === 'catalogue') clearUnavailable() // only a real leave; first draw and cached loads keep the notice
-    previous.current = route // for the next change
-  }, [route, clearUnavailable]) // rerun on a route change
-  return null // draws nothing
-}
-
-/**
- * The whole page: header and the catalogue or the cart screen.
+ * The whole page: header and the screen the address names.
  * @return the app shell
  */
 export function App() {
@@ -70,6 +55,9 @@ export function App() {
       if (barClicked.current) window.history.replaceState(FROM_CATALOGUE_STATE, '') // this entry follows the catalogue one
       barClicked.current = false // only this opening
       window.scrollTo(0, 0) // the cart opens at its top (its heading takes focus itself)
+    } else if (route === 'details') {
+      if (previous === 'cart') window.history.replaceState(FROM_CART_STATE, '') // this entry follows the cart one (Checkout pushed it)
+      window.scrollTo(0, 0) // the details page opens at its top (its heading takes focus itself)
     } else if (route === 'order-sent') {
       window.scrollTo(0, 0) // the confirmation opens at its top (its heading takes focus itself)
     } else {
@@ -86,9 +74,11 @@ export function App() {
     document.title =
       route === 'cart' // the cart screen
         ? `Your cart · ${SITE_TITLE}` // names the cart
-        : route === 'order-sent' // the confirmation
-          ? `Order sent · ${SITE_TITLE}` // names the confirmation
-          : SITE_TITLE // names the screen in history and tabs
+        : route === 'details' // the details page
+          ? `Your details · ${SITE_TITLE}` // names the details page
+          : route === 'order-sent' // the confirmation
+            ? `Order sent · ${SITE_TITLE}` // names the confirmation
+            : SITE_TITLE // names the screen in history and tabs
   }, [route])
 
   /**
@@ -100,7 +90,7 @@ export function App() {
     barClicked.current = true // the next cart entry follows the catalogue one
   }
 
-  /** Back to honors: history back when this very history entry was pushed by the bar, otherwise home. */
+  /** Browse more: history back when this very history entry was pushed by the bar, otherwise home. */
   const goBack = () => {
     const fromCatalogue = (window.history.state as { fromCatalogue?: boolean } | null)?.fromCatalogue === true // the entry's own mark, true also after browser Back or Forward into it
     if (fromCatalogue)
@@ -108,10 +98,17 @@ export function App() {
     else window.location.hash = CATALOGUE_HASH // opened by address or reload: there is nothing to go back to
   }
 
+  /** Back to cart: history back when Checkout pushed this very entry, otherwise to the cart by address. */
+  const goBackToCart = () => {
+    const fromCart = (window.history.state as { fromCart?: boolean } | null)?.fromCart === true // the entry's own mark
+    if (fromCart)
+      window.history.back() // the same as the back button
+    else window.location.replace(CART_HASH) // opened by address or reload: there is nothing to go back to, and no bounce entry is left
+  }
+
   return (
     <CartProvider honors={data.state.status === 'ready' ? data.state.honors : null}>
       <OrderFormProvider>
-        <ClearUnavailableOnLeave route={route} /> {/* the notice goes when the buyer leaves the cart */}
         <div className="bg-bg-app text-text-default min-h-screen">
           {/* The navy band: the gold site name and the theme control, in the same 1,200 px column as the page. */}
           <header className="bg-header text-on-header">
@@ -127,6 +124,8 @@ export function App() {
             </div>
             {/* Only while the address names it, so removed notes end when the buyer leaves. */}
             {route === 'cart' && <CartScreen data={data} onBack={goBack} />}
+            {/* The order form's own page: Checkout leads here. */}
+            {route === 'details' && <DetailsScreen data={data} onBack={goBackToCart} />}
             {/* Always home: the cart it came from is gone. */}
             {route === 'order-sent' && <ConfirmationScreen onBack={() => (window.location.hash = CATALOGUE_HASH)} />}
           </main>

@@ -68,6 +68,41 @@ Pathfinder Honors        [◐ v]      Pathfinder Honors                    [◐ 
 - Buttons are pills. Add turns into a − 1 + pill on the card after the first tap.
 - Content is centred in a 1,200 px column on desktop.
 
+## Spacing and sizes
+
+All spacing is on a 4 px scale (Tailwind steps). The gap inside a group is smaller than the gap between groups. Values are taken from the catalogue and cart as built.
+
+| Use                                     | Value                                       | In code                   |
+| --------------------------------------- | ------------------------------------------- | ------------------------- |
+| Page side gutter                        | 16 px                                       | `px-4`                    |
+| Content column (desktop)                | 1,200 px max                                | `max-w-300`               |
+| Top of page content                     | 24 px                                       | `pt-6`                    |
+| Cart screen column (desktop)            | 768 px max, centred                         | `max-w-3xl`               |
+| Between sections (toolbar, count, grid) | 12–24 px                                    | `mt-3` to `mt-6`          |
+| Between cards                           | 12 px                                       | `gap-3`                   |
+| Inside a card (padding)                 | 8 px under 640 px, 12 px from 640 px        | `p-2 sm:p-3`              |
+| Between parts of a card                 | 8 px                                        | `gap-2`                   |
+| Header band padding                     | 12 px top and bottom, 16 px sides           | `py-3 px-4`               |
+| Patch picture on a card                 | 112 px                                      | `size-28`                 |
+| Tap target (buttons, steppers, fields)  | 44 px tall at least                         | `h-11`                    |
+| Between neighbouring targets            | 8 px at least                               | `gap-2`                   |
+| Card stepper width                      | 134 px                                      |                           |
+| Cart stepper pill                       | 36 px drawn, 44 px tap area per control     | `h-9`, `h-11 w-11`        |
+| Cart row                                | 80 px                                       | `min-h-20 p-3`            |
+| Cart Patch picture                      | 56 px, 10 px corners                        | `size-14 rounded-picture` |
+| Removed note                            | held 5 s, fades in its last 150 ms          |                           |
+| Cart bar                                | 16 px from the screen edges and bottom      | `inset-x-4 bottom-4`      |
+| Card radius                             | 16 px                                       | `rounded-card`            |
+| Buttons, fields, cart bar               | pill                                        | `rounded-pill`            |
+| Screen title                            | 20 px under 640 px, 28 px from 640 px, bold | `text-xl sm:text-title`   |
+
+- Cart, order form and confirmation use the same values: a 16 px gutter, 12 px between cards or lines, 24 px between sections, 44 px targets.
+- The cart column is 768 px, not 1,200: a line is a picture, a name and a stepper, and across 1,200 px they sit about 900 px apart. The order form and confirmation keep it.
+- The cart stepper pill is 36 px because it reads lighter than 44 px on an 80 px row; each control keeps a 44 px tap area (the target rule), drawn round the control so the focus ring sits outside the soft fill.
+- The cart Patch picture is 56 px with 10 px corners: two text lines sit beside it, and the row comes to 80 px.
+- The Removed note holds 5 s (Customer.io's snackbar timing), pauses while the pointer or focus is on it, and restarts at 5 s when they leave.
+- A new value needs a reason written here first.
+
 ## Principles
 
 - Navy and gold mark every action; nothing else uses them.

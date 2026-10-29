@@ -1,103 +1,176 @@
-// The cart screen: order lines A to Z with the estimated total, so a buyer can check and change what they picked.
+// The cart screen: order lines A to Z with Unavailable lines kept in place, the Removed note with Undo, and the Checkout bar, so a buyer can check and change what they picked before the details page.
 
-import { useEffect, useRef, useState } from 'react' // removals and the heading focus
+import { useEffect, useRef, useState } from 'react' // the removal, focus moves and the heading focus
 import type { CatalogueLoad } from '@/features/catalogue/use-catalogue-data.ts' // the load the app hands over
-import { OrderForm } from '@/features/order/OrderForm.tsx' // the form under the total
 import { useOrderForm } from '@/features/order/use-order-form.ts' // whether a send is running
-import { formatPrice } from '@/shared/format/price.ts' // "RM 20.00"
-import { CATALOGUE_HASH } from '@/shared/routes.ts' // the catalogue's address
-import { sortByName } from '@/shared/sort/sort-by-name.ts' // names A to Z
-import { HONOR_ROW_BOX, HONOR_ROW_END_BOX } from '@/shared/ui/honor-row-box.ts' // the line box, shared with the loading lines
+import type { Honor } from '@/shared/data/types.ts' // the shape of an honor
+import { CATALOGUE_HASH, DETAILS_HASH } from '@/shared/routes.ts' // the catalogue's and the details page's addresses
+import { ACTION_BOX } from '@/shared/ui/button-box.ts' // the quiet link and the retry button
+import { byText } from '@/shared/sort/sort-by-name.ts' // names A to Z
 import { LOAD_ERROR_TEXT } from '@/shared/ui/load-error-text.ts' // the failed-load message
-import { estimatedTotalCents, resolveCart } from './cart.ts' // the cart maths
-import { CartLine } from './CartLine.tsx' // one order line or its removed note
+import { CartIcon, InfoIcon } from './cart-icons.tsx' // the empty cart's icon and the banner's i
+import { CART_CARD_BOX, CART_LINE_BOX, CART_PICTURE_BOX } from './cart-line-box.ts' // the card and line boxes, shared with the loading lines
+import { estimatedTotalCents, GONE_NAME, lineLabel, resolveCart } from './cart.ts' // the cart maths and a line's label
+import { CartLine } from './CartLine.tsx' // one line
+import { CheckoutBar } from './CheckoutBar.tsx' // the bottom bar
+import { RemovedNote } from './RemovedNote.tsx' // the note with Undo
 import { useCart } from './use-cart.ts' // the cart
 
 const SKELETON_LINES = 3 // how many skeleton lines the loading state shows
 
-/**
- * Words the Unavailable notice for honors taken out of the cart.
- * @param names the switched-off honors' names
- * @param unnamed how many gone honors have no name
- * @return the Unavailable notice text, or null when nothing was taken out
- */
-function unavailableNotice(names: string[], unnamed: number): string | null {
-  const parts = [...names, ...(unnamed > 0 ? [`${unnamed} ${unnamed === 1 ? 'honor' : 'honors'}`] : [])] // a gone honor counts as "1 honor"
-  if (parts.length === 0) return null // nothing taken out
-  const joined = parts.length === 1 ? parts[0] : `${parts.slice(0, -1).join(', ')} and ${parts[parts.length - 1]}` // names joined
-  const single = names.length + unnamed === 1 // one honor, or the "1 honor" count alone
-  return `${joined} ${single ? 'is' : 'are'} no longer available and ${single ? 'was' : 'were'} taken out of your cart.` // verb agrees
-}
+// One line of the card as drawn: an order line or an Unavailable one.
+type ShownLine = { id: string; honor: Honor | null; quantity: number; unavailable: boolean }
 
-const ACTION_BOX =
-  'focus-visible:outline-focus-ring inline-flex min-h-11 items-center rounded-md font-medium transition-transform duration-(--duration-press) focus-visible:outline-2 focus-visible:outline-offset-2 active:scale-[0.97]' // 44 px, press feedback, focus ring
+// The line just removed, for the note and for Undo; label names it for a screen reader; afterId is the line that followed it.
+type Removal = { id: string; name: string; label: string; quantity: number; keyboard: boolean; afterId: string | null }
+
+// Where focus goes after the next draw: onto a restored line, onto the line after a removed one (or the heading), or nowhere.
+type FocusRequest = { kind: 'restored'; id: string } | { kind: 'after'; id: string | null } | { kind: 'none' }
 
 /**
  * Draws the cart screen.
  * @param data the load: state, skeleton gate and retry
- * @param onBack called by Back to honors and Browse honors
- * @return the heading, the order lines with their removed note, and the estimated total
+ * @param onBack called by Browse more
+ * @return the heading, the Unavailable banner, the lines, the Removed note and the Checkout bar
  */
 export function CartScreen({ data, onBack }: { data: CatalogueLoad; onBack: () => void }) {
   const { state, showSkeleton, retry } = data // load state, skeleton gate and retry
-  const { quantities, setQuantity, unavailableNames, unavailableUnnamed } = useCart() // the cart and what was taken out
+  const { quantities, setQuantity, takeOutUnavailable } = useCart() // the cart and its take-out
   const headingRef = useRef<HTMLHeadingElement>(null) // focused on arrival
-  const { sending } = useOrderForm() // an order is being sent: lines and form wait, even after leaving and coming back
-  const [removed, setRemoved] = useState<Record<string, { quantity: number; height: number }>>({}) // lines set to zero on this screen, kept until it closes
+  const listRef = useRef<HTMLUListElement>(null) // where a line is found for focus
+  const { sending } = useOrderForm() // an order is being sent: the screen waits, even after leaving and coming back
+  const [removal, setRemoval] = useState<Removal | null>(null) // the Removed note, one at a time
+  const [focusRequest, setFocusRequest] = useState<FocusRequest>({ kind: 'none' }) // a focus move waiting for the next draw
 
   // Arriving keyboard and screen-reader users start at the heading.
   useEffect(() => {
     headingRef.current?.focus() // the heading has tabIndex -1
   }, [])
 
-  /**
-   * Draws Back to honors or Browse honors: a link that hands the move to the app.
-   * @param label the link text
-   * @param primary whether it is the screen's one primary action
-   * @return an anchor
-   */
-  const backLink = (label: string, primary: boolean) => (
-    <a
-      href={CATALOGUE_HASH} // a real address for the link; the click is handed to the app
-      onClick={(event) => {
-        event.preventDefault() // the app decides between history back and going home
-        onBack() // back or home
-      }}
-      className={`${ACTION_BOX} ${primary ? 'bg-accent text-on-accent mt-4 px-6' : 'text-accent -ml-2 px-2'}`} // accent button, or a quiet link
-    >
-      {label}
-    </a>
-  )
-
   const currency = state.status === 'ready' ? state.settings.currency : '' // only read once ready
   const honors = state.status === 'ready' ? state.honors : [] // every honor in the file
-  const { lines } = resolveCart(quantities, honors) // order lines A to Z
-  const shownHonors = sortByName([
-    ...lines.map((line) => line.honor),
-    ...honors.filter((honor) => removed[honor.id] !== undefined && quantities[honor.id] === undefined),
-  ]) // the honors of the lines and of the removed notes in one A to Z list, so a removed note keeps its place
-  const notice = unavailableNotice(unavailableNames, unavailableUnnamed) // null when nothing was taken out
+  const { lines, unavailable } = resolveCart(quantities, honors) // orderable lines A to Z, and what cannot be ordered
+  const shownLines: ShownLine[] = [
+    ...lines.map((line) => ({ id: line.honor.id, honor: line.honor, quantity: line.quantity, unavailable: false })), // orderable
+    ...unavailable.map(({ honorId }) => ({
+      id: honorId, // the id
+      honor: honors.find((honor) => honor.id === honorId) ?? null, // null when gone from the data
+      quantity: quantities[honorId], // kept so Undo can restore it
+      unavailable: true, // greyed
+    })), // switched off or gone
+  ].sort((a, b) => byText(a.honor?.name ?? '￿', b.honor?.name ?? '￿') || byText(a.id, b.id)) // A to Z, gone honors last, equal names by id so Undo restores the old place
+  const totalCents = estimatedTotalCents(lines) // orderable lines only
+
+  // Moves focus after the draw that follows a removal, an Undo or the note's end; a tick later, so a field committed by leaving it has handed focus on.
+  useEffect(() => {
+    if (focusRequest.kind === 'none') return // nothing waiting
+    const timer = window.setTimeout(() => {
+      const active = document.activeElement // where focus is now
+      const lost = active === null || active === document.body || active === headingRef.current // gone with the removed control
+      setFocusRequest({ kind: 'none' }) // done either way
+      if (!lost) return // the buyer chose another control: leave it
+      const line = (id: string | null) =>
+        id === null ? null : (listRef.current?.querySelector(`[data-line-id="${CSS.escape(id)}"]`) ?? null) // the line with this id
+      if (focusRequest.kind === 'restored') {
+        const restored = line(focusRequest.id) // the line that came back
+        ;(restored?.querySelector<HTMLElement>('input') ?? restored?.querySelector<HTMLElement>('button'))?.focus() // Undo: the number field, or the trash of an Unavailable line
+      } else {
+        const next = line(focusRequest.id) // the line after the removed one
+        if (next)
+          next.querySelector<HTMLElement>('button, input')?.focus() // its first control
+        else headingRef.current?.focus() // none after it: the heading
+      }
+    }, 0) // after the focus change
+    return () => window.clearTimeout(timer) // a newer request or leaving the screen cancels it
+  }, [focusRequest])
+
+  /**
+   * Removes a line and shows the note.
+   * @param line the line
+   * @param keyboard true when the keyboard did it
+   */
+  const remove = (line: ShownLine, keyboard: boolean) => {
+    const index = shownLines.findIndex((other) => other.id === line.id) // its place
+    const afterId = shownLines[index + 1]?.id ?? null // the line that follows it
+    setRemoval({
+      id: line.id,
+      name: line.honor?.name ?? GONE_NAME,
+      label: lineLabel(line.honor, line.id),
+      quantity: line.quantity,
+      keyboard,
+      afterId,
+    }) // replaces any earlier note
+    setQuantity(line.id, 0) // out of the cart
+    if (!keyboard) setFocusRequest({ kind: 'after', id: afterId }) // the trash is gone: the next line, or the heading (a keyboard removal puts focus on Undo)
+  }
+
+  /** Puts the removed line back at its old quantity. */
+  const undo = () => {
+    if (removal === null) return // nothing to undo
+    setQuantity(removal.id, removal.quantity) // the old quantity
+    setFocusRequest({ kind: 'restored', id: removal.id }) // its field takes focus once drawn
+    setRemoval(null) // the note is done
+  }
+
+  /** Ends the note after its hold, moving focus on if it was inside. */
+  const endNote = () => {
+    const insideNote = document.activeElement?.closest('[data-testid="removed-note"]') != null // focus is on Undo
+    if (insideNote && removal !== null) setFocusRequest({ kind: 'after', id: removal.afterId }) // the same way as after a removal
+    setRemoval(null) // the note goes; the removal stands
+  }
+
+  /** Takes the unavailable lines out, then opens the details page. */
+  const checkout = () => {
+    takeOutUnavailable() // one write, before the address changes
+    window.location.hash = DETAILS_HASH // a new history entry, so Back returns here
+  }
+
+  const unavailableCount = unavailable.length // lines, not quantities
+  // The 768 px centred column keeps a line's picture, name and stepper together on desktop; the bottom padding clears the bar and the note.
   return (
-    <div inert={sending} aria-busy={sending}>
-      {/* Back to the catalogue, quiet; the heading follows. */}
-      {backLink('Back to honors', false)}
+    <div inert={sending} aria-busy={sending} className="mx-auto max-w-3xl pb-24">
+      {/* The quiet way back; the empty cart has the bar's Browse more instead. */}
+      {!(state.status === 'ready' && shownLines.length === 0) && (
+        <a
+          href={CATALOGUE_HASH} // a real address for the link; the click is handed to the app
+          onClick={(event) => {
+            event.preventDefault() // the app decides between history back and going home
+            onBack() // back or home
+          }}
+          className={`${ACTION_BOX} text-accent -ml-2 px-2`} // a quiet link
+        >
+          Browse more
+        </a>
+      )}
       {/* Where focus lands on arrival. */}
-      <h2 ref={headingRef} tabIndex={-1} className="mt-2 text-xl font-semibold outline-none">
+      <h2 ref={headingRef} tabIndex={-1} className="sm:text-title mt-2 text-xl font-bold outline-none">
         Your cart
       </h2>
-      {/* Muted, above the lines, until the buyer leaves the screen. */}
-      {notice !== null && state.status === 'ready' && <p className="text-text-muted mt-3">{notice}</p>}
+      {/* A plain paragraph right after the heading, no live region: it is read with the page, not over the heading's focus. */}
+      {state.status === 'ready' && unavailableCount > 0 && (
+        <p className="bg-tag-warning text-on-tag-warning rounded-card mt-3 flex items-center gap-2 p-3 text-sm font-medium">
+          <InfoIcon className="size-5 shrink-0" /> {/* decorative */}
+          {unavailableCount === 1
+            ? '1 item is no longer available'
+            : `${unavailableCount} items are no longer available`}
+        </p>
+      )}
       {/* Loading shows nothing for 300 ms, then lines of the same shape. */}
       {showSkeleton && (
-        <div aria-hidden="true" className="mt-2">
+        <div aria-hidden="true" className={CART_CARD_BOX}>
           {Array.from({ length: SKELETON_LINES }, (_, index) => (
             // A skeleton line has the box of a real line.
-            <div key={index} data-testid="cart-skeleton-line" className={HONOR_ROW_BOX}>
-              <div className="bg-border-subtle size-14 shrink-0 rounded-md" /> {/* the picture */}
-              <div className="bg-border-subtle h-6 w-3/5 flex-1 rounded-sm" /> {/* the name */}
-              <div className={HONOR_ROW_END_BOX}>
-                <div className="bg-border-subtle h-6 w-14 rounded-sm" /> {/* the line total */}
-                <div className="bg-border-subtle h-11 w-33 rounded-md" /> {/* the stepper, 132 px */}
+            <div key={index} data-testid="cart-skeleton-line" className={CART_LINE_BOX}>
+              <div className={`${CART_PICTURE_BOX} bg-border-subtle`} /> {/* the picture */}
+              <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+                <div className="flex h-5 items-center justify-between gap-3">
+                  <div className="bg-border-subtle h-4 w-3/5 rounded-sm" /> {/* the name */}
+                  <div className="bg-border-subtle h-4 w-14 rounded-sm" /> {/* the line total */}
+                </div>
+                <div className="flex h-9 items-center justify-between gap-3">
+                  <div className="bg-border-subtle h-3 w-16 rounded-sm" /> {/* the price of one */}
+                  <div className="bg-border-subtle rounded-pill h-9 w-33" /> {/* the stepper pill, 132 px */}
+                </div>
               </div>
             </div>
           ))}
@@ -118,65 +191,73 @@ export function CartScreen({ data, onBack }: { data: CatalogueLoad; onBack: () =
       )}
       {state.status === 'ready' && (
         <>
-          {/* One list: lines, with the removed note where a line was set to zero. */}
-          {shownHonors.length > 0 && (
-            <ul className="mt-2">
-              {shownHonors.map((honor) => (
-                // one line per honor, keyed by id so a swap keeps its place
-                <CartLine
-                  key={honor.id}
-                  honor={honor}
-                  quantity={quantities[honor.id] ?? 0}
-                  currency={currency}
-                  removed={quantities[honor.id] === undefined ? (removed[honor.id] ?? null) : null}
-                  onChange={(quantity, height) => {
-                    if (quantity === 0)
-                      // set to zero: a removal
-                      setRemoved((current) => ({
-                        ...current, // the other removed notes
-                        [honor.id]: { quantity: quantities[honor.id] ?? 0, height }, // what to restore and how tall the line was
-                      })) // remember this removal
-                    setQuantity(honor.id, quantity) // edit the cart
-                  }}
-                  onUndo={() => {
-                    setQuantity(honor.id, removed[honor.id]?.quantity ?? 0) // restore the earlier quantity
-                    setRemoved((current) => {
-                      const next = { ...current } // a copy
-                      delete next[honor.id] // the removed note is done
-                      return next // the rest stay
-                    }) // forget this removal
-                  }}
-                />
-              ))}
-            </ul>
+          {/* One card of lines; no total row, the bar below has it. */}
+          {shownLines.length > 0 && (
+            <div className={CART_CARD_BOX}>
+              {/* The list: its ref is where a line is found for focus. */}
+              <ul ref={listRef}>
+                {shownLines.map((shown) => (
+                  // one line per honor, keyed by id
+                  <CartLine
+                    key={shown.id}
+                    id={shown.id}
+                    honor={shown.honor}
+                    quantity={shown.quantity}
+                    currency={currency}
+                    unavailable={shown.unavailable}
+                    onChange={(quantity) => setQuantity(shown.id, quantity)} // edit the cart
+                    onRemove={(keyboard) => remove(shown, keyboard)} // trash or typed 0
+                  />
+                ))}
+              </ul>
+            </div>
           )}
-          {/* The sum of the lines shown; announced politely as it changes. */}
+          {/* The invoice note, only with something to order. */}
           {lines.length > 0 && (
-            <p
-              aria-live="polite"
-              className="border-border-subtle mt-3 flex justify-between gap-3 text-lg font-semibold"
-            >
-              <span>Estimated total</span> {/* the label */}
-              <span>{formatPrice(estimatedTotalCents(lines) / 100, currency)}</span> {/* the sum */}
+            <p className="text-text-muted mt-2 text-sm">
+              Estimated total at today&apos;s prices. The treasurer will email you the invoice.
             </p>
           )}
-          {/* The invoice note and the form, only with something to order. */}
-          {lines.length > 0 && (
-            <>
-              <p className="text-text-muted mt-1 text-sm">
-                Estimated total at today&apos;s prices. The treasurer will email you the invoice.
-              </p>
-              <OrderForm lines={lines} currency={currency} clubs={state.clubs} />
-            </>
-          )}
-          {/* Nothing in the cart: say so and lead back. */}
-          {lines.length === 0 && (
-            <>
-              <p className="text-text-muted mt-3">Your cart is empty.</p>
-              {backLink('Browse honors', true)}
-            </>
+          {/* Nothing at all in the cart: say so, in the upper third; the bar leads back. */}
+          {shownLines.length === 0 && (
+            <div className="mt-[12vh] flex flex-col items-center gap-3 text-center">
+              <div className="bg-bg-soft text-text-muted flex size-22 items-center justify-center rounded-full">
+                <CartIcon className="size-10" /> {/* decorative */}
+              </div>
+              <p className="text-xl font-bold">Your cart is empty</p> {/* what is so */}
+              <p className="text-text-muted">Add items from the shop and they&apos;ll show up here.</p>{' '}
+              {/* what to do */}
+            </div>
           )}
         </>
+      )}
+      {/* The one status region, mounted with the screen and empty until a removal, so the first removal is announced. */}
+      <p role="status" className="sr-only">
+        {removal !== null ? `${removal.name} removed` : ''}
+      </p>
+      {/* Fixed to the bottom: the note floats above the bar. */}
+      {state.status === 'ready' && (
+        <div className="fixed inset-x-0 bottom-0 z-20 print:hidden">
+          {removal !== null && (
+            <div className="px-4 pb-3">
+              <RemovedNote
+                key={`${removal.id}:${removal.quantity}`} // a new removal is a new note with a fresh timer
+                name={removal.name}
+                label={removal.label}
+                onUndo={undo}
+                onEnd={endNote}
+                takeFocus={removal.keyboard}
+              />
+            </div>
+          )}
+          <CheckoutBar
+            totalCents={totalCents}
+            currency={currency}
+            orderable={lines.length > 0}
+            onCheckout={checkout}
+            onBrowse={onBack}
+          />
+        </div>
       )}
     </div>
   )

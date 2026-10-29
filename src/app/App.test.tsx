@@ -170,7 +170,7 @@ describe('App', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Add Knot Tying' }))
     fireEvent.click(screen.getByRole('link', { name: /View cart/ }))
     await screen.findByRole('heading', { name: 'Your cart' })
-    fireEvent.click(screen.getByRole('link', { name: 'Back to honors' }))
+    fireEvent.click(screen.getByRole('link', { name: 'Browse more' }))
     await waitFor(() => expect(screen.queryByRole('heading', { name: 'Your cart' })).not.toBeInTheDocument())
     expect(screen.getByRole('searchbox', { name: 'Search honors' })).toHaveValue('knot')
     expect(screen.getByRole('link', { name: /View cart/ })).toHaveFocus()
@@ -188,27 +188,27 @@ describe('App', () => {
   })
 
   it('goes home from a cart opened by address, and focuses main when the cart is empty', async () => {
-    // catches: Back to honors that does nothing without history, or focus lost with an empty cart
+    // catches: Browse more that does nothing without history, or focus lost with an empty cart
     serveTwoHonors()
     window.location.hash = '#/cart' // opened by address, not from the catalogue
     render(<App />)
-    fireEvent.click(await screen.findByRole('link', { name: 'Browse honors' }))
+    fireEvent.click(await screen.findByRole('button', { name: 'Browse more' }))
     expect(await screen.findByRole('searchbox', { name: 'Search honors' })).toBeInTheDocument()
     expect(window.location.hash).toBe('#/')
     expect(screen.getByRole('main')).toHaveFocus()
   })
 
-  it('never leaves the store from Back to honors, even after browser Back into a cart opened by address', async () => {
-    // catches: Back to honors calling history.back() for a cart the buyer reached by browser Back, which leaves the site
+  it('never leaves the store from Browse more, even after browser Back into a cart opened by address', async () => {
+    // catches: Browse more calling history.back() for a cart the buyer reached by browser Back, which leaves the site
     serveTwoHonors()
     window.location.hash = '#/cart' // opened by address
     render(<App />)
-    fireEvent.click(await screen.findByRole('link', { name: 'Back to honors' }))
+    fireEvent.click(await screen.findByRole('button', { name: 'Browse more' }))
     await waitFor(() => expect(screen.queryByRole('heading', { name: 'Your cart' })).not.toBeInTheDocument())
     act(() => window.history.back()) // the buyer presses the browser's Back: the cart again
     await screen.findByRole('heading', { name: 'Your cart' })
     const back = vi.spyOn(window.history, 'back') // from here on, count history moves
-    fireEvent.click(screen.getByRole('link', { name: 'Back to honors' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Browse more' }))
     expect(back).not.toHaveBeenCalled()
     expect(await screen.findByRole('searchbox', { name: 'Search honors' })).toBeInTheDocument()
     expect(window.location.hash).toBe('#/')
@@ -229,7 +229,7 @@ describe('App', () => {
       serveTwoHonors() // two honors
       window.location.hash = '#/cart' // opened by address
       render(<App />) // draw the app
-      fireEvent.click(await screen.findByRole('link', { name: 'Back to honors' })) // to the catalogue
+      fireEvent.click(await screen.findByRole('link', { name: 'Browse more' })) // to the catalogue
       fireEvent.click(await screen.findByRole('button', { name: 'Add Knot Tying' })) // pick one
       const bar = screen.getByRole('link', { name: /View cart/ }) // the bar's link
       bar.addEventListener('click', (event) => event.preventDefault()) // a browser opens a new tab: this tab's address stays
@@ -237,7 +237,7 @@ describe('App', () => {
       act(() => window.history.back()) // the buyer presses the browser's Back: the address-opened cart
       await screen.findByRole('heading', { name: 'Your cart' }) // the cart shows
       const back = vi.spyOn(window.history, 'back') // count history moves
-      fireEvent.click(screen.getByRole('link', { name: 'Back to honors' })) // the link under test
+      fireEvent.click(screen.getByRole('link', { name: 'Browse more' })) // the link under test
       expect(back).not.toHaveBeenCalled() // went home instead
       expect(await screen.findByRole('searchbox', { name: 'Search honors' })).toBeInTheDocument() // on the catalogue
       back.mockRestore() // put history back
@@ -245,14 +245,14 @@ describe('App', () => {
   )
 
   it('goes back in history from a cart opened by the bar', async () => {
-    // catches: Back to honors pushing a new entry when the bar opened the cart, so back and the link disagree
+    // catches: Browse more pushing a new entry when the bar opened the cart, so back and the link disagree
     serveTwoHonors()
     render(<App />)
     fireEvent.click(await screen.findByRole('button', { name: 'Add Knot Tying' }))
     fireEvent.click(screen.getByRole('link', { name: /View cart/ }))
     await screen.findByRole('heading', { name: 'Your cart' })
     const back = vi.spyOn(window.history, 'back') // count history moves
-    fireEvent.click(screen.getByRole('link', { name: 'Back to honors' }))
+    fireEvent.click(screen.getByRole('link', { name: 'Browse more' }))
     expect(back).toHaveBeenCalledTimes(1)
     await screen.findByRole('searchbox', { name: 'Search honors' })
     back.mockRestore() // put history back
@@ -271,15 +271,15 @@ describe('App', () => {
     expect(scrollTo).toHaveBeenLastCalledWith(0, 0) // the cart opens at its top
     Object.defineProperty(window, 'scrollY', { value: 0, configurable: true })
     fireEvent.scroll(window) // the hidden catalogue makes the browser clamp to 0; it must not be saved
-    fireEvent.click(screen.getByRole('link', { name: 'Back to honors' }))
+    fireEvent.click(screen.getByRole('link', { name: 'Browse more' }))
     await screen.findByRole('searchbox', { name: 'Search honors' })
     expect(scrollTo).toHaveBeenLastCalledWith(0, 92) // back where the buyer was
     delete (window as { scrollY?: number }).scrollY // jsdom's own again
     scrollTo.mockRestore() // put scrollTo back
   })
 
-  it('drops the Unavailable notice when the buyer leaves the cart screen', async () => {
-    // catches: a notice kept in the provider that shows again on every later opening of the cart
+  it('keeps an unavailable line in the cart, and Checkout takes it out, opens the details page, and Back shows the cart without it', async () => {
+    // catches: an unavailable line hidden on load, or one that stays in the cart that goes to the details page
     const honor = (id: string, name: string, enabled: boolean) => ({
       id,
       name,
@@ -305,11 +305,88 @@ describe('App', () => {
     window.localStorage.setItem(CART_STORAGE_KEY, '{"version":1,"quantities":{"knot-tying":1,"africa-lore":1}}') // a saved cart holding it
     window.location.hash = '#/cart' // opened by address
     render(<App />)
-    expect(await screen.findByText(/Africa Lore is no longer available/)).toBeInTheDocument() // shown once
-    fireEvent.click(screen.getByRole('link', { name: 'Back to honors' })) // leave the cart screen
-    fireEvent.click(await screen.findByRole('link', { name: /View cart/ })) // open it again
+    expect(await screen.findByText('1 item is no longer available')).toBeInTheDocument()
+    expect(screen.getByText('Africa Lore')).toBeInTheDocument() // greyed, still there
+    fireEvent.click(screen.getByRole('button', { name: 'Checkout' }))
+    expect(await screen.findByRole('heading', { name: 'Your details' })).toHaveFocus()
+    expect(window.localStorage.getItem(CART_STORAGE_KEY)).toBe('{"version":1,"quantities":{"knot-tying":1}}')
+    fireEvent.click(screen.getByRole('link', { name: 'Back to cart' }))
     await screen.findByRole('heading', { name: 'Your cart' })
-    expect(screen.queryByText(/no longer available/)).not.toBeInTheDocument() // gone for good
+    expect(screen.queryByText('Africa Lore')).not.toBeInTheDocument()
+    expect(screen.queryByText(/no longer available/)).not.toBeInTheDocument()
+  })
+
+  it('sends a typed #/details address with an unavailable line back to the cart', async () => {
+    // catches: the details page opening by address with a line that cannot be ordered
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (url: string) =>
+        url.endsWith('clubs.json')
+          ? new Response('[]')
+          : url.endsWith('settings.json')
+            ? new Response(JSON.stringify({ currency: 'MYR', defaultPrice: 4 }))
+            : new Response(
+                JSON.stringify([
+                  {
+                    id: 'knot-tying',
+                    name: 'Knot Tying',
+                    category: 'Recreation',
+                    skillLevel: null,
+                    issuedBy: 'General Conference',
+                    enabled: true,
+                    price: 4,
+                    image: null,
+                  },
+                  {
+                    id: 'africa-lore',
+                    name: 'Africa Lore',
+                    category: 'Recreation',
+                    skillLevel: null,
+                    issuedBy: 'General Conference',
+                    enabled: false,
+                    price: 4,
+                    image: null,
+                  },
+                ]),
+              ),
+      ),
+    ) // Africa Lore is switched off
+    window.localStorage.setItem(CART_STORAGE_KEY, '{"version":1,"quantities":{"knot-tying":1,"africa-lore":1}}')
+    window.location.hash = '#/details'
+    render(<App />)
+    expect(await screen.findByRole('heading', { name: 'Your cart' })).toBeInTheDocument()
+    expect(window.location.hash).toBe('#/cart')
+    expect(screen.getByText('Africa Lore')).toBeInTheDocument()
+  })
+
+  it('opens the details page from Checkout with its title, and Back to cart returns to the cart', async () => {
+    // catches: a Checkout that leads nowhere, a stale tab title, or a Back that skips the cart
+    serveTwoHonors()
+    render(<App />)
+    fireEvent.click(await screen.findByRole('button', { name: 'Add Knot Tying' }))
+    fireEvent.click(screen.getByRole('link', { name: /View cart/ }))
+    await screen.findByRole('heading', { name: 'Your cart' })
+    fireEvent.click(screen.getByRole('button', { name: 'Checkout' }))
+    expect(await screen.findByRole('heading', { name: 'Your details' })).toHaveFocus()
+    expect(document.title).toBe('Your details · Pathfinder Honors')
+    expect(window.location.hash).toBe('#/details')
+    const back = vi.spyOn(window.history, 'back') // history back when the cart came before
+    fireEvent.click(screen.getByRole('link', { name: 'Back to cart' }))
+    expect(back).toHaveBeenCalledTimes(1)
+    await screen.findByRole('heading', { name: 'Your cart' })
+    expect(document.title).toBe('Your cart · Pathfinder Honors')
+    back.mockRestore() // put history back
+  })
+
+  it('goes to the cart from Back to cart on a details page opened by address', async () => {
+    // catches: a Back to cart that leaves the store when there is no history behind it
+    serveTwoHonors()
+    window.localStorage.setItem(CART_STORAGE_KEY, '{"version":1,"quantities":{"knot-tying":1}}')
+    window.location.hash = '#/details'
+    render(<App />)
+    fireEvent.click(await screen.findByRole('link', { name: 'Back to cart' }))
+    expect(await screen.findByRole('heading', { name: 'Your cart' })).toBeInTheDocument()
+    expect(window.location.hash).toBe('#/cart')
   })
 
   it('takes over scroll restoration so the saved position wins', () => {
@@ -320,15 +397,18 @@ describe('App', () => {
   })
 
   it('keeps a typed name in the order form while the buyer goes back to add an honor and returns', async () => {
-    // catches: form values kept inside the cart screen, which unmounts when the buyer goes back to the catalogue
+    // catches: form values kept inside the details page, which unmounts when the buyer goes back to the catalogue
     serveTwoHonors()
     render(<App />)
     fireEvent.click(await screen.findByRole('button', { name: 'Add Knot Tying' }))
     fireEvent.click(screen.getByRole('link', { name: /View cart/ }))
+    fireEvent.click(await screen.findByRole('button', { name: 'Checkout' }))
     fireEvent.change(await screen.findByLabelText('Name'), { target: { value: 'Jo Tan' } })
-    fireEvent.click(screen.getByRole('link', { name: 'Back to honors' }))
+    fireEvent.click(screen.getByRole('link', { name: 'Back to cart' }))
+    fireEvent.click(await screen.findByRole('link', { name: 'Browse more' }))
     await waitFor(() => expect(screen.queryByRole('heading', { name: 'Your cart' })).not.toBeInTheDocument())
     fireEvent.click(screen.getByRole('link', { name: /View cart/ }))
+    fireEvent.click(await screen.findByRole('button', { name: 'Checkout' }))
     expect(await screen.findByLabelText('Name')).toHaveValue('Jo Tan')
   })
 
@@ -387,6 +467,7 @@ describe('App', () => {
     render(<App />)
     fireEvent.click(await screen.findByRole('button', { name: 'Add Knot Tying' }))
     fireEvent.click(screen.getByRole('link', { name: /View cart/ }))
+    fireEvent.click(await screen.findByRole('button', { name: 'Checkout' }))
     fireEvent.change(await screen.findByLabelText('Name'), { target: { value: 'Jo Tan' } })
     fireEvent.change(screen.getByLabelText('Email'), { target: { value: 'jc@mail.com' } })
     fireEvent.change(screen.getByLabelText('Phone'), { target: { value: '0312345678' } })
@@ -397,5 +478,9 @@ describe('App', () => {
     expect(screen.getByText(/^PF-\d{8}-[2-9A-HJKMNP-Z]{4}$/)).toBeInTheDocument()
     expect(window.localStorage.getItem(CART_STORAGE_KEY)).toBe('{"version":1,"quantities":{}}')
     expect(screen.queryByTestId('cart-bar')).not.toBeInTheDocument()
+    act(() => window.history.back()) // the buyer presses Back on the confirmation
+    expect(await screen.findByRole('heading', { name: 'Your cart' })).toBeInTheDocument() // the cart, now empty, not the catalogue
+    expect(screen.getByText('Your cart is empty')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Browse more' })).toBeInTheDocument()
   })
 })

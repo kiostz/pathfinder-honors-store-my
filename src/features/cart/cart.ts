@@ -4,6 +4,17 @@ import type { Honor } from '@/shared/data/types.ts' // the shape of an honor
 import { sortByName } from '@/shared/sort/sort-by-name.ts' // names A to Z
 
 export const MAX_QUANTITY = 99 // the most of one honor in a cart
+export const GONE_NAME = 'Item no longer in the shop' // what a line shows when its honor is gone from the data
+
+/**
+ * Names an order line for a screen reader; gone honors carry their id so two of them differ.
+ * @param honor the honor on the line, or null when it is gone from the data
+ * @param honorId the id saved in the cart
+ * @return the honor's name, or the gone name with the id
+ */
+export function lineLabel(honor: Honor | null, honorId: string): string {
+  return honor?.name ?? `${GONE_NAME} (${honorId})` // the id tells gone lines apart
+}
 
 // Honor id to quantity, 1 to 99; 0 is never kept.
 export type CartQuantities = Record<string, number>

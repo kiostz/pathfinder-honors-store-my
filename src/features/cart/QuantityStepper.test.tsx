@@ -105,4 +105,30 @@ describe('QuantityStepper', () => {
     fireEvent.blur(field)
     expect(onChange).toHaveBeenCalledWith(2)
   })
+
+  it('with trashAtOne the first control at 1 is a Remove button that calls onChange(0)', () => {
+    // catches: the cart keeping a dead minus at 1, so a buyer cannot remove the line from the stepper
+    const onChange = vi.fn() // records every committed quantity
+    render(<QuantityStepper honorName="Knot Tying" quantity={1} onChange={onChange} trashAtOne />)
+    fireEvent.click(screen.getByRole('button', { name: 'Remove Knot Tying' }))
+    expect(onChange).toHaveBeenCalledWith(0)
+    expect(screen.queryByRole('button', { name: 'One fewer Knot Tying' })).not.toBeInTheDocument()
+  })
+
+  it('with trashAtOne the first control at 2 is still One fewer', () => {
+    // catches: the trash showing above 1, which would drop a line with two in it
+    const onChange = vi.fn() // records every committed quantity
+    render(<QuantityStepper honorName="Knot Tying" quantity={2} onChange={onChange} trashAtOne />)
+    fireEvent.click(screen.getByRole('button', { name: 'One fewer Knot Tying' }))
+    expect(onChange).toHaveBeenCalledWith(1)
+    expect(screen.queryByRole('button', { name: 'Remove Knot Tying' })).not.toBeInTheDocument()
+  })
+
+  it('without trashAtOne minus at 1 still calls onChange(0) as One fewer', () => {
+    // catches: the catalogue card stepper changing with the cart's
+    const { onChange, fewer } = setup(1)
+    fireEvent.click(fewer)
+    expect(onChange).toHaveBeenCalledWith(0)
+    expect(screen.queryByRole('button', { name: 'Remove Knot Tying' })).not.toBeInTheDocument()
+  })
 })

@@ -120,7 +120,7 @@ export function OrderForm({ lines, currency, clubs }: { lines: OrderLine[]; curr
     // The order is sent: nothing below may say it was not.
     try {
       writeSentOrder(order) // for the confirmation page
-      window.location.replace(ORDER_SENT_HASH) // the confirmation first, so no empty-cart frame paints; Back leads to the catalogue
+      window.location.replace(ORDER_SENT_HASH) // the confirmation first, so no empty-cart frame paints; Back leads to the cart
       removeOrderLines(order.lines) // only after Web3Forms confirmed, and only what the email listed
       reset() // empty fields
       numberRef.current = null // the next order is a new one

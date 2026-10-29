@@ -1,96 +1,108 @@
-// One order line on the cart screen, or the removed note that replaces it after removal, so a buyer can change a quantity or take the removal back.
+// One line of the cart card: an order line with its stepper, or an Unavailable line with its tag and trash, so a buyer can change a quantity or remove what is no longer sold.
 
-import { useEffect, useRef } from 'react' // handles on the line and its parts
+import { useRef } from 'react' // whether the last input was the keyboard
 import type { Honor } from '@/shared/data/types.ts' // the shape of an honor
 import { formatPrice } from '@/shared/format/price.ts' // "RM 4.00"
-import { HONOR_ROW_BOX, HONOR_ROW_END_BOX } from '@/shared/ui/honor-row-box.ts' // the same box as a catalogue line
 import { PatchPicture } from '@/shared/ui/PatchPicture.tsx' // picture or category mark
-import { lineTotalCents } from './cart.ts' // the line's price
+import { TrashIcon } from './cart-icons.tsx' // the trash on an Unavailable line
+import { CART_LINE_BOX, CART_PICTURE_BOX } from './cart-line-box.ts' // the line's boxes
+import { GONE_NAME, lineLabel, lineTotalCents } from './cart.ts' // the gone name, the label and the line's price
 import { QuantityStepper } from './QuantityStepper.tsx' // the quantity control
 
 /**
- * Draws one order line; when `removed` is set it draws the removed note with Undo at the height the line had.
- * @param honor the honor on this line
- * @param quantity the quantity now (0 while removed)
+ * Draws one line.
+ * @param id the honor id saved in the cart, so a gone honor's line can still be found for focus
+ * @param honor the honor on this line, or null when it is gone from the data
+ * @param quantity the quantity in the cart
  * @param currency the currency code from the settings
- * @param removed the quantity and line height from before the removal, or null while the line is in the cart
- * @param onChange called with the new quantity and the line's current height in pixels
- * @param onUndo called when the buyer takes the removal back
+ * @param unavailable true when the honor is switched off or gone: greyed, no stepper, left out of the total
+ * @param onChange called with a new quantity from 1 to 99
+ * @param onRemove called when the line is removed (trash, or a typed 0), with true when the keyboard did it
  * @return an `li` element
  */
 export function CartLine({
+  id,
   honor,
   quantity,
   currency,
-  removed,
+  unavailable,
   onChange,
-  onUndo,
+  onRemove,
 }: {
-  honor: Honor
+  id: string
+  honor: Honor | null
   quantity: number
   currency: string
-  removed: { quantity: number; height: number } | null
-  onChange: (quantity: number, height: number) => void
-  onUndo: () => void
+  unavailable: boolean
+  onChange: (quantity: number) => void
+  onRemove: (keyboard: boolean) => void
 }) {
-  const lineRef = useRef<HTMLLIElement>(null) // measured on a change, so the removed note can keep its height
-  const isRemoved = removed !== null // which of the two shapes to draw
-  const lastRemoved = useRef(isRemoved) // the shape drawn before, so only a real swap moves focus
-
-  // After a swap, move focus to where the buyer's hands are (Undo after a removal, the number after Undo), unless they moved it elsewhere.
-  useEffect(() => {
-    if (lastRemoved.current === isRemoved) return // no swap (also true on mount and on a strict-mode re-run)
-    lastRemoved.current = isRemoved // remember the new shape
-    // One tick later: a blur commits while the browser is still moving focus to the tapped control, so only then is it known where focus went.
-    const timer = window.setTimeout(() => {
-      const line = lineRef.current // this line's element
-      const active = document.activeElement // where focus is now
-      if (active !== null && active !== document.body && !line?.contains(active)) return // the buyer chose another control: leave it
-      line?.querySelector(isRemoved ? 'button' : 'input')?.focus() // the removed note's only button is Undo
-    }, 0) // after the focus change
-    return () => window.clearTimeout(timer) // a swap back or leaving the screen cancels it
-  }, [isRemoved])
+  const keyboard = useRef(false) // set by the latest input in this line, read when a removal comes from the stepper
+  const name = honor?.name ?? GONE_NAME // the line's name
   return (
-    // Same box as a catalogue line; the removed note keeps the line's measured height so the lines below stay put.
+    // The line; the capture handlers note which input is about to cause a removal, before the stepper reacts to it.
     <li
-      ref={lineRef} // for measuring and focus
-      className={HONOR_ROW_BOX}
-      style={isRemoved ? { minHeight: removed.height } : undefined} // measured, so the swap moves nothing
+      data-line-id={id} // from the saved id, so a gone honor has one too; lets the screen find the line to focus
+      onKeyDownCapture={() => (keyboard.current = true)} // a key press (Enter in the field, Enter or Space on the trash)
+      onClickCapture={(event) => (keyboard.current = event.detail === 0)} // a keyboard-made click has detail 0
+      onBlurCapture={() => (keyboard.current = false)} // a field committed by leaving it
+      className={CART_LINE_BOX}
     >
-      {isRemoved ? (
-        <>
-          {/* The removed note, left; Undo, right where the stepper was. */}
-          <p className="text-text-muted min-w-0 flex-1 wrap-break-word">{`${honor.name} removed.`}</p>
-          <button
-            type="button" // not a form submit
-            aria-label={`Undo removing ${honor.name}`} // names the honor
-            onClick={onUndo} // restore the earlier quantity
-            className="border-border-subtle text-accent focus-visible:outline-focus-ring min-h-11 shrink-0 rounded-md border px-4 font-medium transition-transform duration-(--duration-press) focus-visible:outline-2 focus-visible:outline-offset-2 active:scale-[0.97]" // 44 px, press feedback, focus ring
-          >
-            Undo
-          </button>
-        </>
-      ) : (
-        <>
-          {/* Picture or category mark, as in the catalogue. */}
+      {/* Picture or category mark in its rounded box; greyed when unavailable. */}
+      <div className={`${CART_PICTURE_BOX} ${unavailable ? 'opacity-50 grayscale' : ''}`}>
+        {honor === null ? (
+          <div className="bg-bg-soft size-full" /> /* a plain soft box for a gone honor */
+        ) : (
           <PatchPicture honor={honor} />
-          {/* Name that wraps, the price of one under it. */}
-          <div className="flex min-w-0 flex-1 flex-col items-start gap-1">
-            <span className="wrap-break-word">{honor.name}</span> {/* the name */}
-            <span className="text-text-muted text-sm">{`${formatPrice(honor.price, currency)} each`}</span>{' '}
-            {/* one's price */}
-          </div>
-          {/* The line total over the stepper. */}
-          <div className={HONOR_ROW_END_BOX}>
-            <span>{formatPrice(lineTotalCents({ honor, quantity }) / 100, currency)}</span> {/* the line total */}
-            <QuantityStepper
-              honorName={honor.name} // for the labels
-              quantity={quantity} // the cart's quantity
-              onChange={(next) => onChange(next, lineRef.current?.offsetHeight ?? 0)} // with the height to keep
-            />
-          </div>
-        </>
-      )}
+        )}
+      </div>
+      {/* Two lines: name and total, then "each" and the stepper (or the tag and the trash). */}
+      <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+        {/* Name and total. */}
+        <div className="flex items-baseline justify-between gap-3 leading-5">
+          <span className={`wrap-break-word ${unavailable ? 'text-text-muted' : 'font-bold'}`}>{name}</span>{' '}
+          {/* the name */}
+          {unavailable ? (
+            <span className="text-text-muted shrink-0 text-sm">Not in your total</span> // where the total was
+          ) : (
+            <span className="shrink-0 font-bold tabular-nums">
+              {formatPrice(lineTotalCents({ honor: honor as Honor, quantity }) / 100, currency)}
+            </span> // the line total
+          )}
+        </div>
+        <div className="flex items-center justify-between gap-3">
+          {unavailable ? (
+            <>
+              <span className="bg-tag-warning text-on-tag-warning rounded-pill px-2 py-0.5 text-xs font-medium">
+                Unavailable
+              </span>{' '}
+              {/* the tag */}
+              {/* 36 px drawn, 44 px tap area. */}
+              <span className="bg-bg-soft rounded-pill flex size-9 items-center justify-center">
+                <button
+                  type="button" // not a form submit
+                  aria-label={`Remove ${lineLabel(honor, id)}`} // names the line, a gone one by id
+                  onClick={() => onRemove(keyboard.current)} // keyboard or pointer, as noted above
+                  className="text-trash focus-visible:outline-focus-ring rounded-pill flex size-11 shrink-0 items-center justify-center focus-visible:outline-2 focus-visible:outline-offset-0 active:scale-[0.97]" // 44 px tap area over the 36 px disc
+                >
+                  <TrashIcon />
+                </button>
+              </span>
+            </>
+          ) : (
+            <>
+              <span className="text-text-muted text-[0.8125rem]">{`${formatPrice((honor as Honor).price, currency)} each`}</span>{' '}
+              {/* one's price, 13 px */}
+              <QuantityStepper
+                honorName={name} // for the labels
+                quantity={quantity} // the cart's quantity
+                trashAtOne // the cart's look: trash at 1
+                onChange={(next) => (next === 0 ? onRemove(keyboard.current) : onChange(next))} // 0 is a removal, like the trash
+              />
+            </>
+          )}
+        </div>
+      </div>
     </li>
   )
 }

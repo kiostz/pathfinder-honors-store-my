@@ -1,0 +1,220 @@
+// Tests for the details page: the order form with only orderable lines, the way back to the cart when something unavailable is left, and the order the buyer's Checkout actually sends.
+
+import { act, fireEvent, render, screen } from '@testing-library/react' // render and query
+import { afterEach, describe, expect, it, vi } from 'vitest' // test API and mocks
+import { useHashRoute } from '@/app/use-hash-route.ts' // which screen the address names
+import { CART_STORAGE_KEY } from '@/features/cart/cart-storage.ts' // where the cart is kept
+import { CartProvider } from '@/features/cart/CartProvider.tsx' // the cart state
+import { CartScreen } from '@/features/cart/CartScreen.tsx' // Checkout lives here
+import type { CatalogueLoad } from '@/features/catalogue/use-catalogue-data.ts' // the load the screen receives
+import type { Honor } from '@/shared/data/types.ts' // the shape of an honor
+import { DetailsScreen } from './DetailsScreen.tsx' // code under test
+import { OrderFormProvider } from './OrderFormProvider.tsx' // the form state
+
+// The real captcha loads hCaptcha's script, which a test must not do; this stand-in ticks on demand.
+vi.mock('@/features/order/Captcha.tsx', () => ({
+  Captcha: ({ onToken }: { onToken: (token: string | null) => void }) => (
+    <button type="button" onClick={() => onToken('token-1')}>
+      Tick captcha
+    </button>
+  ),
+}))
+
+const honors: Honor[] = [
+  { id: 'knot-tying', name: 'Knot Tying', price: 4, enabled: true },
+  { id: 'africa-lore', name: 'Africa Lore', price: 5, enabled: false },
+].map((partial) => ({
+  ...partial,
+  category: 'Nature',
+  skillLevel: null,
+  issuedBy: 'General Conference',
+  image: null,
+})) // Knot Tying on, Africa Lore off
+
+const ready: CatalogueLoad = {
+  state: { status: 'ready', honors, settings: { currency: 'MYR', defaultPrice: 4 }, clubs: [] },
+  showSkeleton: false,
+  retry: () => {},
+} // the load as the app hands it over
+
+afterEach(() => {
+  vi.unstubAllGlobals() // fetch back
+  window.location.hash = '' // back to the catalogue address
+})
+
+/**
+ * Stores a cart and renders the details page over it, with the address set to the details page.
+ * @param quantities honor id to quantity
+ * @param onBack called by Back to cart
+ */
+function renderDetails(quantities: Record<string, number>, onBack: () => void = () => {}) {
+  window.localStorage.setItem(CART_STORAGE_KEY, JSON.stringify({ version: 1, quantities })) // the saved cart
+  window.location.hash = '#/details' // as a buyer arrives
+  render(
+    <CartProvider honors={honors}>
+      <OrderFormProvider>
+        <DetailsScreen data={ready} onBack={onBack} />
+      </OrderFormProvider>
+    </CartProvider>,
+  )
+}
+
+/** Fills the form and ticks the stand-in captcha. */
+function fillForm() {
+  fireEvent.change(screen.getByLabelText('Name'), { target: { value: 'Jo Tan' } })
+  fireEvent.change(screen.getByLabelText('Email'), { target: { value: 'jc@mail.com' } })
+  fireEvent.change(screen.getByLabelText('Phone'), { target: { value: '0312345678' } })
+  fireEvent.change(screen.getByLabelText('Club name'), { target: { value: 'Hilltop Club' } })
+  fireEvent.click(screen.getByRole('button', { name: 'Tick captcha' }))
+}
+
+describe('DetailsScreen', () => {
+  it('shows its heading and the order form, and Back to cart calls onBack', () => {
+    // catches: a details page without its form, or a way back that does nothing
+    const onBack = vi.fn()
+    renderDetails({ 'knot-tying': 1 }, onBack)
+    expect(screen.getByRole('heading', { name: 'Your details' })).toBeInTheDocument()
+    expect(screen.getByLabelText('Name')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Send order' })).toBeInTheDocument()
+    const notPrevented = fireEvent.click(screen.getByRole('link', { name: 'Back to cart' }))
+    expect(onBack).toHaveBeenCalledTimes(1)
+    expect(notPrevented).toBe(false)
+  })
+
+  it('goes to the cart when the cart has no orderable line', () => {
+    // catches: a typed #/details address opening a form with nothing to order
+    renderDetails({})
+    expect(window.location.hash).toBe('#/cart')
+  })
+
+  it('goes to the cart when an unavailable line is still in it', () => {
+    // catches: a reload or typed address carrying an unavailable line into an order
+    renderDetails({ 'knot-tying': 1, 'africa-lore': 2 })
+    expect(window.location.hash).toBe('#/cart')
+  })
+
+  it('goes to the cart for a gone honor as well', () => {
+    // catches: an id missing from the data counted as orderable
+    renderDetails({ 'knot-tying': 1, 'no-such-honor': 2 })
+    expect(window.location.hash).toBe('#/cart')
+  })
+
+  it('stays on #/details while honors are loading', () => {
+    // catches: a redirect before the data is known, which would send every reload to the cart
+    window.localStorage.setItem(CART_STORAGE_KEY, '{"version":1,"quantities":{"knot-tying":1}}')
+    window.location.hash = '#/details'
+    render(
+      <CartProvider honors={null}>
+        <OrderFormProvider>
+          <DetailsScreen
+            data={{ state: { status: 'loading' }, showSkeleton: false, retry: () => {} }}
+            onBack={() => {}}
+          />
+        </OrderFormProvider>
+      </CartProvider>,
+    )
+    expect(window.location.hash).toBe('#/details')
+    expect(screen.queryByLabelText('Name')).not.toBeInTheDocument()
+  })
+
+  it('leaves for the cart and drops the form when the last orderable honor is switched off while the page is open', () => {
+    // catches: a form left open over a cart that can no longer be ordered, so a buyer could send a wrong order
+    window.localStorage.setItem(CART_STORAGE_KEY, '{"version":1,"quantities":{"knot-tying":1}}') // one orderable line
+    window.location.hash = '#/details' // as a buyer arrives
+    /**
+     * Builds the page over the given honors.
+     * @param list the honors the data holds
+     * @return the page
+     */
+    const page = (list: Honor[]) => (
+      <CartProvider honors={list}>
+        <OrderFormProvider>
+          <DetailsScreen
+            data={{ ...ready, state: { ...ready.state, honors: list } as typeof ready.state }}
+            onBack={() => {}}
+          />
+        </OrderFormProvider>
+      </CartProvider>
+    ) // the page for one data load
+    const { rerender } = render(page(honors))
+    expect(screen.getByLabelText('Name')).toBeInTheDocument() // the form is open
+    rerender(page(honors.map((honor) => ({ ...honor, enabled: false })))) // the data now has Knot Tying off
+    expect(screen.queryByLabelText('Name')).not.toBeInTheDocument()
+    expect(window.location.hash).toBe('#/cart')
+  })
+
+  it('shows no form and does not redirect when the data failed to load', () => {
+    // catches: a form shown with no honors to check against, or a reload with the network down bouncing the buyer
+    window.localStorage.setItem(CART_STORAGE_KEY, '{"version":1,"quantities":{"knot-tying":1}}')
+    window.location.hash = '#/details'
+    render(
+      <CartProvider honors={null}>
+        <OrderFormProvider>
+          <DetailsScreen
+            data={{ state: { status: 'error' }, showSkeleton: false, retry: () => {} }}
+            onBack={() => {}}
+          />
+        </OrderFormProvider>
+      </CartProvider>,
+    )
+    expect(screen.queryByLabelText('Name')).not.toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Try again' })).toBeInTheDocument()
+    expect(window.location.hash).toBe('#/details')
+  })
+
+  it('sends only the orderable lines after Checkout with a switched-off honor in the cart', async () => {
+    // catches: a wrong order that lists a switched-off honor
+    const fetchFn = vi.fn(async () => new Response(JSON.stringify({ success: true }))) // Web3Forms
+    vi.stubGlobal('fetch', fetchFn)
+    window.localStorage.setItem(CART_STORAGE_KEY, '{"version":1,"quantities":{"knot-tying":2,"africa-lore":3}}')
+    window.location.hash = '#/cart'
+    /** @return the cart or the details page, as the address says */
+    const Flow = () => {
+      const route = useHashRoute() // the screen for the address
+      return route === 'details' ? (
+        <DetailsScreen data={ready} onBack={() => {}} />
+      ) : (
+        <CartScreen data={ready} onBack={() => {}} />
+      )
+    }
+    render(
+      <CartProvider honors={honors}>
+        <OrderFormProvider>
+          <Flow />
+        </OrderFormProvider>
+      </CartProvider>,
+    )
+    fireEvent.click(screen.getByRole('button', { name: 'Checkout' }))
+    await screen.findByRole('heading', { name: 'Your details' })
+    fillForm()
+    await act(async () => {
+      fireEvent.click(screen.getByRole('button', { name: 'Send order' }))
+    })
+    expect(fetchFn).toHaveBeenCalledTimes(1)
+    const body = JSON.parse((fetchFn.mock.calls[0] as unknown as [string, RequestInit])[1].body as string) as {
+      message: string
+    }
+    expect(body.message).toContain('Knot Tying')
+    expect(body.message).not.toContain('Africa Lore')
+    expect(body.message).not.toContain('no-such-honor')
+  })
+
+  it('is inert and busy while an order is sending, then free', async () => {
+    // catches: a form that can be edited mid-send, so the sent order differs from what the buyer sees
+    let finish: (response: Response) => void = () => {}
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(() => new Promise<Response>((resolve) => (finish = resolve))),
+    ) // never answers until told
+    vi.spyOn(console, 'error').mockImplementation(() => {})
+    renderDetails({ 'knot-tying': 1 })
+    fillForm()
+    fireEvent.click(screen.getByRole('button', { name: 'Send order' }))
+    expect(screen.getByLabelText('Name').closest('[inert]')).not.toBeNull()
+    expect(screen.getByLabelText('Name').closest('[aria-busy="true"]')).not.toBeNull()
+    expect(screen.getByRole('heading', { name: 'Your details' }).closest('[inert]')).not.toBeNull()
+    expect(screen.getByRole('link', { name: 'Back to cart' }).closest('[inert]')).not.toBeNull() // leaving is frozen too
+    await act(async () => finish(new Response('{}', { status: 500 }))) // the send fails
+    expect(screen.getByLabelText('Name').closest('[inert]')).toBeNull()
+  })
+})

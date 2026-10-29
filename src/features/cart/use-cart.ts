@@ -8,12 +8,10 @@ export type CartValue = {
   quantities: CartQuantities // honor id to quantity
   quantityOf: (honorId: string) => number // 0 when the honor is not in the cart
   setQuantity: (honorId: string, quantity: number) => void // change one honor, 0 removes it
-  unavailableNames: string[] // names of honors taken out of the cart because they are switched off, A to Z
-  unavailableUnnamed: number // how many taken out had gone from the data, so have no name
   removeOrderLines: (
     orderLines: Array<{ honorId: string; quantity: number }>,
   ) => void // takes a sent order's quantities out, called once an order is sent
-  clearUnavailable: () => void // ends the Unavailable notice, called when the buyer leaves the cart screen
+  takeOutUnavailable: () => void // removes every switched-off and gone id in one write; called by Checkout
 }
 
 export const CartContext = createContext<CartValue | null>(null) // null outside a CartProvider

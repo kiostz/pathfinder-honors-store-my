@@ -1,4 +1,4 @@
-// Tests for CartProvider: start from storage, write each change, take unavailable honors out once honors load.
+// Tests for CartProvider: start from storage, write each change, keep unavailable honors until takeOutUnavailable removes them in one write.
 
 import { StrictMode } from 'react' // React's double render and double effect run in development
 import { act, fireEvent, render, screen } from '@testing-library/react' // render and query
@@ -23,15 +23,14 @@ const honors: Honor[] = [
 
 /**
  * Shows the cart as text and offers one button to change it.
- * @return the quantities, the notice values and a button
+ * @return the quantities and buttons
  */
 function Probe() {
-  const { quantities, setQuantity, removeOrderLines, unavailableNames, unavailableUnnamed } = useCart() // the cart
+  const { quantities, setQuantity, removeOrderLines, takeOutUnavailable } = useCart() // the cart
   return (
     <>
       <p data-testid="quantities">{JSON.stringify(quantities)}</p>
-      <p data-testid="names">{unavailableNames.join('|')}</p>
-      <p data-testid="unnamed">{unavailableUnnamed}</p>
+      <button onClick={takeOutUnavailable}>take out unavailable</button>
       <button onClick={() => setQuantity('knot-tying', 5)}>five knots</button>
       <button
         onClick={() =>
@@ -124,40 +123,82 @@ describe('CartProvider', () => {
     expect(window.localStorage.getItem(CART_STORAGE_KEY)).toBe('{"version":1,"quantities":{"africa-lore":1,"gone":2}}')
   })
 
-  it('takes out switched-off and missing honors when honors arrive, and writes', () => {
-    // catches: a switched-off honor staying in the cart, or the stored cart keeping it
+  it('keeps switched-off and missing ids when honors arrive, with no write', () => {
+    // catches: the old take-out on load, which hides an unavailable line before the buyer sees it
+    const stored = '{"version":1,"quantities":{"knot-tying":2,"africa-lore":1,"no-such-honor":3}}'
+    window.localStorage.setItem(CART_STORAGE_KEY, stored)
+    const setItem = vi.spyOn(Storage.prototype, 'setItem') // counts the writes
+    const rerender = renderProvider(null)
+    act(() => rerender(honors))
+    expect(screen.getByTestId('quantities')).toHaveTextContent('{"knot-tying":2,"africa-lore":1,"no-such-honor":3}')
+    expect(setItem).not.toHaveBeenCalled()
+    expect(window.localStorage.getItem(CART_STORAGE_KEY)).toBe(stored)
+  })
+
+  it('keeps the unavailable lines across a reload (storage round trip)', () => {
+    // catches: a stored cart that loses the unavailable line, so a reload hides it
+    window.localStorage.setItem(CART_STORAGE_KEY, '{"version":1,"quantities":{"africa-lore":1,"ants":2}}')
+    const first = render(
+      <CartProvider honors={honors}>
+        <Probe />
+      </CartProvider>,
+    )
+    fireEvent.click(screen.getByText('five knots')) // a write, so storage holds the whole cart
+    first.unmount() // the page closes
+    renderProvider(honors) // and opens again
+    expect(screen.getByTestId('quantities')).toHaveTextContent('{"africa-lore":1,"ants":2,"knot-tying":5}')
+  })
+
+  it('takeOutUnavailable removes every switched-off and missing id in one write and keeps the rest', () => {
+    // catches: an unavailable line left in an order, or a take-out that writes twice or drops an orderable line
     window.localStorage.setItem(
       CART_STORAGE_KEY,
       '{"version":1,"quantities":{"knot-tying":2,"africa-lore":1,"no-such-honor":3}}',
     )
-    const rerender = renderProvider(null)
-    act(() => rerender(honors))
+    const setItem = vi.spyOn(Storage.prototype, 'setItem') // counts the writes
+    renderProvider(honors)
+    fireEvent.click(screen.getByText('take out unavailable'))
     expect(screen.getByTestId('quantities')).toHaveTextContent('{"knot-tying":2}')
-    expect(screen.getByTestId('names')).toHaveTextContent('Africa Lore')
-    expect(screen.getByTestId('unnamed')).toHaveTextContent('1')
-    expect(window.localStorage.getItem(CART_STORAGE_KEY)).toBe('{"version":1,"quantities":{"knot-tying":2}}')
+    expect(setItem.mock.calls.map(([, value]) => value)).toEqual(['{"version":1,"quantities":{"knot-tying":2}}']) // one write
   })
 
-  it('takes out once and writes once under StrictMode, keeping only the kept ids', () => {
-    // catches: a render-phase take-out that doubles its notice or its stored write when React renders twice
+  it('takeOutUnavailable writes once under StrictMode', () => {
+    // catches: a take-out that writes twice when React runs updaters and effects twice
     window.localStorage.setItem(
       CART_STORAGE_KEY,
       '{"version":1,"quantities":{"knot-tying":2,"africa-lore":1,"no-such-honor":3}}',
     ) // a stored cart with a switched-off and a missing honor
     const setItem = vi.spyOn(Storage.prototype, 'setItem') // counts the writes
-    const tree = (honorsNow: Honor[] | null) => (
+    render(
       <StrictMode>
-        <CartProvider honors={honorsNow}>
+        <CartProvider honors={honors}>
           <Probe />
         </CartProvider>
-      </StrictMode>
+      </StrictMode>,
     ) // the same provider under StrictMode
-    const view = render(tree(null)) // still loading
-    act(() => view.rerender(tree(honors))) // honors arrive
+    fireEvent.click(screen.getByText('take out unavailable'))
     expect(screen.getByTestId('quantities')).toHaveTextContent('{"knot-tying":2}')
-    expect(screen.getByTestId('names')).toHaveTextContent(/^Africa Lore$/) // exactly one name, so a doubled notice fails
-    expect(screen.getByTestId('unnamed')).toHaveTextContent('1')
     expect(setItem.mock.calls.map(([, value]) => value)).toEqual(['{"version":1,"quantities":{"knot-tying":2}}']) // one write
+  })
+
+  it('takeOutUnavailable writes nothing when every id is orderable', () => {
+    // catches: a write (and a re-render) on every Checkout press
+    window.localStorage.setItem(CART_STORAGE_KEY, '{"version":1,"quantities":{"knot-tying":2}}')
+    const setItem = vi.spyOn(Storage.prototype, 'setItem') // counts the writes
+    renderProvider(honors)
+    fireEvent.click(screen.getByText('take out unavailable'))
+    expect(setItem).not.toHaveBeenCalled()
+  })
+
+  it('takeOutUnavailable writes nothing while honors is null', () => {
+    // catches: an emptied cart before the data is known, which would drop orderable lines too
+    const stored = '{"version":1,"quantities":{"africa-lore":1,"gone":2}}'
+    window.localStorage.setItem(CART_STORAGE_KEY, stored)
+    const setItem = vi.spyOn(Storage.prototype, 'setItem') // counts the writes
+    renderProvider(null)
+    fireEvent.click(screen.getByText('take out unavailable'))
+    expect(screen.getByTestId('quantities')).toHaveTextContent('{"africa-lore":1,"gone":2}')
+    expect(setItem).not.toHaveBeenCalled()
   })
 
   it('keeps working in memory when storage throws', () => {

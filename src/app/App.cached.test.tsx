@@ -1,4 +1,4 @@
-// Tests for App when the honors are already loaded at the first draw (a cached load), so the Unavailable notice cannot depend on a slow load.
+// Tests for App when the honors are already loaded at the first draw (a cached load), so the Unavailable line and banner cannot depend on a slow load.
 
 import { fireEvent, render, screen } from '@testing-library/react' // render and query the page
 import { afterEach, describe, expect, it, vi } from 'vitest' // test API and mocks
@@ -49,11 +49,12 @@ afterEach(() => {
 })
 
 describe('App with honors loaded at the first draw', () => {
-  it('still shows the Unavailable notice when the cart is opened from the catalogue', async () => {
-    // catches: the notice cleared on first mount of the catalogue, so a buyer is never told what was taken out
+  it('shows the Unavailable line and banner when the cart is opened from the catalogue', async () => {
+    // catches: the unavailable line taken out on first mount of the catalogue, so a buyer is never shown what went
     window.localStorage.setItem(CART_STORAGE_KEY, '{"version":1,"quantities":{"knot-tying":1,"africa-lore":1}}') // a saved cart holding a switched-off honor
     render(<App />)
     fireEvent.click(screen.getByRole('link', { name: /View cart/ })) // open the cart
-    expect(await screen.findByText(/Africa Lore is no longer available/)).toBeInTheDocument() // told once
+    expect(await screen.findByText('1 item is no longer available')).toBeInTheDocument() // told once
+    expect(screen.getByText('Africa Lore')).toBeInTheDocument() // and still in the list
   })
 })
