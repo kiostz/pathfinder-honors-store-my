@@ -129,6 +129,22 @@ describe('App checkout path', () => {
     expect(window.localStorage.getItem(CART_STORAGE_KEY)).toBe('{"version":1,"quantities":{}}')
   })
 
+  it('freezes the header Back while an order sends, and frees it after a failed send', async () => {
+    // catches: leaving the details page mid-send through the header, which the old in-page link froze
+    vi.spyOn(console, 'error').mockImplementation(() => {})
+    let finish: (response: Response) => void = () => {} // answers the pending send
+    serve(() => new Promise<Response>((resolve) => (finish = resolve))) // never answers until told
+    window.localStorage.setItem(CART_STORAGE_KEY, '{"version":1,"quantities":{"knot-tying":1}}') // one orderable line
+    window.location.hash = '#/details'
+    render(<App />)
+    await screen.findByRole('heading', { name: 'Your details' })
+    fillAndTick()
+    fireEvent.click(screen.getByRole('button', { name: 'Send order' }))
+    expect(within(screen.getByRole('banner')).getByRole('link', { name: 'Back' }).closest('[inert]')).not.toBeNull()
+    await act(async () => finish(new Response('{}', { status: 500 }))) // the send fails
+    expect(within(screen.getByRole('banner')).getByRole('link', { name: 'Back' }).closest('[inert]')).toBeNull()
+  })
+
   it('keeps the form and the orderable line when #/details is reloaded after Checkout', async () => {
     // catches: a reload on the details page that bounces a valid cart to the cart, or brings an unavailable line back
     serve(async () => new Response(JSON.stringify({ success: true })))

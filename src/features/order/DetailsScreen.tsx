@@ -5,7 +5,7 @@ import { resolveCart } from '@/features/cart/cart.ts' // orderable lines and wha
 import { useCart } from '@/features/cart/use-cart.ts' // the cart
 import type { CatalogueLoad } from '@/features/catalogue/use-catalogue-data.ts' // the load the app hands over
 import { CART_HASH, DETAILS_HASH } from '@/shared/routes.ts' // the cart's and this page's addresses
-import { ACTION_BOX } from '@/shared/ui/button-box.ts' // the quiet link and the retry button
+import { ACTION_BOX } from '@/shared/ui/button-box.ts' // the retry button
 import { LOAD_ERROR_TEXT } from '@/shared/ui/load-error-text.ts' // the failed-load message
 import { OrderForm } from './OrderForm.tsx' // the form
 import { useOrderForm } from './use-order-form.ts' // whether a send is running
@@ -13,10 +13,9 @@ import { useOrderForm } from './use-order-form.ts' // whether a send is running
 /**
  * Draws the details page.
  * @param data the load: state and retry
- * @param onBack called by Back to cart
- * @return the heading, a quiet way back and the order form; nothing but the heading while the data loads
+ * @return the heading and the order form; nothing but the heading while the data loads
  */
-export function DetailsScreen({ data, onBack }: { data: CatalogueLoad; onBack: () => void }) {
+export function DetailsScreen({ data }: { data: CatalogueLoad }) {
   const { state, retry } = data // load state and retry
   const { quantities } = useCart() // the cart
   const { sending } = useOrderForm() // an order is being sent: the page waits
@@ -40,16 +39,6 @@ export function DetailsScreen({ data, onBack }: { data: CatalogueLoad; onBack: (
   return (
     // A 768 px centred column like the cart's; inert and busy while an order sends.
     <div inert={sending} aria-busy={sending} className="mx-auto max-w-3xl pb-6">
-      <a
-        href={CART_HASH} // a real address for the link; the click is handed to the app
-        onClick={(event) => {
-          event.preventDefault() // the app decides between history back and going to the cart
-          onBack() // back to the cart
-        }}
-        className={`${ACTION_BOX} text-accent -ml-2 px-2`} // a quiet link
-      >
-        Back to cart
-      </a>
       {/* Where focus lands on arrival. */}
       <h2 ref={headingRef} tabIndex={-1} className="sm:text-title mt-2 text-xl font-bold outline-none">
         Your details

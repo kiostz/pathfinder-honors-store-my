@@ -52,7 +52,7 @@ export function CartBar({
           visible
             ? 'translate-y-0 duration-(--duration-enter) ease-(--ease-out-soft)'
             : 'translate-y-[calc(100%+1rem)] duration-(--duration-exit) ease-(--ease-in-soft)'
-        }`} // a navy pill floating in the page column; enter and exit tokens; it slides below the bottom gap
+        }`} // an oxblood pill floating in the page column; enter and exit tokens; it slides below the bottom gap
       >
         {/* Count and estimated total as last shown; the status above does the announcing. */}
         <div className="min-w-0">
@@ -61,7 +61,7 @@ export function CartBar({
           {/* The estimated total under it. */}
           <p className="text-on-header/80 text-sm">{`Estimated total ${formatPrice(shown.totalCents / 100, currency)}`}</p>
         </div>
-        {/* The one primary action, drawn as a button inside the link: gold on the navy pill. */}
+        {/* The one primary action, drawn as a button inside the link: stone on the oxblood pill. */}
         <span className={`${PILL_BOX} bg-on-header text-header shrink-0`}>View cart</span>
       </a>
     </>

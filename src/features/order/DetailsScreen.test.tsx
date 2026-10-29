@@ -45,15 +45,14 @@ afterEach(() => {
 /**
  * Stores a cart and renders the details page over it, with the address set to the details page.
  * @param quantities honor id to quantity
- * @param onBack called by Back to cart
  */
-function renderDetails(quantities: Record<string, number>, onBack: () => void = () => {}) {
+function renderDetails(quantities: Record<string, number>) {
   window.localStorage.setItem(CART_STORAGE_KEY, JSON.stringify({ version: 1, quantities })) // the saved cart
   window.location.hash = '#/details' // as a buyer arrives
   render(
     <CartProvider honors={honors}>
       <OrderFormProvider>
-        <DetailsScreen data={ready} onBack={onBack} />
+        <DetailsScreen data={ready} />
       </OrderFormProvider>
     </CartProvider>,
   )
@@ -69,16 +68,13 @@ function fillForm() {
 }
 
 describe('DetailsScreen', () => {
-  it('shows its heading and the order form, and Back to cart calls onBack', () => {
-    // catches: a details page without its form, or a way back that does nothing
-    const onBack = vi.fn()
-    renderDetails({ 'knot-tying': 1 }, onBack)
+  it('shows its heading and the order form, with no quiet Back to cart link of its own', () => {
+    // catches: a details page without its form, or a second way back beside the header's < button
+    renderDetails({ 'knot-tying': 1 })
     expect(screen.getByRole('heading', { name: 'Your details' })).toBeInTheDocument()
     expect(screen.getByLabelText('Name')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Send order' })).toBeInTheDocument()
-    const notPrevented = fireEvent.click(screen.getByRole('link', { name: 'Back to cart' }))
-    expect(onBack).toHaveBeenCalledTimes(1)
-    expect(notPrevented).toBe(false)
+    expect(screen.queryByRole('link', { name: 'Back to cart' })).not.toBeInTheDocument()
   })
 
   it('goes to the cart when the cart has no orderable line', () => {
@@ -106,10 +102,7 @@ describe('DetailsScreen', () => {
     render(
       <CartProvider honors={null}>
         <OrderFormProvider>
-          <DetailsScreen
-            data={{ state: { status: 'loading' }, showSkeleton: false, retry: () => {} }}
-            onBack={() => {}}
-          />
+          <DetailsScreen data={{ state: { status: 'loading' }, showSkeleton: false, retry: () => {} }} />
         </OrderFormProvider>
       </CartProvider>,
     )
@@ -129,10 +122,7 @@ describe('DetailsScreen', () => {
     const page = (list: Honor[]) => (
       <CartProvider honors={list}>
         <OrderFormProvider>
-          <DetailsScreen
-            data={{ ...ready, state: { ...ready.state, honors: list } as typeof ready.state }}
-            onBack={() => {}}
-          />
+          <DetailsScreen data={{ ...ready, state: { ...ready.state, honors: list } as typeof ready.state }} />
         </OrderFormProvider>
       </CartProvider>
     ) // the page for one data load
@@ -150,10 +140,7 @@ describe('DetailsScreen', () => {
     render(
       <CartProvider honors={null}>
         <OrderFormProvider>
-          <DetailsScreen
-            data={{ state: { status: 'error' }, showSkeleton: false, retry: () => {} }}
-            onBack={() => {}}
-          />
+          <DetailsScreen data={{ state: { status: 'error' }, showSkeleton: false, retry: () => {} }} />
         </OrderFormProvider>
       </CartProvider>,
     )
@@ -171,11 +158,7 @@ describe('DetailsScreen', () => {
     /** @return the cart or the details page, as the address says */
     const Flow = () => {
       const route = useHashRoute() // the screen for the address
-      return route === 'details' ? (
-        <DetailsScreen data={ready} onBack={() => {}} />
-      ) : (
-        <CartScreen data={ready} onBack={() => {}} />
-      )
+      return route === 'details' ? <DetailsScreen data={ready} /> : <CartScreen data={ready} onBack={() => {}} />
     }
     render(
       <CartProvider honors={honors}>
@@ -213,7 +196,6 @@ describe('DetailsScreen', () => {
     expect(screen.getByLabelText('Name').closest('[inert]')).not.toBeNull()
     expect(screen.getByLabelText('Name').closest('[aria-busy="true"]')).not.toBeNull()
     expect(screen.getByRole('heading', { name: 'Your details' }).closest('[inert]')).not.toBeNull()
-    expect(screen.getByRole('link', { name: 'Back to cart' }).closest('[inert]')).not.toBeNull() // leaving is frozen too
     await act(async () => finish(new Response('{}', { status: 500 }))) // the send fails
     expect(screen.getByLabelText('Name').closest('[inert]')).toBeNull()
   })

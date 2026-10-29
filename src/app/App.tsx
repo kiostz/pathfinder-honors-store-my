@@ -10,10 +10,10 @@ import { ConfirmationScreen } from '@/features/order/ConfirmationScreen.tsx' // 
 import { DetailsScreen } from '@/features/order/DetailsScreen.tsx' // the order form's page
 import { OrderFormProvider } from '@/features/order/OrderFormProvider.tsx' // the order form's values, kept across screens
 import { CART_HASH, CATALOGUE_HASH } from '@/shared/routes.ts' // the catalogue's and the cart's addresses
-import { ThemeControl } from '@/shared/theme/ThemeControl.tsx' // System, Light or Dark
+import { AppHeader } from './AppHeader.tsx' // the header band
 import { useHashRoute } from './use-hash-route.ts' // which screen the address names
 
-const SITE_TITLE = 'Pathfinder Honors' // the catalogue's tab title
+const SITE_TITLE = 'AY Store' // the site's name: the tab title and the header
 const FROM_CATALOGUE_STATE = { fromCatalogue: true } // marks a cart history entry the bar pushed, so history back leads to the catalogue
 const FROM_CART_STATE = { fromCart: true } // marks a details history entry Checkout pushed, so history back leads to the cart
 
@@ -90,7 +90,7 @@ export function App() {
     barClicked.current = true // the next cart entry follows the catalogue one
   }
 
-  /** Browse more: history back when this very history entry was pushed by the bar, otherwise home. */
+  /** Back from the cart: history back when this very history entry was pushed by the bar, otherwise the catalogue. */
   const goBack = () => {
     const fromCatalogue = (window.history.state as { fromCatalogue?: boolean } | null)?.fromCatalogue === true // the entry's own mark, true also after browser Back or Forward into it
     if (fromCatalogue)
@@ -98,7 +98,7 @@ export function App() {
     else window.location.hash = CATALOGUE_HASH // opened by address or reload: there is nothing to go back to
   }
 
-  /** Back to cart: history back when Checkout pushed this very entry, otherwise to the cart by address. */
+  /** Back from the details page: history back when Checkout pushed this very entry, otherwise to the cart by address. */
   const goBackToCart = () => {
     const fromCart = (window.history.state as { fromCart?: boolean } | null)?.fromCart === true // the entry's own mark
     if (fromCart)
@@ -106,17 +106,21 @@ export function App() {
     else window.location.replace(CART_HASH) // opened by address or reload: there is nothing to go back to, and no bounce entry is left
   }
 
+  /** Back from the confirmation: always the catalogue, because the cart it came from is gone. */
+  const goToCatalogue = () => {
+    window.location.hash = CATALOGUE_HASH // the catalogue
+  }
+
   return (
     <CartProvider honors={data.state.status === 'ready' ? data.state.honors : null}>
       <OrderFormProvider>
         <div className="bg-bg-app text-text-default min-h-screen">
-          {/* The navy band: the gold site name and the theme control, in the same 1,200 px column as the page. */}
-          <header className="bg-header text-on-header">
-            <div className="mx-auto flex max-w-300 items-center justify-between gap-3 px-4 py-3">
-              <h1 className="sm:text-title text-xl font-bold">{SITE_TITLE}</h1>
-              <ThemeControl />
-            </div>
-          </header>
+          <AppHeader
+            siteTitle={SITE_TITLE}
+            onCatalogue={route === 'catalogue'} // big name and theme control only on the catalogue
+            backHref={route === 'details' ? CART_HASH : CATALOGUE_HASH} // where the < button leads: the details page to the cart, the rest to the catalogue
+            onBack={route === 'cart' ? goBack : route === 'details' ? goBackToCart : goToCatalogue} // each screen's own back rule
+          />
           <main ref={mainRef} tabIndex={-1} className="mx-auto max-w-300 px-4 pt-6 pb-28 outline-none">
             {/* Stays mounted but hidden while the cart shows, so search, category and pictures survive. */}
             <div hidden={route !== 'catalogue'}>
@@ -125,9 +129,9 @@ export function App() {
             {/* Only while the address names it, so removed notes end when the buyer leaves. */}
             {route === 'cart' && <CartScreen data={data} onBack={goBack} />}
             {/* The order form's own page: Checkout leads here. */}
-            {route === 'details' && <DetailsScreen data={data} onBack={goBackToCart} />}
+            {route === 'details' && <DetailsScreen data={data} />}
             {/* Always home: the cart it came from is gone. */}
-            {route === 'order-sent' && <ConfirmationScreen onBack={() => (window.location.hash = CATALOGUE_HASH)} />}
+            {route === 'order-sent' && <ConfirmationScreen onBack={goToCatalogue} />}
           </main>
           {/* Only on the catalogue, once the honors are loaded; slides up when something is picked. */}
           {route === 'catalogue' && data.state.status === 'ready' && (

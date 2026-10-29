@@ -1,6 +1,6 @@
-# Pathfinder Honors — design
+# AY Store — design
 
-Seed: exact tokens in Task 06 Part A, full file from the built screens at the end of Task 06.
+The tokens live in `src/styles/index.css`; this file says why they are what they are.
 
 ## Product
 
@@ -10,47 +10,57 @@ Seed: exact tokens in Task 06 Part A, full file from the built screens at the en
 - **Feel:** an official store. Clean, trustworthy and plain, like a supplier's catalogue. The patch pictures are the colour; the interface stays quiet.
 - **Voice:** plain and polite. Short sentences, verbs first on buttons. The site says "we" for the people who handle orders. Prices read like `RM 4.00`.
 - **Brand limits:**
-  - The name is always "Pathfinder Honors".
+  - The name is always "AY Store".
   - Words come from the project glossary (honor, not badge or product).
   - The site never copies the official Pathfinder emblem or uniform.
   - English only.
 
 ## Direction
 
-- **Name:** Navy and gold.
-- **Thesis:** an official patch store with its own colours. A calm page with white rounded cards, a dark navy header and buttons with gold lettering, like a club flag or an honor sash trim. The patch pictures carry the rest of the colour.
-- **Memorable thing:** the navy header with the gold "Pathfinder Honors" title, and the same navy-and-gold pill on every action.
+- **Name:** Oxblood and stone.
+- **Thesis:** an everyday store with a warm, grown-up face. A stone page with white rounded cards, a deep oxblood header and oxblood pill buttons with stone lettering. The patch pictures carry the rest of the colour.
+- **Memorable thing:** the oxblood header with the big "AY Store" title, and the same oxblood pill on every action. On the dark theme the buttons turn rose, so the brand colour stays visible.
 - **Reference:** the card and pill structure follows apple.com/shop; the feel is our own. Nothing is copied: no Apple fonts, logos or brand values.
 
 ## Palette
 
-| Role                       | Light                        | Dark                         |
-| -------------------------- | ---------------------------- | ---------------------------- |
-| page                       | `#F5F5F2`                    | `#000000`                    |
-| card                       | `#FFFFFF`                    | `#1C1C1E`                    |
-| ink (text)                 | `#1D1D1F`                    | `#F5F5F7`                    |
-| muted                      | `#6E6E73`                    | `#A1A1A6`                    |
-| hairline                   | `#D2D2D7`                    | `#38383A`                    |
-| navy (header, buttons)     | `#162447`                    | `#0D1730` (header only)      |
-| gold (text on navy, title) | `#F2C14E`                    | `#F2C14E`                    |
-| button                     | navy fill, gold text (9.1:1) | gold fill, navy text (9.1:1) |
+| Role                      | Light                                                      | Dark                                                    |
+| ------------------------- | ---------------------------------------------------------- | ------------------------------------------------------- |
+| page                      | `#F3F0EC` stone                                            | `#000000`                                               |
+| card                      | `#FFFFFF`                                                  | `#1C1C1E`                                               |
+| soft fill (stepper pill)  | `#ECE6E1`                                                  | `#2C2C2E`                                               |
+| ink (text)                | `#1D1D1F` (14.8:1 on page)                                 | `#F5F5F7` (19.3:1)                                      |
+| muted                     | `#55555A` (6.5:1 on page, 6.0:1 on soft fill)              | `#A1A1A6` (8.2:1 on page, 5.4:1 on soft fill)           |
+| hairline                  | `#D2D2D7`                                                  | `#38383A`                                               |
+| oxblood (header, buttons) | `#4A1520`; hover `#33101A`                                 | header `#2A0C12`                                        |
+| stone (text on oxblood)   | `#F3F0EC` (13.0:1; 15.0:1 on hover)                        | `#F3F0EC` (15.9:1 on the header)                        |
+| rose (dark buttons)       | not used                                                   | `#E8B4BC` (11.7:1 on page)                              |
+| button                    | oxblood fill, stone text (13.0:1)                          | rose fill, oxblood text (8.2:1; hover `#F0C4CA`, 9.5:1) |
+| errors                    | `#B91C1C` (5.7:1 on page)                                  | `#F87171` (6.2:1 on a card)                             |
+| trash icon                | `#C62828` (4.5:1 on soft fill)                             | `#FF6B6B` (5.0:1 on soft fill)                          |
+| Unavailable tag           | `#8A4B00` on `#FDF0DC` (6.1:1)                             | `#F5C26B` on `#3D2A0F`                                  |
+| Removed note              | `#F3F0EC` on `#1D1D1F` (14.8:1)                            | `#F5F5F7` on `#3A3A3C` (10.4:1)                         |
+| focus ring                | `#3B82F6` (3.2:1 on page, 3.7:1 on card, 4.0:1 on oxblood) | `#8AB4FF` (10.1:1 on page, 8.7:1 on the header)         |
 
 - The Category mark colours stay as ruled (real patch backgrounds).
-- Red is kept for errors only.
-- Gold is never used as text on the white page; it fails contrast there.
+- Red is kept for errors and the trash icon only.
+- Tan `#B89A7A` is not used: it is 2.6:1 on white, so never text.
+- The focus ring is blue (`#3B82F6`) so it never matches the oxblood it sits on. It measures 2.97:1 on the soft fill, so the cart stepper has its own ring: oxblood in light (12.0:1 on the soft fill, 14.8:1 on a card) and `#8AB4FF` in dark (6.7:1 on the soft fill, 8.2:1 on a card).
+- Print keeps the light values.
+- A test (`src/styles/tokens.test.ts`) holds the listed text pairs at 4.5:1 and the listed icon and ring pairs at 3:1, in light, dark and print.
 
 ## Type
 
 - For now, the system font stack: `system-ui, -apple-system, "Segoe UI", Roboto, sans-serif`. No web font is downloaded.
 - Public Sans (OFL) is the intended face, added later.
 - Big, bold screen titles; plain body text; prices in tabular figures.
-- Exact sizes are set in Task 06 Part A.
+- Exact sizes are in Spacing and sizes below.
 
 ## Layout
 
 ```
 375 px                              desktop (1440)
-Pathfinder Honors        [◐ v]      Pathfinder Honors                    [◐ System v]
+AY Store                 [◐ v]      AY Store                             [◐ System v]
 ( ⌕ Search honors          )        ( ⌕ Search honors   )  [ All categories v ]
 [ All categories v ]
 ┌──────────┐ ┌──────────┐           ┌────────┐ ┌────────┐ ┌────────┐ ┌────────┐
@@ -64,7 +74,7 @@ Pathfinder Honors        [◐ v]      Pathfinder Honors                    [◐ 
 ```
 
 - Cards: white, large radius, no shadow in light mode, a hairline in dark mode.
-- The header is a navy band with the gold title and the theme control.
+- The header is an oxblood band. On the catalogue it holds the big "AY Store" title and the theme control. On inner screens (cart, details, confirmation) it holds a solid < back button on the left and a small "AY Store" above the page title, with no theme control.
 - Buttons are pills. Add turns into a − 1 + pill on the card after the first tap.
 - Content is centred in a 1,200 px column on desktop.
 
@@ -105,13 +115,13 @@ All spacing is on a 4 px scale (Tailwind steps). The gap inside a group is small
 
 ## Principles
 
-- Navy and gold mark every action; nothing else uses them.
+- Oxblood marks every action and the header; nothing else uses it. Dark mode swaps the buttons to rose.
 - The patch is the hero of every card. Text stays small and grey under it.
 - Quiet chrome: no gradients and no decoration. The space between things does the separating.
-- A theme control (System, Light, Dark) sits in the header.
+- A theme control (System, Light, Dark) sits in the header on the catalogue only.
+- One way back on inner screens: the < button in the header. Other buttons say "Browse more" when they lead to the catalogue.
 
-## Rulings this direction would change
+## Fixed choices
 
-- Task 02's row layout becomes a card grid (already ruled 2026-10-29: cards with Add turning into a stepper).
-- Task 03's always-shown row steppers go (same ruling).
-- No other standing ruling changes: the A–Z order, the Category label on each card, the Category filter dropdown, the Category mark colours and the confirmation wording all stay.
+- Honors show as a card grid, with Add turning into a stepper after the first tap, not as rows with always-shown steppers.
+- Unchanged: the A–Z order, the Category label on each card, the Category filter dropdown, the Category mark colours and the confirmation wording.

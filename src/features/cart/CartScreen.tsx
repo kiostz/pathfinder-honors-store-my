@@ -4,8 +4,8 @@ import { useEffect, useRef, useState } from 'react' // the removal, focus moves 
 import type { CatalogueLoad } from '@/features/catalogue/use-catalogue-data.ts' // the load the app hands over
 import { useOrderForm } from '@/features/order/use-order-form.ts' // whether a send is running
 import type { Honor } from '@/shared/data/types.ts' // the shape of an honor
-import { CATALOGUE_HASH, DETAILS_HASH } from '@/shared/routes.ts' // the catalogue's and the details page's addresses
-import { ACTION_BOX } from '@/shared/ui/button-box.ts' // the quiet link and the retry button
+import { DETAILS_HASH } from '@/shared/routes.ts' // the details page's address
+import { ACTION_BOX } from '@/shared/ui/button-box.ts' // the retry button
 import { byText } from '@/shared/sort/sort-by-name.ts' // names A to Z
 import { LOAD_ERROR_TEXT } from '@/shared/ui/load-error-text.ts' // the failed-load message
 import { CartIcon, InfoIcon } from './cart-icons.tsx' // the empty cart's icon and the banner's i
@@ -129,19 +129,6 @@ export function CartScreen({ data, onBack }: { data: CatalogueLoad; onBack: () =
   // The 768 px centred column keeps a line's picture, name and stepper together on desktop; the bottom padding clears the bar and the note.
   return (
     <div inert={sending} aria-busy={sending} className="mx-auto max-w-3xl pb-24">
-      {/* The quiet way back; the empty cart has the bar's Browse more instead. */}
-      {!(state.status === 'ready' && shownLines.length === 0) && (
-        <a
-          href={CATALOGUE_HASH} // a real address for the link; the click is handed to the app
-          onClick={(event) => {
-            event.preventDefault() // the app decides between history back and going home
-            onBack() // back or home
-          }}
-          className={`${ACTION_BOX} text-accent -ml-2 px-2`} // a quiet link
-        >
-          Browse more
-        </a>
-      )}
       {/* Where focus lands on arrival. */}
       <h2 ref={headingRef} tabIndex={-1} className="sm:text-title mt-2 text-xl font-bold outline-none">
         Your cart

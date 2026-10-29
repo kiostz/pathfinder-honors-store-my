@@ -21,6 +21,13 @@ function runScript(storage: { getItem: (key: string) => string | null }) {
   new Function('localStorage', script)(storage) // the script sees this storage and jsdom's document
 }
 
+describe('index.html', () => {
+  it('names the page AY Store', () => {
+    // catches: the old site name left in the tab title before React draws
+    expect(/<title>([^<]*)<\/title>/.exec(html)?.[1]).toBe('AY Store')
+  })
+})
+
 describe('index.html theme script', () => {
   it('sets the attribute for a stored dark pick', () => {
     // catches: the key or attribute name drifting from theme-storage.ts, which brings back the light flash

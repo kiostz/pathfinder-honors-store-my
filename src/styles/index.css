@@ -1,26 +1,28 @@
-/* Tailwind entry and design tokens: navy-and-gold colours with light and dark values, the system font stack, type, radius and motion. */
+/* Tailwind entry and design tokens: oxblood-and-stone colours with light and dark values, the system font stack, type, radius and motion. */
 @import 'tailwindcss';
 
 /* Tokens, named by role. Light values here; the dark values follow below. */
 @theme {
   /* Light colour values. */
-  --color-bg-app: #f5f5f2; /* page */
+  --color-bg-app: #f3f0ec; /* stone page */
   --color-bg-surface: #ffffff; /* cards, popups */
   --color-text-default: #1d1d1f; /* ink */
-  --color-text-muted: #6e6e73; /* grey text, 4.6:1 on the page */
+  --color-text-muted: #55555a; /* grey text, 6.5:1 on the page, 6.0:1 on the soft fill */
   --color-border-subtle: #d2d2d7; /* hairline */
-  --color-accent: #162447; /* navy: buttons */
-  --color-on-accent: #f2c14e; /* gold lettering on navy, 9.1:1 */
-  --color-header: #162447; /* the navy band */
-  --color-on-header: #f2c14e; /* the gold title and control on the band */
+  --color-accent: #4a1520; /* oxblood: buttons, links, stepper symbols */
+  --color-accent-hover: #33101a; /* the deeper oxblood under a pointer, 15.0:1 under the stone lettering */
+  --color-on-accent: #f3f0ec; /* stone lettering on oxblood, 13.0:1 */
+  --color-header: #4a1520; /* the oxblood band */
+  --color-on-header: #f3f0ec; /* the stone title and control on the band, 13.0:1 */
   --color-danger: #b91c1c; /* errors only */
-  --color-bg-soft: #ece6e1; /* soft fill: the cart's stepper pill, 12.3:1 under the navy symbols */
+  --color-bg-soft: #ece6e1; /* soft fill: the cart's stepper pill, 12.0:1 under the oxblood symbols */
   --color-trash: #c62828; /* the trash icon, 4.5:1 on the soft fill, 5.6:1 on a card */
   --color-tag-warning: #fdf0dc; /* the Unavailable tag's fill */
   --color-on-tag-warning: #8a4b00; /* the Unavailable tag's text, 6.1:1 */
   --color-bg-inverse: #1d1d1f; /* the Removed note's fill */
   --color-on-inverse: #f3f0ec; /* text on the Removed note, 14.8:1 */
-  --color-focus-ring: #3b82f6; /* a blue that is neither navy nor gold, 3:1 or more on page, card and band */
+  --color-focus-ring: #3b82f6; /* a blue that is not the brand colour: 3.2:1 on the page, 3.7:1 on a card, 4.0:1 on the band */
+  --color-focus-ring-soft: #4a1520; /* the cart stepper's ring: oxblood, 12.0:1 on the soft fill, 14.8:1 on a card */
   --color-category-mark-border: rgb(
     0 0 0 / 0.12
   ); /* hairline round the category mark, light mode */
@@ -93,18 +95,20 @@ body {
     --color-text-default: #f5f5f7; /* near-white ink, 19.3:1 on the page */
     --color-text-muted: #a1a1a6; /* grey text, 8.2:1 on the page */
     --color-border-subtle: #38383a; /* hairline */
-    --color-accent: #f2c14e; /* gold buttons */
-    --color-on-accent: #162447; /* navy lettering, 9.1:1 */
-    --color-header: #0d1730; /* the darker navy band */
-    --color-on-header: #f2c14e; /* the gold title and control on the band */
+    --color-accent: #e8b4bc; /* rose buttons, 11.7:1 on the page */
+    --color-accent-hover: #f0c4ca; /* a lighter rose under a pointer, 9.5:1 under the oxblood lettering */
+    --color-on-accent: #4a1520; /* oxblood lettering, 8.2:1 */
+    --color-header: #2a0c12; /* the dark oxblood band */
+    --color-on-header: #f3f0ec; /* the stone title and control on the band, 15.9:1 */
     --color-danger: #f87171; /* errors only, 7.6:1 on the page */
-    --color-bg-soft: #2c2c2e; /* the stepper pill, 8.3:1 under the gold symbols */
+    --color-bg-soft: #2c2c2e; /* the stepper pill, 7.8:1 under the rose symbols */
     --color-trash: #ff6b6b; /* the trash icon, 5.0:1 on the soft fill, 4.1:1 on the note */
     --color-tag-warning: #3d2a0f; /* the Unavailable tag's fill */
     --color-on-tag-warning: #f5c26b; /* the tag's text, 8.3:1 */
     --color-bg-inverse: #3a3a3c; /* the Removed note, raised above the black page */
     --color-on-inverse: #f5f5f7; /* text on the note, 10.4:1 */
-    --color-focus-ring: #8ab4ff; /* a light blue, neither navy nor gold, 10:1 on the page */
+    --color-focus-ring: #8ab4ff; /* a light blue, 10.1:1 on the page, 8.7:1 on the band */
+    --color-focus-ring-soft: #8ab4ff; /* the cart stepper's ring: 6.7:1 on the soft fill, 8.2:1 on a card */
     --color-category-mark-border: rgb(
       255 255 255 / 0.2
     ); /* hairline round the category mark, dark mode */
@@ -120,29 +124,31 @@ body {
     --color-text-default: #f5f5f7; /* near-white ink, 19.3:1 on the page */
     --color-text-muted: #a1a1a6; /* grey text, 8.2:1 on the page */
     --color-border-subtle: #38383a; /* hairline */
-    --color-accent: #f2c14e; /* gold buttons */
-    --color-on-accent: #162447; /* navy lettering, 9.1:1 */
-    --color-header: #0d1730; /* the darker navy band */
-    --color-on-header: #f2c14e; /* the gold title and control on the band */
+    --color-accent: #e8b4bc; /* rose buttons, 11.7:1 on the page */
+    --color-accent-hover: #f0c4ca; /* a lighter rose under a pointer, 9.5:1 under the oxblood lettering */
+    --color-on-accent: #4a1520; /* oxblood lettering, 8.2:1 */
+    --color-header: #2a0c12; /* the dark oxblood band */
+    --color-on-header: #f3f0ec; /* the stone title and control on the band, 15.9:1 */
     --color-danger: #f87171; /* errors only, 7.6:1 on the page */
-    --color-bg-soft: #2c2c2e; /* the stepper pill, 8.3:1 under the gold symbols */
+    --color-bg-soft: #2c2c2e; /* the stepper pill, 7.8:1 under the rose symbols */
     --color-trash: #ff6b6b; /* the trash icon, 5.0:1 on the soft fill, 4.1:1 on the note */
     --color-tag-warning: #3d2a0f; /* the Unavailable tag's fill */
     --color-on-tag-warning: #f5c26b; /* the tag's text, 8.3:1 */
     --color-bg-inverse: #3a3a3c; /* the Removed note, raised above the black page */
     --color-on-inverse: #f5f5f7; /* text on the note, 10.4:1 */
-    --color-focus-ring: #8ab4ff; /* a light blue, neither navy nor gold, 10:1 on the page */
+    --color-focus-ring: #8ab4ff; /* a light blue, 10.1:1 on the page, 8.7:1 on the band */
+    --color-focus-ring-soft: #8ab4ff; /* the cart stepper's ring: 6.7:1 on the soft fill, 8.2:1 on a card */
     --color-category-mark-border: rgb(
       255 255 255 / 0.2
     ); /* hairline round the category mark, dark mode */
   }
 }
 
-/* The theme control's list, where the browser draws a plain popup: readable text on the popup's own surface, not the band's gold. */
+/* The theme control's list, where the browser draws a plain popup: readable text on the popup's own surface, not the band's stone. */
 .theme-select option {
   color: var(
     --color-text-default
-  ); /* ink, not the gold the closed control uses */
+  ); /* ink, not the stone the closed control uses */
   background: var(--color-bg-surface); /* white or dark card */
 }
 
@@ -169,9 +175,9 @@ body {
   .club-select::picker-icon {
     color: var(--color-text-muted); /* quieter than the chosen text */
   }
-  /* The theme control's chevron takes the band's gold. */
+  /* The theme control's chevron takes the band's stone. */
   .theme-select::picker-icon {
-    color: var(--color-on-header); /* readable on the navy band */
+    color: var(--color-on-header); /* readable on the oxblood band */
   }
 
   /* The popup list: its own surface, at least the control's width, scrolls past about 10 options. */
@@ -321,12 +327,13 @@ body {
     --color-bg-app: #ffffff; /* white page */
     --color-bg-surface: #ffffff; /* white cards */
     --color-text-default: #1d1d1f; /* near-black text */
-    --color-text-muted: #6e6e73; /* grey text, 5:1 on white */
+    --color-text-muted: #55555a; /* grey text, 7.4:1 on white */
     --color-border-subtle: #d2d2d7; /* light rule lines */
-    --color-accent: #162447; /* the light-mode navy */
-    --color-on-accent: #f2c14e; /* text on that navy */
-    --color-header: #162447; /* the light-mode band */
-    --color-on-header: #f2c14e; /* text on that band */
+    --color-accent: #4a1520; /* the light-mode oxblood */
+    --color-accent-hover: #33101a; /* the light-mode hover oxblood */
+    --color-on-accent: #f3f0ec; /* text on that oxblood */
+    --color-header: #4a1520; /* the light-mode band */
+    --color-on-header: #f3f0ec; /* text on that band */
     --color-danger: #b91c1c; /* the light-mode red */
     --color-bg-soft: #ece6e1; /* the light-mode soft fill */
     --color-trash: #c62828; /* the light-mode trash red */

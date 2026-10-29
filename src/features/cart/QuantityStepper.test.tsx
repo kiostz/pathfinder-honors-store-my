@@ -115,6 +115,17 @@ describe('QuantityStepper', () => {
     expect(screen.queryByRole('button', { name: 'One fewer Knot Tying' })).not.toBeInTheDocument()
   })
 
+  it('with trashAtOne draws the focus ring of every control in the soft-fill ring colour', () => {
+    // catches: the card's blue ring (2.97:1 on the soft fill) staying on the cart's stepper
+    render(<QuantityStepper honorName="Knot Tying" quantity={2} onChange={() => {}} trashAtOne />)
+    for (const control of [
+      screen.getByRole('button', { name: 'One fewer Knot Tying' }),
+      screen.getByRole('textbox', { name: 'Quantity of Knot Tying' }),
+      screen.getByRole('button', { name: 'One more Knot Tying' }),
+    ])
+      expect(control.className).toContain('focus-visible:outline-focus-ring-soft')
+  })
+
   it('with trashAtOne the first control at 2 is still One fewer', () => {
     // catches: the trash showing above 1, which would drop a line with two in it
     const onChange = vi.fn() // records every committed quantity

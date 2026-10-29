@@ -39,7 +39,7 @@ export function ThemeControl() {
         id="theme-control" // the label points here
         value={choice} // the shared pick
         onChange={(event) => setChoice(event.target.value as ThemeChoice)} // the options are the three choices only
-        className="theme-select border-on-header/40 text-on-header focus-visible:outline-focus-ring rounded-pill min-h-11 border bg-transparent pr-3 pl-10 text-base focus-visible:outline-2 focus-visible:outline-offset-2" // the pill outline reads on the navy band
+        className="theme-select border-on-header/40 text-on-header focus-visible:outline-focus-ring rounded-pill min-h-11 border bg-transparent pr-3 pl-10 text-base focus-visible:outline-2 focus-visible:outline-offset-2" // the pill outline reads on the oxblood band
       >
         {/* One option per choice. */}
         {CHOICES.map(({ value, text }) => (

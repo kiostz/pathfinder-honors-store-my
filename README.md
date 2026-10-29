@@ -1,4 +1,4 @@
-# Pathfinder Honors
+# AY Store
 
 Honors store for Pathfinder clubs. Static site (React, Vite, TypeScript, Tailwind) hosted on GitHub Pages at https://kiostz.github.io/pathfinder-honors-store-my/.
 

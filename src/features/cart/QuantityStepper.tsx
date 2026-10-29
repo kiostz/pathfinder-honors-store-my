@@ -8,7 +8,7 @@ const CONTROL_BOX =
   'size-11 bg-transparent text-center text-lg focus-visible:outline-focus-ring focus-visible:outline-2 focus-visible:-outline-offset-2' // 44 px square inside the pill, ring drawn inside so the pill's edge does not clip it
 const BUTTON_BOX = `${CONTROL_BOX} rounded-pill transition-transform duration-(--duration-press) active:scale-[0.97] aria-disabled:opacity-40` // press feedback, dimmed at a limit
 const CART_CONTROL_BOX =
-  'h-11 w-11 shrink-0 rounded-pill bg-transparent text-center text-lg text-accent focus-visible:outline-focus-ring focus-visible:outline-2 focus-visible:outline-offset-0' // 44 px tap area on a 36 px pill; the ring is drawn round the control, so it sits outside the soft fill
+  'h-11 w-11 shrink-0 rounded-pill bg-transparent text-center text-lg text-accent focus-visible:outline-focus-ring-soft focus-visible:outline-2 focus-visible:outline-offset-0' // 44 px tap area on a 36 px pill; the ring is drawn round the control and has its own colour, which passes 3:1 on both the soft fill and the card
 const CART_BUTTON_BOX = `${CART_CONTROL_BOX} flex items-center justify-center transition-transform duration-(--duration-press) active:scale-[0.97] aria-disabled:opacity-40` // press feedback, dimmed at a limit
 
 /**
@@ -55,7 +55,7 @@ export function QuantityStepper({
           type="button" // not a form submit
           aria-label={`Remove ${honorName}`} // names the honor
           onClick={() => onChange(0)} // a removal, like a typed 0
-          className={`${button} text-trash`} // red, not the pill's navy
+          className={`${button} text-trash`} // red, not the pill's oxblood
         >
           <TrashIcon />
         </button>

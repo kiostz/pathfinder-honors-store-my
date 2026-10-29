@@ -134,7 +134,7 @@ export function Catalogue({ data }: { data: CatalogueLoad }) {
         <button
           type="button" // not a form submit
           onClick={retry} // run the load again
-          className={`${PILL_BOX} bg-accent text-on-accent focus-visible:outline-focus-ring mt-4 transition-transform duration-(--duration-press) focus-visible:outline-2 focus-visible:outline-offset-2 active:scale-[0.97]`} // navy pill, press feedback, focus ring
+          className={`${PILL_BOX} bg-accent text-on-accent focus-visible:outline-focus-ring mt-4 transition-transform duration-(--duration-press) focus-visible:outline-2 focus-visible:outline-offset-2 active:scale-[0.97]`} // oxblood pill, press feedback, focus ring
         >
           Try again
         </button>
@@ -144,7 +144,7 @@ export function Catalogue({ data }: { data: CatalogueLoad }) {
         <button
           type="button" // not a form submit
           onClick={clearFilters} // back to the full list
-          className={`${PILL_BOX} bg-accent text-on-accent focus-visible:outline-focus-ring mt-4 transition-transform duration-(--duration-press) focus-visible:outline-2 focus-visible:outline-offset-2 active:scale-[0.97]`} // navy pill, press feedback, focus ring
+          className={`${PILL_BOX} bg-accent text-on-accent focus-visible:outline-focus-ring mt-4 transition-transform duration-(--duration-press) focus-visible:outline-2 focus-visible:outline-offset-2 active:scale-[0.97]`} // oxblood pill, press feedback, focus ring
         >
           Clear filters
         </button>

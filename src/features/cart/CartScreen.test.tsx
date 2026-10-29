@@ -119,13 +119,10 @@ describe('CartScreen lines', () => {
     expect(screen.getByRole('heading', { name: 'Your cart' })).toHaveFocus()
   })
 
-  it('has a quiet Browse more link that calls onBack and cancels the click', () => {
-    // catches: a link that changes the address by itself and disagrees with the back button
-    const onBack = vi.fn()
-    renderScreen({ 'knot-tying': 1 }, ready, onBack)
-    const notPrevented = fireEvent.click(screen.getByRole('link', { name: 'Browse more' }))
-    expect(onBack).toHaveBeenCalledTimes(1)
-    expect(notPrevented).toBe(false)
+  it('has no quiet Browse more link while it holds lines; the header Back is the way out', () => {
+    // catches: a second way back beside the header's < button
+    renderScreen({ 'knot-tying': 1 })
+    expect(screen.queryByRole('link', { name: 'Browse more' })).not.toBeInTheDocument()
   })
 
   it('never says "honors" in the ways back to the shop', () => {

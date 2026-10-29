@@ -68,7 +68,7 @@ export function CardQuantity({
             focusNext.current = 'more' // the Add button is about to unmount
             onChange(1) // the first one
           }}
-          className={`${PILL_BOX} bg-accent text-on-accent focus-visible:outline-focus-ring w-full transition-transform duration-(--duration-press) focus-visible:outline-2 focus-visible:outline-offset-2 active:scale-[0.97] ${FADE_IN}`} // navy pill, press feedback, focus ring
+          className={`${PILL_BOX} bg-accent text-on-accent focus-visible:outline-focus-ring w-full transition-transform duration-(--duration-press) focus-visible:outline-2 focus-visible:outline-offset-2 active:scale-[0.97] ${FADE_IN}`} // oxblood pill, press feedback, focus ring
         >
           Add
         </button>
