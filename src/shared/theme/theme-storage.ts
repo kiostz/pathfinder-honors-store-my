@@ -9,6 +9,7 @@ export const THEME_STORAGE_KEY = 'pathfinder-honors-store-my:theme' // the key; 
  */
 export function readThemeChoice(): ThemeChoice {
   try {
+    // storage may throw when blocked
     const stored = window.localStorage.getItem(THEME_STORAGE_KEY) // the raw saved text
     return stored === 'light' || stored === 'dark' ? stored : 'system' // anything else is System
   } catch {
@@ -22,6 +23,7 @@ export function readThemeChoice(): ThemeChoice {
  */
 export function saveThemeChoice(choice: ThemeChoice): void {
   try {
+    // storage may throw when blocked or full
     window.localStorage.setItem(THEME_STORAGE_KEY, choice) // remembered for the next visit
   } catch {
     // Storage refused: nothing to do, the attribute on <html> carries the pick for this visit.

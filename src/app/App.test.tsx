@@ -90,8 +90,8 @@ describe('App', () => {
     expect(await screen.findByText('Knot Tying')).toBeInTheDocument()
   })
 
-  it('updates the cart bar when + is pressed on a row', async () => {
-    // catches: steppers and bar holding separate state, or a bar that never appears
+  it('updates the cart bar when Add is pressed on a card', async () => {
+    // catches: cards and bar holding separate state, or a bar that never appears
     vi.stubGlobal(
       'fetch',
       vi.fn(async (url: string) =>
@@ -116,9 +116,11 @@ describe('App', () => {
       ),
     ) // one honor at RM 4
     render(<App />)
-    fireEvent.click(await screen.findByRole('button', { name: 'One more Knot Tying' }))
-    fireEvent.click(screen.getByRole('button', { name: 'One more Knot Tying' }))
+    fireEvent.click(await screen.findByRole('button', { name: 'Add Knot Tying' }))
     expect(screen.getByTestId('cart-bar')).not.toHaveAttribute('inert')
+    expect(screen.getByTestId('cart-bar')).toHaveTextContent('1 item')
+    expect(screen.getByTestId('cart-bar')).toHaveTextContent(/Estimated total RM\s?4\.00/)
+    fireEvent.click(screen.getByRole('button', { name: 'One more Knot Tying' })) // the stepper that replaced Add
     expect(screen.getByTestId('cart-bar')).toHaveTextContent('2 items')
     expect(screen.getByTestId('cart-bar')).toHaveTextContent(/Estimated total RM\s?8\.00/)
   })
@@ -150,7 +152,7 @@ describe('App', () => {
     // catches: a bar that does not lead to the cart, focus left behind, or a stale tab title
     serveTwoHonors()
     render(<App />)
-    fireEvent.click(await screen.findByRole('button', { name: 'One more Knot Tying' }))
+    fireEvent.click(await screen.findByRole('button', { name: 'Add Knot Tying' }))
     expect(document.title).toBe('Pathfinder Honors')
     fireEvent.click(screen.getByRole('link', { name: /View cart/ }))
     const heading = await screen.findByRole('heading', { name: 'Your cart' })
@@ -165,7 +167,7 @@ describe('App', () => {
     serveTwoHonors()
     render(<App />)
     fireEvent.change(await screen.findByRole('searchbox', { name: 'Search honors' }), { target: { value: 'knot' } })
-    fireEvent.click(screen.getByRole('button', { name: 'One more Knot Tying' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Add Knot Tying' }))
     fireEvent.click(screen.getByRole('link', { name: /View cart/ }))
     await screen.findByRole('heading', { name: 'Your cart' })
     fireEvent.click(screen.getByRole('link', { name: 'Back to honors' }))
@@ -179,7 +181,7 @@ describe('App', () => {
     // catches: the catalogue staying in the accessibility tree under the cart
     serveTwoHonors()
     render(<App />)
-    fireEvent.click(await screen.findByRole('button', { name: 'One more Knot Tying' }))
+    fireEvent.click(await screen.findByRole('button', { name: 'Add Knot Tying' }))
     fireEvent.click(screen.getByRole('link', { name: /View cart/ }))
     await screen.findByRole('heading', { name: 'Your cart' })
     expect(screen.queryByRole('searchbox', { name: 'Search honors' })).not.toBeInTheDocument()
@@ -228,7 +230,7 @@ describe('App', () => {
       window.location.hash = '#/cart' // opened by address
       render(<App />) // draw the app
       fireEvent.click(await screen.findByRole('link', { name: 'Back to honors' })) // to the catalogue
-      fireEvent.click(await screen.findByRole('button', { name: 'One more Knot Tying' })) // pick one
+      fireEvent.click(await screen.findByRole('button', { name: 'Add Knot Tying' })) // pick one
       const bar = screen.getByRole('link', { name: /View cart/ }) // the bar's link
       bar.addEventListener('click', (event) => event.preventDefault()) // a browser opens a new tab: this tab's address stays
       fireEvent(bar, new MouseEvent(eventType, { ...eventInit, bubbles: true, cancelable: true })) // the click under test
@@ -246,7 +248,7 @@ describe('App', () => {
     // catches: Back to honors pushing a new entry when the bar opened the cart, so back and the link disagree
     serveTwoHonors()
     render(<App />)
-    fireEvent.click(await screen.findByRole('button', { name: 'One more Knot Tying' }))
+    fireEvent.click(await screen.findByRole('button', { name: 'Add Knot Tying' }))
     fireEvent.click(screen.getByRole('link', { name: /View cart/ }))
     await screen.findByRole('heading', { name: 'Your cart' })
     const back = vi.spyOn(window.history, 'back') // count history moves
@@ -261,7 +263,7 @@ describe('App', () => {
     serveTwoHonors()
     const scrollTo = vi.spyOn(window, 'scrollTo').mockImplementation(() => {}) // jsdom does not scroll
     render(<App />)
-    fireEvent.click(await screen.findByRole('button', { name: 'One more Knot Tying' }))
+    fireEvent.click(await screen.findByRole('button', { name: 'Add Knot Tying' }))
     Object.defineProperty(window, 'scrollY', { value: 92, configurable: true })
     fireEvent.scroll(window) // the buyer scrolled to 92
     fireEvent.click(screen.getByRole('link', { name: /View cart/ }))
@@ -321,7 +323,7 @@ describe('App', () => {
     // catches: form values kept inside the cart screen, which unmounts when the buyer goes back to the catalogue
     serveTwoHonors()
     render(<App />)
-    fireEvent.click(await screen.findByRole('button', { name: 'One more Knot Tying' }))
+    fireEvent.click(await screen.findByRole('button', { name: 'Add Knot Tying' }))
     fireEvent.click(screen.getByRole('link', { name: /View cart/ }))
     fireEvent.change(await screen.findByLabelText('Name'), { target: { value: 'Jo Tan' } })
     fireEvent.click(screen.getByRole('link', { name: 'Back to honors' }))
@@ -383,7 +385,7 @@ describe('App', () => {
       ),
     ) // data files and Web3Forms answer
     render(<App />)
-    fireEvent.click(await screen.findByRole('button', { name: 'One more Knot Tying' }))
+    fireEvent.click(await screen.findByRole('button', { name: 'Add Knot Tying' }))
     fireEvent.click(screen.getByRole('link', { name: /View cart/ }))
     fireEvent.change(await screen.findByLabelText('Name'), { target: { value: 'Jo Tan' } })
     fireEvent.change(screen.getByLabelText('Email'), { target: { value: 'jc@mail.com' } })

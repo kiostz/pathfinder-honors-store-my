@@ -4,8 +4,8 @@ import { useState } from 'react' // the text being typed
 import { clampQuantity, MAX_QUANTITY } from './cart.ts' // the 0 to 99 rule
 
 const CONTROL_BOX =
-  'border-border-subtle bg-bg-surface size-11 rounded-md border text-center text-lg focus-visible:outline-focus-ring focus-visible:outline-2 focus-visible:outline-offset-2' // 44 px square, existing focus ring
-const BUTTON_BOX = `${CONTROL_BOX} transition-transform duration-(--duration-press) active:scale-[0.97] aria-disabled:opacity-40` // press feedback, dimmed at a limit
+  'size-11 bg-transparent text-center text-lg focus-visible:outline-focus-ring focus-visible:outline-2 focus-visible:-outline-offset-2' // 44 px square inside the pill, ring drawn inside so the pill's edge does not clip it
+const BUTTON_BOX = `${CONTROL_BOX} rounded-pill transition-transform duration-(--duration-press) active:scale-[0.97] aria-disabled:opacity-40` // press feedback, dimmed at a limit
 
 /**
  * Draws the stepper.
@@ -35,7 +35,11 @@ export function QuantityStepper({
 
   return (
     // One labelled group so a screen reader names all three controls together.
-    <div role="group" aria-label={`Quantity of ${honorName}`} className="flex shrink-0 items-center">
+    <div
+      role="group" // one named group
+      aria-label={`Quantity of ${honorName}`} // names the honor
+      className="border-border-subtle bg-bg-surface rounded-pill flex shrink-0 items-center border"
+    >
       {/* Minus: aria-disabled at 0 so focus stays on it. */}
       <button
         type="button" // not a form submit

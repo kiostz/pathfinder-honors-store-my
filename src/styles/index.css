@@ -282,7 +282,8 @@ body {
 
 /* Print: the light colour values, whatever the theme; the dark rules above are screen only, so paper never gets light text. */
 @media print {
-  :root,
+  :root, /* every page, whatever the theme */
+  /* and a picked theme, which would otherwise outrank the selector above */
   :root[data-theme] {
     color-scheme: light; /* the browser draws light controls */
     --color-bg-app: #ffffff; /* white page */

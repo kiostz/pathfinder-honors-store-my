@@ -93,14 +93,34 @@ describe('Catalogue', () => {
     ).toEqual(['Ants', 'Braiding - Advanced', 'Knot Tying', 'Leaves']) // names only, labels and prices checked elsewhere
   })
 
-  it('shows each row its category label, and the label is not a button', async () => {
+  it('shows each card its category label, and the label is not a button', async () => {
     // catches: a missing label, or a label that looks and acts like a control
     serve([honor('Ants', 'Nature'), honor('Knot Tying', 'Recreation')])
     render(<CatalogueWithCart />)
     const row = (await screen.findByText('Ants')).closest('li')!
     expect(within(row).getByText('Nature')).toBeInTheDocument()
-    expect(within(row).queryByRole('button', { name: 'Nature' })).not.toBeInTheDocument() // the stepper buttons are the row's only buttons
+    expect(within(row).queryByRole('button', { name: 'Nature' })).not.toBeInTheDocument() // Add is the card's only button
     expect(within(row).queryByRole('link')).not.toBeInTheDocument()
+  })
+
+  it('keeps the grid one column below 348 px, where two columns are too narrow for the 134 px stepper', async () => {
+    // catches: two columns on a 320 px phone, where the stepper sticks out of its card
+    serve([honor('Ants', 'Nature')])
+    render(<CatalogueWithCart />)
+    await screen.findByText('Ants')
+    const classes = screen.getByRole('list').className.split(' ') // the grid's utility classes
+    expect(classes).toContain('grid-cols-1') // one column by default
+    expect(classes).toContain('min-[348px]:grid-cols-2') // two only from 348 px
+    expect(classes).not.toContain('grid-cols-2') // never two at every width
+  })
+
+  it('draws the category label in the default text colour, not the muted grey that fails contrast on its chip', async () => {
+    // catches: muted text (3.4:1) on the light chip
+    serve([honor('Ants', 'Nature')])
+    render(<CatalogueWithCart />)
+    const label = within((await screen.findByText('Ants')).closest('li')!).getByText('Nature') // the chip
+    expect(label).toHaveClass('text-text-default')
+    expect(label).not.toHaveClass('text-text-muted')
   })
 
   it('leaves out switched-off honors', async () => {
@@ -119,17 +139,34 @@ describe('Catalogue', () => {
     expect(row).toHaveTextContent(/RM\s?4\.00/)
   })
 
-  it('gives every row a quantity stepper at 0', async () => {
-    // catches: a row with no way to order, or a stepper that starts above 0
+  it('shows every card its name, Category label, price and Add, with no stepper', async () => {
+    // catches: a stepper on every card before anything is picked, or a card missing one of its four parts
     serve([honor('Ants', 'Nature'), honor('Knot Tying', 'Recreation')])
     render(<CatalogueWithCart />)
     await screen.findByText('Ants')
-    const fields = screen.getAllByRole('textbox', { name: /^Quantity of / })
-    expect(fields.map((field) => field.getAttribute('aria-label'))).toEqual([
-      'Quantity of Ants',
-      'Quantity of Knot Tying',
-    ])
-    expect(fields.every((field) => (field as HTMLInputElement).value === '0')).toBe(true)
+    const cards = screen.getAllByRole('listitem')
+    expect(cards).toHaveLength(2)
+    const ants = within(cards[0])
+    expect(ants.getByText('Ants')).toBeInTheDocument()
+    expect(ants.getByText('Nature')).toBeInTheDocument()
+    expect(cards[0]).toHaveTextContent(/RM\s?4\.00/)
+    expect(ants.getByRole('button', { name: 'Add Ants' })).toBeInTheDocument()
+    expect(screen.queryByRole('textbox', { name: /^Quantity of / })).not.toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Add Knot Tying' })).toBeInTheDocument()
+  })
+
+  it('keeps a card in the cart showing its stepper after a search hides and shows it again', async () => {
+    // catches: a card that forgets its quantity when the search unmounts it
+    serve([honor('Ants', 'Nature'), honor('Knot Tying', 'Recreation')])
+    render(<CatalogueWithCart />)
+    fireEvent.click(await screen.findByRole('button', { name: 'Add Ants' }))
+    const search = screen.getByRole('searchbox', { name: 'Search honors' })
+    fireEvent.change(search, { target: { value: 'knot' } }) // Ants is hidden
+    expect(screen.queryByText('Ants')).not.toBeInTheDocument()
+    fireEvent.change(search, { target: { value: '' } }) // and shown again
+    expect(screen.getByRole('textbox', { name: 'Quantity of Ants' })).toHaveValue('1')
+    expect(screen.queryByRole('button', { name: 'Add Ants' })).not.toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Add Knot Tying' })).toBeInTheDocument()
   })
 
   it('counts the honors, singular for one', async () => {
@@ -167,7 +204,7 @@ describe('Catalogue', () => {
     expect(await screen.findByText('No honors are switched on yet. Check back soon.')).toBeInTheDocument()
   })
 
-  it('shows nothing for 300 ms, then the toolbar box, the count line box and 6 rows with picture, name and label bars', () => {
+  it('shows nothing for 300 ms, then the toolbar box, the count line box and 6 card shapes with picture, name, label, price and button bars', () => {
     // catches: a skeleton flash on fast loads, or a skeleton missing the count line or label bar so rows jump when data arrives
     vi.stubGlobal(
       'fetch',
@@ -185,10 +222,9 @@ describe('Catalogue', () => {
     expect(rows).toHaveLength(6)
     expect(children.slice(2)).toHaveLength(1) // the rows sit in one list box after the count line
     for (const row of rows) {
-      expect(row.querySelectorAll('[data-skeleton-part]')).toHaveLength(3) // picture square, name bar, label bar
       expect(
         Array.from(row.querySelectorAll('[data-skeleton-part]')).map((part) => part.getAttribute('data-skeleton-part')),
-      ).toEqual(['picture', 'name', 'label'])
+      ).toEqual(['picture', 'name', 'label', 'price', 'button']) // the card's five parts, top to bottom
     }
   })
 
@@ -203,15 +239,15 @@ describe('Catalogue', () => {
       vi.advanceTimersByTime(300)
     })
     expect(screen.getByTestId('catalogue-skeleton-count')).toHaveClass('mt-3', 'min-h-6')
-    const skeletonRowClass = screen.getAllByTestId('catalogue-skeleton-row')[0].className // the skeleton row's box
-    const skeletonRowEndClass = screen.getAllByTestId('catalogue-skeleton-row-end')[0].className // the skeleton's right column
+    const skeletonCardClass = screen.getAllByTestId('catalogue-skeleton-row')[0].className // the skeleton card's box
+    const skeletonGridClass = screen.getByTestId('catalogue-skeleton-grid').className // the skeleton's grid
     first.unmount()
     vi.unstubAllGlobals() // drop the never-answering fetch
     serve([honor('Knot Tying', 'Recreation')])
     render(<CatalogueWithCart />)
     expect(await screen.findByText('1 honor')).toHaveClass('mt-3', 'min-h-6')
-    expect(screen.getByRole('listitem').className).toBe(skeletonRowClass) // the honor row and the skeleton row share one box
-    expect(screen.getByTestId('honor-row-end').className).toBe(skeletonRowEndClass) // and the price-and-stepper column
+    expect(screen.getByRole('listitem').className).toBe(skeletonCardClass) // the honor card and the skeleton card share one box
+    expect(screen.getByRole('list').className).toBe(skeletonGridClass) // and the grid
   })
 
   it('shows the error and Try again, and Try again shows the list', async () => {

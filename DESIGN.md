@@ -24,16 +24,16 @@ Seed: exact tokens in Task 06 Part A, full file from the built screens at the en
 
 ## Palette
 
-| Role | Light | Dark |
-|---|---|---|
-| page | `#F5F5F2` | `#000000` |
-| card | `#FFFFFF` | `#1C1C1E` |
-| ink (text) | `#1D1D1F` | `#F5F5F7` |
-| muted | `#6E6E73` | `#A1A1A6` |
-| hairline | `#D2D2D7` | `#38383A` |
-| navy (header, buttons) | `#162447` | `#0D1730` (header only) |
-| gold (text on navy, title) | `#F2C14E` | `#F2C14E` |
-| button | navy fill, gold text (9.1:1) | gold fill, navy text (9.1:1) |
+| Role                       | Light                        | Dark                         |
+| -------------------------- | ---------------------------- | ---------------------------- |
+| page                       | `#F5F5F2`                    | `#000000`                    |
+| card                       | `#FFFFFF`                    | `#1C1C1E`                    |
+| ink (text)                 | `#1D1D1F`                    | `#F5F5F7`                    |
+| muted                      | `#6E6E73`                    | `#A1A1A6`                    |
+| hairline                   | `#D2D2D7`                    | `#38383A`                    |
+| navy (header, buttons)     | `#162447`                    | `#0D1730` (header only)      |
+| gold (text on navy, title) | `#F2C14E`                    | `#F2C14E`                    |
+| button                     | navy fill, gold text (9.1:1) | gold fill, navy text (9.1:1) |
 
 - The Category mark colours stay as ruled (real patch backgrounds).
 - Red is kept for errors only.

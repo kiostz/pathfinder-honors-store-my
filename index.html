@@ -7,7 +7,8 @@
     <script>
       // Sets the saved theme before the first paint, so a buyer who picked Dark never sees a light flash.
       ;(function () {
-        // the function keeps the script's names out of the page's globals
+        // keeps the names below out of the page's globals
+        // blocked storage throws
         try {
           var theme = localStorage.getItem('pathfinder-honors-store-my:theme') // same key as theme-storage.ts
           if (theme === 'light' || theme === 'dark')
@@ -15,7 +16,7 @@
         } catch (error) {
           // Storage is blocked: the page stays on System, as theme-storage.ts does.
         }
-      })()
+      })() // runs at once
     </script>
   </head>
   <body>

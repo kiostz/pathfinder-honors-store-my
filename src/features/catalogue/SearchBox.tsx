@@ -34,7 +34,7 @@ export function SearchBox({
         onChange={(event) => onChange(event.target.value)} // report every keystroke
         placeholder="Search honors" // visible hint
         autoComplete="off" // no browser history dropdown
-        className="border-border-subtle bg-bg-app focus-visible:outline-focus-ring min-h-11 w-full rounded-md border px-3 text-base focus-visible:outline-2 focus-visible:outline-offset-2" // 44 px tall, 16 px text, focus ring
+        className="border-border-subtle bg-bg-surface focus-visible:outline-focus-ring rounded-pill min-h-11 w-full border px-4 text-base focus-visible:outline-2 focus-visible:outline-offset-2" // 44 px tall, 16 px text, focus ring
       />
     </div>
   )

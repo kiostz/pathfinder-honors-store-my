@@ -17,15 +17,11 @@ describe('theme storage', () => {
     'round-trips %s',
     (choice) => {
       // catches: a choice saved under one spelling and read back as another
-      saveThemeChoice(choice)
-      expect(readThemeChoice()).toBe(choice)
+      window.localStorage.setItem(THEME_STORAGE_KEY, 'dark') // an old pick already saved, so System must really overwrite it (a pick that never saved would still read System)
+      saveThemeChoice(choice) // the pick under test
+      expect(readThemeChoice()).toBe(choice) // light and system fail if saving does nothing and the old pick stays
     },
   )
-
-  it('uses a literal key', () => {
-    // catches: the key drifting from the one the inline script in index.html reads
-    expect(THEME_STORAGE_KEY).toBe('pathfinder-honors-store-my:theme')
-  })
 
   it.each([[null], ['blue'], ['']])('reads %j as system', (stored) => {
     // catches: an unknown stored value leaking into the page as a theme

@@ -35,7 +35,7 @@ export function CategoryFilter({
           if (value === (selected ?? ALL_VALUE)) return // already chosen: nothing to report
           onSelect(value === ALL_VALUE ? null : value) // report the choice, All as null
         }}
-        className="category-filter border-border-subtle bg-bg-app text-text-default focus-visible:outline-focus-ring min-h-11 w-47 rounded-md border px-3 text-base focus-visible:outline-2 focus-visible:outline-offset-2" // same box as the search box; a fixed width so choosing a shorter category does not move the search box
+        className="category-filter border-border-subtle bg-bg-surface text-text-default focus-visible:outline-focus-ring rounded-pill min-h-11 w-42 border px-4 text-base focus-visible:outline-2 focus-visible:outline-offset-2 sm:w-47" // same box as the search box; a fixed width so choosing a shorter category does not move the search box
       >
         {/* All categories comes first. */}
         <option value={ALL_VALUE}>All categories</option>
