@@ -1,6 +1,6 @@
 // The order form's context and its hook, in their own file so OrderFormProvider.tsx exports only a component.
 
-import { createContext, useContext } from 'react' // context and its reader
+import { createContext, useContext, type RefObject } from 'react' // context, its reader and the ref type
 import type { OrderField, OrderFormValues } from './order-form.ts' // the form's shapes
 
 // What every reader of the form gets.
@@ -11,13 +11,19 @@ export type OrderFormValue = {
   touch: (field: OrderField) => void // mark one field as left
   touchAll: () => void // mark every field, so every error shows
   reset: () => void // empty the form
+  sending: boolean // an order is on its way, kept here so leaving the cart screen cannot lose it
+  sendingRef: RefObject<boolean> // the same flag, readable in the same tick as a second press
+  setSending: (sending: boolean) => void // starts or ends a send
+  failure: { text: string } | null // the alert of the last failed send, a new object per failure
+  setFailure: (failure: { text: string } | null) => void // shows or clears the alert
+  numberRef: RefObject<{ signature: string; number: string } | null> // the order number kept for retries of the same order
 }
 
 export const OrderFormContext = createContext<OrderFormValue | null>(null) // null outside an OrderFormProvider
 
 /**
  * Reads the order form.
- * @return the values, which fields were left, and how to change them
+ * @return the values, which fields were left, how to change them, and the send's state
  */
 export function useOrderForm(): OrderFormValue {
   const value = useContext(OrderFormContext) // the nearest provider

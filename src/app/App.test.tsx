@@ -3,6 +3,7 @@
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react' // render and query the page
 import { afterEach, describe, expect, it, vi } from 'vitest' // test API and mocks
 import { CART_STORAGE_KEY } from '@/features/cart/cart-storage.ts' // the stored cart's key
+import { writeSentOrder } from '@/features/order/sent-order-storage.ts' // fills the stored order
 import { App } from './App.tsx' // code under test
 
 // The real captcha loads hCaptcha's script, which a test must not do; this stand-in ticks and expires on demand.
@@ -20,6 +21,7 @@ vi.mock('@/features/order/Captcha.tsx', () => ({
 }))
 
 afterEach(() => {
+  window.sessionStorage.clear() // no sent order left
   vi.unstubAllGlobals() // restore fetch
   vi.restoreAllMocks() // a spy left by a failed test must not leak into the next case
   window.location.hash = '' // back to the catalogue address
@@ -324,5 +326,72 @@ describe('App', () => {
     await waitFor(() => expect(screen.queryByRole('heading', { name: 'Your cart' })).not.toBeInTheDocument())
     fireEvent.click(screen.getByRole('link', { name: /View cart/ }))
     expect(await screen.findByLabelText('Name')).toHaveValue('Jo Tan')
+  })
+
+  it('shows the confirmation at #/order-sent with its heading focused, its title and no cart bar or catalogue', async () => {
+    // catches: the confirmation address opening the catalogue, a stale title, focus left behind, or a cart bar over the confirmation
+    serveTwoHonors()
+    window.localStorage.setItem(CART_STORAGE_KEY, '{"version":1,"quantities":{"knot-tying":2}}') // would show a bar on the catalogue
+    writeSentOrder({
+      number: 'PF-20261028-4K7Q',
+      sentAt: '2026-10-28T10:00:00.000Z',
+      currency: 'MYR',
+      lines: [],
+      totalCents: 0,
+      name: 'J. Cruz',
+      email: 'jc@mail.com',
+      phone: '+60 12-345 6789',
+      club: { subject: 'Eagles', email: 'Eagles' },
+    })
+    window.location.hash = '#/order-sent'
+    render(<App />)
+    const heading = await screen.findByRole('heading', { name: 'Order sent' })
+    expect(heading).toHaveFocus()
+    expect(document.title).toBe('Order sent · Pathfinder Honors')
+    expect(screen.getByText('PF-20261028-4K7Q')).toBeInTheDocument()
+    expect(screen.queryByTestId('cart-bar')).not.toBeInTheDocument()
+    expect(screen.queryByRole('searchbox', { name: 'Search honors' })).not.toBeInTheDocument()
+  })
+
+  it('sends an order from the cart and lands on the confirmation with an empty cart', async () => {
+    // catches: pieces that work alone but do not join: the cart not cleared, no confirmation, or the number not shown
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (url: string) =>
+        url.includes('web3forms')
+          ? new Response(JSON.stringify({ success: true }))
+          : url.endsWith('clubs.json')
+            ? new Response('[]')
+            : url.endsWith('settings.json')
+              ? new Response(JSON.stringify({ currency: 'MYR', defaultPrice: 4 }))
+              : new Response(
+                  JSON.stringify([
+                    {
+                      id: 'knot-tying',
+                      name: 'Knot Tying',
+                      category: 'Recreation',
+                      skillLevel: null,
+                      issuedBy: 'General Conference',
+                      enabled: true,
+                      price: 4,
+                      image: null,
+                    },
+                  ]),
+                ),
+      ),
+    ) // data files and Web3Forms answer
+    render(<App />)
+    fireEvent.click(await screen.findByRole('button', { name: 'One more Knot Tying' }))
+    fireEvent.click(screen.getByRole('link', { name: /View cart/ }))
+    fireEvent.change(await screen.findByLabelText('Name'), { target: { value: 'Jo Tan' } })
+    fireEvent.change(screen.getByLabelText('Email'), { target: { value: 'jc@mail.com' } })
+    fireEvent.change(screen.getByLabelText('Phone'), { target: { value: '0312345678' } })
+    fireEvent.change(screen.getByLabelText('Club name'), { target: { value: 'Hilltop Club' } })
+    fireEvent.click(screen.getByRole('button', { name: 'Tick captcha' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Send order' }))
+    expect(await screen.findByRole('heading', { name: 'Order sent' })).toHaveFocus()
+    expect(screen.getByText(/^PF-\d{8}-[2-9A-HJKMNP-Z]{4}$/)).toBeInTheDocument()
+    expect(window.localStorage.getItem(CART_STORAGE_KEY)).toBe('{"version":1,"quantities":{}}')
+    expect(screen.queryByTestId('cart-bar')).not.toBeInTheDocument()
   })
 })

@@ -1,4 +1,4 @@
-// App shell: the site header and the screen the address names (catalogue or cart), so every screen hangs off one frame.
+// App shell: the site header and the screen the address names (catalogue, cart or order confirmation), so every screen hangs off one frame.
 
 import { useEffect, useLayoutEffect, useRef, type MouseEvent } from 'react' // scroll, focus and title around a screen change, and the click's type
 import { CartBar } from '@/features/cart/CartBar.tsx' // the fixed bar with the item count
@@ -7,6 +7,7 @@ import { useCart } from '@/features/cart/use-cart.ts' // clears the Unavailable 
 import { CartScreen } from '@/features/cart/CartScreen.tsx' // the cart screen
 import { Catalogue } from '@/features/catalogue/Catalogue.tsx' // the buyer's list of honors
 import { useCatalogueData } from '@/features/catalogue/use-catalogue-data.ts' // the one load
+import { ConfirmationScreen } from '@/features/order/ConfirmationScreen.tsx' // the screen after a sent order
 import { OrderFormProvider } from '@/features/order/OrderFormProvider.tsx' // the order form's values, kept across screens
 import { CATALOGUE_HASH } from '@/shared/routes.ts' // the catalogue's address
 import { useHashRoute } from './use-hash-route.ts' // which screen the address names
@@ -19,7 +20,7 @@ const FROM_CATALOGUE_STATE = { fromCatalogue: true } // marks a cart history ent
  * @param route the screen the address names
  * @return nothing drawn
  */
-function ClearUnavailableOnLeave({ route }: { route: 'catalogue' | 'cart' }) {
+function ClearUnavailableOnLeave({ route }: { route: 'catalogue' | 'cart' | 'order-sent' }) {
   const { clearUnavailable } = useCart() // the cart's way to end the notice
   const previous = useRef(route) // the screen before this one
   // runs after each route change
@@ -68,6 +69,8 @@ export function App() {
       if (barClicked.current) window.history.replaceState(FROM_CATALOGUE_STATE, '') // this entry follows the catalogue one
       barClicked.current = false // only this opening
       window.scrollTo(0, 0) // the cart opens at its top (its heading takes focus itself)
+    } else if (route === 'order-sent') {
+      window.scrollTo(0, 0) // the confirmation opens at its top (its heading takes focus itself)
     } else {
       window.scrollTo(0, catalogueScroll.current) // back to where the buyer was
       const bar = barRef.current // the bar, when the cart has lines
@@ -79,7 +82,12 @@ export function App() {
 
   // The tab title follows the screen.
   useEffect(() => {
-    document.title = route === 'cart' ? `Your cart · ${SITE_TITLE}` : SITE_TITLE // names the screen in history and tabs
+    document.title =
+      route === 'cart' // the cart screen
+        ? `Your cart · ${SITE_TITLE}` // names the cart
+        : route === 'order-sent' // the confirmation
+          ? `Order sent · ${SITE_TITLE}` // names the confirmation
+          : SITE_TITLE // names the screen in history and tabs
   }, [route])
 
   /**
@@ -110,11 +118,13 @@ export function App() {
           </header>
           <main ref={mainRef} tabIndex={-1} className="mx-auto max-w-3xl px-4 pt-6 pb-24 outline-none">
             {/* Stays mounted but hidden while the cart shows, so search, category and pictures survive. */}
-            <div hidden={route === 'cart'}>
+            <div hidden={route !== 'catalogue'}>
               <Catalogue data={data} />
             </div>
             {/* Only while the address names it, so removed notes end when the buyer leaves. */}
             {route === 'cart' && <CartScreen data={data} onBack={goBack} />}
+            {/* Always home: the cart it came from is gone. */}
+            {route === 'order-sent' && <ConfirmationScreen onBack={() => (window.location.hash = CATALOGUE_HASH)} />}
           </main>
           {/* Only on the catalogue, once the honors are loaded; slides up when something is picked. */}
           {route === 'catalogue' && data.state.status === 'ready' && (

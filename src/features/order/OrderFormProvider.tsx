@@ -1,6 +1,7 @@
-// Holds the order form's values above the routes, in memory only, so a buyer who goes back to add an honor finds the form as they left it.
+// Holds the order form's values and the running send above the routes, in memory only, so a buyer who goes back mid-send finds the form as they left it.
 
-import { useCallback, useMemo, useState, type ReactNode } from 'react' // state and context
+import { useCallback, useMemo, useRef, useState, type ReactNode } from 'react' // state, refs and context
+import { useCart } from '@/features/cart/use-cart.ts' // a changed cart ends the last failure's alert
 import { EMPTY_ORDER_FORM, type OrderField, type OrderFormValues } from './order-form.ts' // the form's shapes
 import { OrderFormContext } from './use-order-form.ts' // the context this provider fills
 
@@ -14,6 +15,18 @@ const ALL_FIELDS: OrderField[] = ['name', 'email', 'phone', 'club', 'otherClub']
 export function OrderFormProvider({ children }: { children: ReactNode }) {
   const [values, setValues] = useState<OrderFormValues>(EMPTY_ORDER_FORM) // what the buyer has typed
   const [touched, setTouched] = useState<Partial<Record<OrderField, boolean>>>({}) // fields the buyer has left
+  const [sending, setSendingState] = useState(false) // an order is on its way
+  const [failure, setFailure] = useState<{ text: string } | null>(null) // the alert of the last failed send
+  const sendingRef = useRef(false) // blocks a second press in the same tick, before state shows
+  const numberRef = useRef<{ signature: string; number: string } | null>(null) // the order number, kept for retries of the same order
+  const { quantities } = useCart() // the cart, watched for changes
+  const [seenCart, setSeenCart] = useState(quantities) // the cart at the last render
+
+  // A changed cart is a new order, so the last failure's alert goes; adjusted while rendering (React's way to derive state).
+  if (seenCart !== quantities) {
+    setSeenCart(quantities) // this change is handled
+    setFailure(null) // never above a cart the buyer has not sent
+  }
 
   /**
    * Changes one field's value.
@@ -38,11 +51,34 @@ export function OrderFormProvider({ children }: { children: ReactNode }) {
   const reset = useCallback(() => {
     setValues(EMPTY_ORDER_FORM) // empty fields
     setTouched({}) // no errors showing
+    setFailure(null) // a new order starts without the last one's alert
+  }, [])
+
+  /**
+   * Starts or ends a send, in the flag and in the state.
+   * @param next true while an order is on its way
+   */
+  const setSending = useCallback((next: boolean) => {
+    sendingRef.current = next // a second press in this tick sees it
+    setSendingState(next) // the screen shows it
   }, [])
 
   const value = useMemo(
-    () => ({ values, touched, setField, touch, touchAll, reset }),
-    [values, touched, setField, touch, touchAll, reset],
+    () => ({
+      values,
+      touched,
+      setField,
+      touch,
+      touchAll,
+      reset,
+      sending,
+      sendingRef,
+      setSending,
+      failure,
+      setFailure,
+      numberRef,
+    }), // what every reader gets
+    [values, touched, setField, touch, touchAll, reset, sending, setSending, failure], // the refs and setFailure never change
   ) // new only when one changes
   return <OrderFormContext.Provider value={value}>{children}</OrderFormContext.Provider> // everything below reads the form
 }

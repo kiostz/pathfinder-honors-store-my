@@ -41,6 +41,20 @@ export function CartProvider({ honors, children }: { honors: Honor[] | null; chi
     }
   }
 
+  /**
+   * Takes a sent order's lines out of the cart, so only what the buyer added or raised while it was sending stays.
+   * @param orderLines each sent honor and the quantity the order listed
+   */
+  const removeOrderLines = useCallback(
+    (orderLines: Array<{ honorId: string; quantity: number }>) =>
+      setQuantities((current) =>
+        orderLines.reduce(
+          (next, { honorId, quantity }) => withQuantity(next, honorId, (next[honorId] ?? 0) - quantity), // what is left of this honor; 0 or less removes it
+          current, // the cart as it is now, edits made during the send included
+        ),
+      ), // saved by the effect above
+    [], // setQuantities never changes
+  )
   const clearUnavailable = useCallback(
     () => setTaken((current) => (current.names.length === 0 && current.unnamed === 0 ? current : NOTHING_TAKEN)), // no re-render when already empty
     [], // setTaken never changes
@@ -57,11 +71,12 @@ export function CartProvider({ honors, children }: { honors: Honor[] | null; chi
       quantities,
       quantityOf,
       setQuantity,
+      removeOrderLines,
       unavailableNames: taken.names,
       unavailableUnnamed: taken.unnamed,
       clearUnavailable,
     }), // the cart and what the Unavailable notice needs
-    [quantities, quantityOf, setQuantity, taken, clearUnavailable], // new only when one changes
+    [quantities, quantityOf, setQuantity, removeOrderLines, taken, clearUnavailable], // new only when one changes
   ) // stable between renders
   return <CartContext.Provider value={value}>{children}</CartContext.Provider> // everything below reads the cart
 }

@@ -16,7 +16,14 @@ describe('useHashRoute', () => {
     expect(result.current).toBe('cart')
   })
 
-  it.each(['', '#/', '#/admin', '#/cart/x'])(
+  it('names the order confirmation for #/order-sent', () => {
+    // catches: the confirmation address opening the catalogue
+    window.location.hash = '#/order-sent'
+    const { result } = renderHook(() => useHashRoute())
+    expect(result.current).toBe('order-sent')
+  })
+
+  it.each(['', '#/', '#/admin', '#/cart/x', '#/order-sent/x'])(
     'names the catalogue for "%s"',
     (hash) => {
       // catches: an unknown or longer address opening the cart instead of the catalogue

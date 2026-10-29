@@ -22,6 +22,7 @@
   --duration-fast: 150ms;
   --duration-enter: 240ms;
   --duration-exit: 150ms;
+  --delay-loader: 300ms; /* a spinner or skeleton stays hidden this long, so quick waits flash nothing */
 
   /* Easing curves. */
   --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
@@ -192,5 +193,38 @@
   /* The closed control keeps to the name. */
   .club-select selectedcontent .club-detail {
     display: none; /* the grey line belongs to the list */
+  }
+}
+
+/* The spinner on Send order: invisible until --delay-loader has passed, then fades in and turns. */
+.send-spinner {
+  display: inline-block; /* sits in the button's line */
+  width: 1rem; /* a 16 px ring */
+  height: 1rem; /* round */
+  border: 2px solid currentColor; /* the button's text colour */
+  border-right-color: transparent; /* the gap that shows the turn */
+  border-radius: 9999px; /* a circle */
+  opacity: 0; /* hidden until the delay has passed */
+  animation:
+    send-spinner-in var(--duration-fast) var(--ease-out-soft)
+      var(--delay-loader) forwards,
+    send-spinner-turn 0.8s linear var(--delay-loader) infinite; /* one turn in 0.8 s */
+}
+@keyframes send-spinner-in {
+  to {
+    opacity: 1;
+  }
+}
+@keyframes send-spinner-turn {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Reduced motion: the ring appears after the delay but does not turn. */
+@media (prefers-reduced-motion: reduce) {
+  .send-spinner {
+    animation: send-spinner-in var(--duration-fast) var(--ease-out-soft)
+      var(--delay-loader) forwards;
   }
 }

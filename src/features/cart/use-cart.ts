@@ -10,6 +10,9 @@ export type CartValue = {
   setQuantity: (honorId: string, quantity: number) => void // change one honor, 0 removes it
   unavailableNames: string[] // names of honors taken out of the cart because they are switched off, A to Z
   unavailableUnnamed: number // how many taken out had gone from the data, so have no name
+  removeOrderLines: (
+    orderLines: Array<{ honorId: string; quantity: number }>,
+  ) => void // takes a sent order's quantities out, called once an order is sent
   clearUnavailable: () => void // ends the Unavailable notice, called when the buyer leaves the cart screen
 }
 

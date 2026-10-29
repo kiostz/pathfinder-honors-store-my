@@ -26,13 +26,23 @@ const honors: Honor[] = [
  * @return the quantities, the notice values and a button
  */
 function Probe() {
-  const { quantities, setQuantity, unavailableNames, unavailableUnnamed } = useCart() // the cart
+  const { quantities, setQuantity, removeOrderLines, unavailableNames, unavailableUnnamed } = useCart() // the cart
   return (
     <>
       <p data-testid="quantities">{JSON.stringify(quantities)}</p>
       <p data-testid="names">{unavailableNames.join('|')}</p>
       <p data-testid="unnamed">{unavailableUnnamed}</p>
       <button onClick={() => setQuantity('knot-tying', 5)}>five knots</button>
+      <button
+        onClick={() =>
+          removeOrderLines([
+            { honorId: 'knot-tying', quantity: 2 },
+            { honorId: 'ants', quantity: 1 },
+          ])
+        }
+      >
+        remove sent lines
+      </button>
     </>
   )
 }
@@ -73,6 +83,29 @@ describe('CartProvider', () => {
     renderProvider(null)
     fireEvent.click(screen.getByText('five knots'))
     expect(window.localStorage.getItem(CART_STORAGE_KEY)).toBe('{"version":1,"quantities":{"knot-tying":5}}')
+  })
+
+  it('removeOrderLines takes the sent order lines out of the cart and its stored copy', () => {
+    // catches: a sent order whose order lines come back after a reload
+    window.localStorage.setItem(CART_STORAGE_KEY, '{"version":1,"quantities":{"knot-tying":2,"ants":1}}')
+    renderProvider(null)
+    fireEvent.click(screen.getByText('remove sent lines'))
+    expect(screen.getByTestId('quantities')).toHaveTextContent('{}')
+    expect(window.localStorage.getItem(CART_STORAGE_KEY)).toBe('{"version":1,"quantities":{}}')
+  })
+
+  it('removeOrderLines leaves what was added or raised after the order was sent', () => {
+    // catches: a successful send wiping an honor added, or the extra quantity, while the order was on its way
+    window.localStorage.setItem(
+      CART_STORAGE_KEY,
+      '{"version":1,"quantities":{"knot-tying":5,"ants":1,"africa-lore":4}}',
+    )
+    renderProvider(null)
+    fireEvent.click(screen.getByText('remove sent lines'))
+    expect(screen.getByTestId('quantities')).toHaveTextContent('{"knot-tying":3,"africa-lore":4}')
+    expect(window.localStorage.getItem(CART_STORAGE_KEY)).toBe(
+      '{"version":1,"quantities":{"knot-tying":3,"africa-lore":4}}',
+    )
   })
 
   it('does not write on start, so a failed load leaves the stored value as it was', () => {

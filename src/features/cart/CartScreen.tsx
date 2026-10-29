@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react' // removals and the heading focus
 import type { CatalogueLoad } from '@/features/catalogue/use-catalogue-data.ts' // the load the app hands over
 import { OrderForm } from '@/features/order/OrderForm.tsx' // the form under the total
+import { useOrderForm } from '@/features/order/use-order-form.ts' // whether a send is running
 import { formatPrice } from '@/shared/format/price.ts' // "RM 20.00"
 import { CATALOGUE_HASH } from '@/shared/routes.ts' // the catalogue's address
 import { sortByName } from '@/shared/sort/sort-by-name.ts' // names A to Z
@@ -41,6 +42,7 @@ export function CartScreen({ data, onBack }: { data: CatalogueLoad; onBack: () =
   const { state, showSkeleton, retry } = data // load state, skeleton gate and retry
   const { quantities, setQuantity, unavailableNames, unavailableUnnamed } = useCart() // the cart and what was taken out
   const headingRef = useRef<HTMLHeadingElement>(null) // focused on arrival
+  const { sending } = useOrderForm() // an order is being sent: lines and form wait, even after leaving and coming back
   const [removed, setRemoved] = useState<Record<string, { quantity: number; height: number }>>({}) // lines set to zero on this screen, kept until it closes
 
   // Arriving keyboard and screen-reader users start at the heading.
@@ -76,7 +78,7 @@ export function CartScreen({ data, onBack }: { data: CatalogueLoad; onBack: () =
   ]) // the honors of the lines and of the removed notes in one A to Z list, so a removed note keeps its place
   const notice = unavailableNotice(unavailableNames, unavailableUnnamed) // null when nothing was taken out
   return (
-    <>
+    <div inert={sending} aria-busy={sending}>
       {/* Back to the catalogue, quiet; the heading follows. */}
       {backLink('Back to honors', false)}
       {/* Where focus lands on arrival. */}
@@ -164,7 +166,7 @@ export function CartScreen({ data, onBack }: { data: CatalogueLoad; onBack: () =
               <p className="text-text-muted mt-1 text-sm">
                 Estimated total at today&apos;s prices. The treasurer will email you the invoice.
               </p>
-              <OrderForm clubs={state.clubs} />
+              <OrderForm lines={lines} currency={currency} clubs={state.clubs} />
             </>
           )}
           {/* Nothing in the cart: say so and lead back. */}
@@ -176,6 +178,6 @@ export function CartScreen({ data, onBack }: { data: CatalogueLoad; onBack: () =
           )}
         </>
       )}
-    </>
+    </div>
   )
 }

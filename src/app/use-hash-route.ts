@@ -1,7 +1,7 @@
 // Reads which screen the address hash names, so the cart screen has an address that back and reload understand, with no router package.
 
 import { useSyncExternalStore } from 'react' // follows the address
-import { CART_HASH } from '@/shared/routes.ts' // the cart screen's address
+import { CART_HASH, ORDER_SENT_HASH } from '@/shared/routes.ts' // the cart screen's and the confirmation page's addresses
 
 /**
  * Tells React when the hash changes.
@@ -15,9 +15,10 @@ function subscribe(onChange: () => void): () => void {
 
 /**
  * Names the screen for the current address.
- * @return 'cart' for exactly #/cart, otherwise 'catalogue'
+ * @return 'cart' for exactly #/cart, 'order-sent' for exactly #/order-sent, otherwise 'catalogue'
  */
-export function useHashRoute(): 'catalogue' | 'cart' {
+export function useHashRoute(): 'catalogue' | 'cart' | 'order-sent' {
   const hash = useSyncExternalStore(subscribe, () => window.location.hash) // the live hash
-  return hash === CART_HASH ? 'cart' : 'catalogue' // anything else is the catalogue
+  if (hash === CART_HASH) return 'cart' // the cart screen
+  return hash === ORDER_SENT_HASH ? 'order-sent' : 'catalogue' // anything else is the catalogue
 }

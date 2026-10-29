@@ -1,7 +1,7 @@
 // Tests for the cart screen: order lines A to Z, edits, removal with Undo, and its loading, error and empty states.
 
 import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react' // render and query
-import { useEffect, useRef } from 'react' // seeds the cart
+import { useEffect, useRef, useState } from 'react' // seeds the cart and leaves the screen
 import { describe, expect, it, vi } from 'vitest' // test API and mocks
 import type { CatalogueLoad } from '@/features/catalogue/use-catalogue-data.ts' // the load the screen receives
 import type { Honor } from '@/shared/data/types.ts' // the shape of an honor
@@ -78,6 +78,73 @@ function renderScreen(quantities: Record<string, number>, data: CatalogueLoad = 
 }
 
 describe('CartScreen', () => {
+  it('makes the lines and the form inert and busy while an order is sending, then frees them', async () => {
+    // catches: a cart that can be edited mid-send, so the sent order differs from what the buyer sees
+    let finish: (response: Response) => void = () => {}
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(() => new Promise<Response>((resolve) => (finish = resolve))),
+    ) // never answers until told
+    vi.spyOn(console, 'error').mockImplementation(() => {})
+    renderScreen({ 'knot-tying': 1 })
+    fireEvent.change(screen.getByLabelText('Name'), { target: { value: 'Jo Tan' } })
+    fireEvent.change(screen.getByLabelText('Email'), { target: { value: 'jc@mail.com' } })
+    fireEvent.change(screen.getByLabelText('Phone'), { target: { value: '0312345678' } })
+    fireEvent.change(screen.getByLabelText('Club name'), { target: { value: 'Hilltop Club' } })
+    fireEvent.click(screen.getByRole('button', { name: 'Tick captcha' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Send order' }))
+    const stepper = screen.getByRole('button', { name: 'One more Knot Tying' })
+    expect(stepper.closest('[inert]')).not.toBeNull()
+    expect(stepper.closest('[aria-busy="true"]')).not.toBeNull()
+    expect(screen.getByLabelText('Name').closest('[inert]')).not.toBeNull()
+    expect(screen.getByRole('link', { name: 'Back to honors' }).closest('[inert]')).not.toBeNull() // leaving is frozen too
+    expect(screen.getByRole('heading', { name: 'Your cart' }).closest('[inert]')).not.toBeNull()
+    await act(async () => finish(new Response('{}', { status: 500 }))) // the send fails
+    expect(stepper.closest('[inert]')).toBeNull()
+    vi.unstubAllGlobals()
+  })
+
+  it('stays inert and busy when the screen is left and opened again while an order is sending', async () => {
+    // catches: a returning buyer finding a live screen over a send still running, free to change the cart or send again
+    let finish: (response: Response) => void = () => {}
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(() => new Promise<Response>((resolve) => (finish = resolve))),
+    ) // never answers until told
+    vi.spyOn(console, 'error').mockImplementation(() => {})
+    const data = ready
+    /** @return the cart screen behind a button that leaves and returns */
+    const Leaving = () => {
+      const [shown, setShown] = useState(true) // the cart route is showing
+      return (
+        <>
+          <button onClick={() => setShown(!shown)}>Leave or return</button>
+          {shown && <CartScreen data={data} onBack={() => {}} />}
+        </>
+      )
+    }
+    render(
+      <CartProvider honors={honors}>
+        <OrderFormProvider>
+          <Seed quantities={{ 'knot-tying': 1 }} />
+          <Leaving />
+        </OrderFormProvider>
+      </CartProvider>,
+    )
+    fireEvent.change(screen.getByLabelText('Name'), { target: { value: 'Jo Tan' } })
+    fireEvent.change(screen.getByLabelText('Email'), { target: { value: 'jc@mail.com' } })
+    fireEvent.change(screen.getByLabelText('Phone'), { target: { value: '0312345678' } })
+    fireEvent.change(screen.getByLabelText('Club name'), { target: { value: 'Hilltop Club' } })
+    fireEvent.click(screen.getByRole('button', { name: 'Tick captcha' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Send order' }))
+    fireEvent.click(screen.getByText('Leave or return')) // browser Back
+    fireEvent.click(screen.getByText('Leave or return')) // and the cart again
+    expect(screen.getByRole('heading', { name: 'Your cart' }).closest('[inert]')).not.toBeNull()
+    await act(async () => finish(new Response('{}', { status: 500 })))
+    expect(screen.getByRole('heading', { name: 'Your cart' }).closest('[inert]')).toBeNull()
+    vi.unstubAllGlobals()
+  })
+
   it('shows the invoice note and the order form under the estimated total', () => {
     // catches: the form above the total, or the note missing so the buyer does not know an invoice follows
     renderScreen({ 'knot-tying': 1 })
@@ -179,7 +246,9 @@ describe('CartScreen', () => {
     const loading: CatalogueLoad = { state: { status: 'loading' }, showSkeleton: false, retry: () => {} }
     const { rerender } = render(
       <CartProvider honors={honors}>
-        <CartScreen data={loading} onBack={() => {}} />
+        <OrderFormProvider>
+          <CartScreen data={loading} onBack={() => {}} />
+        </OrderFormProvider>
       </CartProvider>,
     )
     expect(screen.getByRole('heading', { name: 'Your cart' })).toBeInTheDocument()
@@ -187,7 +256,9 @@ describe('CartScreen', () => {
     expect(screen.queryByText('Your cart is empty.')).not.toBeInTheDocument() // not empty, only unknown
     rerender(
       <CartProvider honors={honors}>
-        <CartScreen data={{ ...loading, showSkeleton: true }} onBack={() => {}} />
+        <OrderFormProvider>
+          <CartScreen data={{ ...loading, showSkeleton: true }} onBack={() => {}} />
+        </OrderFormProvider>
       </CartProvider>,
     )
     expect(screen.getAllByTestId('cart-skeleton-line')).toHaveLength(3)

@@ -18,6 +18,8 @@ The order form reads two keys from the committed `.env` files, which are public 
 - `VITE_WEB3FORMS_ACCESS_KEY` in `.env` (a placeholder until the order handler's Web3Forms key is pasted in; switching inbox later changes only this line).
 - `VITE_HCAPTCHA_SITEKEY`: `.env` holds Web3Forms' shared sitekey for the production build; `.env.development` holds hCaptcha's always-passing test key, because hCaptcha refuses `localhost` with a real key.
 
+To try the whole order flow without a real send, run `npm run dev -- --mode fake-send`: `.env.fake-send` (dev only, never part of the build) makes Send order wait 800 ms, log the email subject and text to the browser console and succeed, with hCaptcha's test key. The order text in that console log holds the buyer's details, so use made-up ones. A real send cannot pass hCaptcha on `localhost`; it is tried once on the live site.
+
 `public/data/clubs.json` is a list of clubs: `name` plus `area`, `language`, `location` and `churchName` (each text or `null`). The seed's `--force` still writes `[]`, which is valid.
 
 ## Seed the data

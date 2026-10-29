@@ -8,4 +8,6 @@ interface ImportMetaEnv {
   readonly VITE_WEB3FORMS_ACCESS_KEY: string // set in .env
   // hCaptcha sitekey: Web3Forms' shared key in .env, the always-passing test key in .env.development.
   readonly VITE_HCAPTCHA_SITEKEY: string // set in .env and .env.development
+  // 'fake' only in dev's fake-send mode (.env.fake-send): the order is logged instead of sent.
+  readonly VITE_ORDER_SEND?: string // unset everywhere else
 }
