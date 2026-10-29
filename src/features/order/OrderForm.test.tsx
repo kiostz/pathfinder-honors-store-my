@@ -484,6 +484,22 @@ describe('OrderForm sending', () => {
     expect(stored.order.totalCents).toBe(900)
   })
 
+  it('on success with sessionStorage refusing the write still replaces the address and clears the cart', async () => {
+    // catches: a sent order shown as failed, or a cart left full, because the stored order could not be saved
+    vi.spyOn(console, 'warn').mockImplementation(() => {})
+    stubFetch(sent())
+    renderForm()
+    const real = Storage.prototype.setItem // the working save
+    vi.spyOn(Storage.prototype, 'setItem').mockImplementation(function (this: Storage, key: string, value: string) {
+      if (this === window.sessionStorage) throw new Error('blocked') // only the sent order's store refuses
+      real.call(this, key, value) // the cart still saves
+    })
+    fillTickAndSend()
+    await waitFor(() => expect(window.location.hash).toBe('#/order-sent'))
+    await waitFor(() => expect(screen.getByTestId('cart')).toHaveTextContent('{}'))
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument()
+  })
+
   it('on success removes a line whose quantity was lowered below the sent amount during the send', async () => {
     // catches: a lowered line that survives a sent order as a negative or leftover quantity
     let finish: (response: Response) => void = () => {}

@@ -120,7 +120,7 @@ export function Catalogue({ data }: { data: CatalogueLoad }) {
       <div aria-live="polite">
         {/* The count line, the empty message when nothing is switched on, or the no-match message. */}
         {state.status === 'ready' && (
-          <p className={`${COUNT_BOX} text-text-muted motion-safe:animate-fade-in`}>
+          <p className={`${COUNT_BOX} text-text-muted animate-fade-in`}>
             {/* The three messages share one line so the live region announces whichever applies. */}
             {switchedOn.length === 0
               ? 'No honors are switched on yet. Check back soon.'
@@ -154,7 +154,7 @@ export function Catalogue({ data }: { data: CatalogueLoad }) {
       )}
       {state.status === 'ready' && (
         // The list fades in once as a whole; rows do not animate one by one.
-        <div ref={listRef} className={`${LIST_BOX} motion-safe:animate-fade-in`}>
+        <div ref={listRef} className={`${LIST_BOX} animate-fade-in`}>
           {/* All switched-on honors at once, A to Z. */}
           <ul>
             {sorted.map((honor) => (

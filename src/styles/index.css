@@ -59,16 +59,6 @@
   }
 }
 
-/* Reduced motion: every duration collapses to nothing. */
-@media (prefers-reduced-motion: reduce) {
-  :root {
-    --duration-press: 0.01ms;
-    --duration-fast: 0.01ms;
-    --duration-enter: 0.01ms;
-    --duration-exit: 0.01ms;
-  }
-}
-
 /* Category filter: the select shows the site's own popup list where the browser supports base-select (Chrome 135+, Safari 27); elsewhere it stays the plain select. */
 @supports (appearance: base-select) {
   .category-filter,
@@ -119,15 +109,13 @@
     }
   }
 
-  /* The fade-in only when motion is welcome; the duration and easing are the tokens'. */
-  @media (prefers-reduced-motion: no-preference) {
-    .category-filter::picker(select),
-    .club-select::picker(select) {
-      transition:
-        opacity var(--duration-fast) var(--ease-out-soft),
-        display var(--duration-fast) allow-discrete,
-        overlay var(--duration-fast) allow-discrete; /* allow-discrete keeps the popup shown until the fade ends */
-    }
+  /* The fade-in; the duration and easing are the tokens'. */
+  .category-filter::picker(select),
+  .club-select::picker(select) {
+    transition:
+      opacity var(--duration-fast) var(--ease-out-soft),
+      display var(--duration-fast) allow-discrete,
+      overlay var(--duration-fast) allow-discrete; /* allow-discrete keeps the popup shown until the fade ends */
   }
 
   /* One option: 44 px tall, 16 px text; the check mark and a heavier weight show the chosen one. */
@@ -221,10 +209,17 @@
   }
 }
 
-/* Reduced motion: the ring appears after the delay but does not turn. */
-@media (prefers-reduced-motion: reduce) {
-  .send-spinner {
-    animation: send-spinner-in var(--duration-fast) var(--ease-out-soft)
-      var(--delay-loader) forwards;
+/* Print: always the light colour values, so dark mode never prints light text on white paper. */
+@media print {
+  :root {
+    color-scheme: light; /* the browser draws light controls */
+    --color-bg-app: #ffffff; /* white page */
+    --color-bg-surface: #ffffff; /* white cards */
+    --color-text-default: #171717; /* near-black text */
+    --color-text-muted: #525252; /* grey text, 7:1 on white */
+    --color-border-subtle: #e5e5e5; /* light rule lines */
+    --color-accent: #1d4ed8; /* the light-mode blue */
+    --color-on-accent: #ffffff; /* text on that blue */
+    --color-danger: #b91c1c; /* the light-mode red */
   }
 }

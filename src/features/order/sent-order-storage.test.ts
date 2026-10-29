@@ -22,7 +22,17 @@ const order: SentOrder = {
   club: { subject: 'Eagles', email: 'Eagles' },
 } // an order as sent
 
+const blocked = {
+  getItem: () => {
+    throw new Error('blocked')
+  },
+  setItem: () => {
+    throw new Error('blocked')
+  },
+} as unknown as Storage // storage that refuses every call
+
 afterEach(() => {
+  writeSentOrder(order) // a good write forgets any order held in memory
   window.sessionStorage.clear() // nothing left for the next test
   vi.restoreAllMocks() // spies removed
 })
@@ -33,8 +43,60 @@ describe('sent order storage', () => {
     writeSentOrder(order)
     expect(
       JSON.parse(window.sessionStorage.getItem(SENT_ORDER_STORAGE_KEY) ?? ''),
-    ).toEqual({ version: 1, order })
+    ).toEqual({ version: 1, order: order })
     expect(readSentOrder()).toEqual(order)
+  })
+
+  it("keeps the buyer's email with the order", () => {
+    // catches: the email lost between the send and the confirmation page
+    writeSentOrder(order)
+    expect(readSentOrder()?.email).toBe('jc@mail.com')
+  })
+
+  it('still gives the order back in this tab when storage cannot be written', () => {
+    // catches: a sent order shown as "no order" because sessionStorage is blocked
+    vi.spyOn(console, 'warn').mockImplementation(() => {})
+    writeSentOrder(order, blocked)
+    expect(readSentOrder()).toEqual(order)
+    expect(window.sessionStorage.getItem(SENT_ORDER_STORAGE_KEY)).toBeNull()
+  })
+
+  it('shows a later good write, not the order held in memory', () => {
+    // catches: an old held order hiding the next order sent in the same tab
+    vi.spyOn(console, 'warn').mockImplementation(() => {})
+    writeSentOrder(order, blocked)
+    writeSentOrder({ ...order, number: 'PF-20261029-ABCD' })
+    expect(readSentOrder()?.number).toBe('PF-20261029-ABCD')
+    window.sessionStorage.clear()
+    expect(readSentOrder()).toBeNull()
+  })
+
+  it('shows the order just sent, not an older stored one, when saving the new one fails', () => {
+    // catches: the confirmation showing the previous order's number after a refused write
+    vi.spyOn(console, 'warn').mockImplementation(() => {})
+    writeSentOrder(order) // the older order is stored
+    const refusesWrites = {
+      getItem: () => null,
+      setItem: () => {
+        throw new Error('full')
+      },
+    } as unknown as Storage // storage that refuses to save
+    writeSentOrder({ ...order, number: 'PF-20261029-ABCD' }, refusesWrites)
+    expect(readSentOrder()?.number).toBe('PF-20261029-ABCD')
+  })
+
+  it('leaves no older order stored when saving the new one fails, so a reload cannot show it', () => {
+    // catches: a reload after a refused save showing the previous order's number as the one just sent
+    vi.spyOn(console, 'warn').mockImplementation(() => {})
+    writeSentOrder(order) // the older order is stored
+    const refusesSaves = {
+      setItem: () => {
+        throw new Error('full')
+      },
+      removeItem: (key: string) => window.sessionStorage.removeItem(key),
+    } as unknown as Storage // refuses to save but can still remove
+    writeSentOrder({ ...order, number: 'PF-20261029-ABCD' }, refusesSaves)
+    expect(window.sessionStorage.getItem(SENT_ORDER_STORAGE_KEY)).toBeNull()
   })
 
   it('reads null when nothing is stored, without a warning', () => {
@@ -60,16 +122,79 @@ describe('sent order storage', () => {
   it('reads null with a warning when storage throws, and a write that throws does not throw', () => {
     // catches: blocked storage turning a sent order into an error screen
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
-    const broken = {
-      getItem: () => {
-        throw new Error('blocked')
-      },
-      setItem: () => {
-        throw new Error('blocked')
-      },
-    } as unknown as Storage
-    expect(readSentOrder(broken)).toBeNull()
-    expect(() => writeSentOrder(order, broken)).not.toThrow()
+    expect(readSentOrder(blocked)).toBeNull()
+    expect(() => writeSentOrder(order, blocked)).not.toThrow()
     expect(warn).toHaveBeenCalledTimes(2)
+  })
+  it.each([
+    ['an order with no lines', { number: 'PF-20261028-4K7Q' }],
+    ['lines that are not a list', { ...order, lines: 'Knot Tying' }],
+    [
+      'a line with no price',
+      { ...order, lines: [{ honorId: 'a', name: 'A', quantity: 1 }] },
+    ],
+    ['a total that is text', { ...order, totalCents: '900' }],
+    ['no club', { ...order, club: undefined }],
+    ['a phone that is a number', { ...order, phone: 123 }],
+    ['a send time that is not text', { ...order, sentAt: 5 }],
+  ])('reads null for a version 1 value holding %s', (_label, bad) => {
+    // catches: a foreign or hand-edited value that passes the check on the number alone and then crashes the confirmation page
+    window.sessionStorage.setItem(
+      SENT_ORDER_STORAGE_KEY,
+      JSON.stringify({ version: 1, order: bad }),
+    )
+    vi.spyOn(console, 'warn').mockImplementation(() => {})
+    expect(readSentOrder()).toBeNull()
+  })
+
+  it.each([
+    ['an array', '[1,2]'],
+    ['a string', '"PF-20261028-4K7Q"'],
+    ['a number', '7'],
+    ['an empty string', ''],
+  ])('reads null for %s stored under the key', (_label, text) => {
+    // catches: a non-object value throwing on property access
+    window.sessionStorage.setItem(SENT_ORDER_STORAGE_KEY, text)
+    vi.spyOn(console, 'warn').mockImplementation(() => {})
+    expect(readSentOrder()).toBeNull()
+  })
+
+  it('never writes the order to localStorage or the address', () => {
+    // catches: buyer details left on disk after the tab closes, or put in a URL
+    const hash = window.location.hash
+    writeSentOrder(order)
+    expect(window.localStorage.length).toBe(0)
+    expect(window.location.hash).toBe(hash)
+    expect(window.location.search).toBe('')
+  })
+
+  it('replaces the stored order with the next one sent', () => {
+    // catches: a second send leaving the first order on the confirmation page
+    writeSentOrder(order)
+    writeSentOrder({ ...order, number: 'PF-20261029-ABCD', totalCents: 50 })
+    expect(readSentOrder()?.number).toBe('PF-20261029-ABCD')
+    expect(readSentOrder()?.totalCents).toBe(50)
+  })
+
+  it('serves the order held in memory when reading throws but the write was refused', () => {
+    // catches: a read-blocked storage turning a held order into "no order"
+    vi.spyOn(console, 'warn').mockImplementation(() => {})
+    writeSentOrder(order, blocked)
+    expect(readSentOrder(blocked)?.number).toBe(order.number)
+  })
+
+  it('does not put buyer data in any warning when storage fails', () => {
+    // catches: a warning that logs the name, email or phone
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    writeSentOrder(order, blocked)
+    readSentOrder(blocked)
+    window.sessionStorage.setItem(
+      SENT_ORDER_STORAGE_KEY,
+      'jc@mail.com not json',
+    )
+    readSentOrder()
+    expect(JSON.stringify(warn.mock.calls)).not.toMatch(
+      /jc@mail\.com|J\. Cruz|345 6789/,
+    )
   })
 })
