@@ -187,7 +187,7 @@ describe('fetchWithRetry', () => {
       },
     })
     expect(agent).toContain(
-      'https://github.com/kiostz/pathfinder-honors-shop-my',
+      'https://github.com/kiostz/pathfinder-honors-store-my',
     )
   })
 })

@@ -4,7 +4,7 @@
 const apiUrl = 'https://wiki.pathfindersonline.org/api.php' // the wiki's API
 const batchSize = 50 // titles the API accepts per request
 const userAgent =
-  'pathfinder-honors-shop-my one-time patch import (https://github.com/kiostz/pathfinder-honors-shop-my)' // names the store to the wiki's admins
+  'pathfinder-honors-store-my one-time patch import (https://github.com/kiostz/pathfinder-honors-store-my)' // names the store to the wiki's admins
 
 /** What the lookups need from the outside: HTTP, waiting and optional logging. */
 export type WikiDeps = {
