@@ -1,7 +1,13 @@
-// Reads which screen the address hash names, so the cart screen has an address that back and reload understand, with no router package.
+// Reads which screen the address hash names, so every screen has an address that back and reload understand, with no router package.
 
 import { useSyncExternalStore } from 'react' // follows the address
-import { CART_HASH, DETAILS_HASH, ORDER_SENT_HASH } from '@/shared/routes.ts' // the cart screen's, details page's and confirmation page's addresses
+import {
+  CART_HASH,
+  CATALOGUE_HASH,
+  DETAILS_HASH,
+  ORDER_SENT_HASH,
+  readShopCategory,
+} from '@/shared/routes.ts' // the screens' addresses and the category reader
 
 /**
  * Tells React when the hash changes.
@@ -15,12 +21,24 @@ function subscribe(onChange: () => void): () => void {
 
 /**
  * Names the screen for the current address.
- * @return 'cart' for exactly #/cart, 'details' for exactly #/details, 'order-sent' for exactly #/order-sent, otherwise 'catalogue'
+ * @return 'catalogue' for #/shop with or without a query, 'cart', 'details' and 'order-sent' for exactly their addresses, otherwise 'home'
  */
 export function useHashRoute():
-  'catalogue' | 'cart' | 'details' | 'order-sent' {
+  'home' | 'catalogue' | 'cart' | 'details' | 'order-sent' {
   const hash = useSyncExternalStore(subscribe, () => window.location.hash) // the live hash
   if (hash === CART_HASH) return 'cart' // the cart screen
   if (hash === DETAILS_HASH) return 'details' // the details page
-  return hash === ORDER_SENT_HASH ? 'order-sent' : 'catalogue' // anything else is the catalogue
+  if (hash === ORDER_SENT_HASH) return 'order-sent' // the confirmation
+  if (hash === CATALOGUE_HASH || hash.startsWith(`${CATALOGUE_HASH}?`))
+    return 'catalogue' // only the shop takes a query
+  return 'home' // anything else, unknown addresses included
+}
+
+/**
+ * Reads the category the address names.
+ * @return the category in the address, or null for none
+ */
+export function useShopCategory(): string | null {
+  const hash = useSyncExternalStore(subscribe, () => window.location.hash) // the same subscription as the route
+  return readShopCategory(hash) // null when absent or blank
 }

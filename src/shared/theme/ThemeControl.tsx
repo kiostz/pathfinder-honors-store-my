@@ -1,53 +1,46 @@
-// The header's theme control: a select with System, Light and Dark, an icon and the word at every width, so a buyer can pick how the site looks.
+// The header's theme control: a 44 px icon button, a sun while the page is light and a moon while it is dark, that flips between light and dark so a buyer can pick how the site looks.
 
-import { useTheme } from './use-theme.ts' // the pick and its setter
-import type { ThemeChoice } from './theme-storage.ts' // the three picks
-
-const CHOICES: { value: ThemeChoice; text: string }[] = [
-  { value: 'system', text: 'System' }, // follows the device
-  { value: 'light', text: 'Light' }, // always light
-  { value: 'dark', text: 'Dark' }, // always dark
-] // in the order the list shows them
+import { useTheme } from './use-theme.ts' // the pick, its setter and what it resolves to
 
 /**
  * Draws the theme control.
- * @return the labelled select with its icon
+ * @return a button named for the current theme and the one it switches to
  */
 export function ThemeControl() {
-  const { choice, setChoice } = useTheme() // the shared pick
+  const { choice, setChoice, resolved } = useTheme() // the shared pick and the light or dark it shows
+  const next = resolved === 'dark' ? 'light' : 'dark' // what a tap picks
+  const name =
+    choice === 'system'
+      ? `Theme: following your device, now ${resolved}. Switch to ${next}` // still on the device's setting
+      : `Theme: ${resolved}. Switch to ${next}` // a saved pick
   return (
-    <div className="relative inline-flex items-center print:hidden">
-      <label htmlFor="theme-control" className="sr-only">
-        Theme
-      </label>
-      {/* A circle half filled, the usual light-and-dark sign; sits over the select's left padding and never takes a tap. */}
+    <button
+      type="button" // not a form submit
+      aria-label={name} // the icon has no text
+      onClick={() => setChoice(next)} // saves the pick; nothing sets System again
+      className="border-on-header/40 text-on-header focus-visible:outline-focus-ring rounded-pill flex size-11 items-center justify-center border bg-transparent transition-transform duration-(--duration-press) focus-visible:outline-2 focus-visible:outline-offset-2 active:scale-[0.97] print:hidden" // 44 px outlined circle on the band, press feedback and focus ring
+    >
       <svg
-        aria-hidden="true"
-        viewBox="0 0 24 24"
-        className="pointer-events-none absolute left-3 size-5"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
+        aria-hidden="true" // decorative: the button's label names it
+        data-icon={resolved === 'dark' ? 'moon' : 'sun'} // which glyph shows
+        viewBox="0 0 24 24" // a 24 unit canvas
+        className="size-5" // 20 px glyph
+        fill="none" // outline only
+        stroke="currentColor" // the band's stone
+        strokeWidth="2" // line weight
+        strokeLinecap="round" // round ends
+        strokeLinejoin="round" // round corners
       >
-        <circle cx="12" cy="12" r="9" />
-        <path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor" />
+        {resolved === 'dark' ? (
+          <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" /> // the moon
+        ) : (
+          <>
+            <circle cx="12" cy="12" r="4" /> {/* the sun's disc */}
+            <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" />{' '}
+            {/* its rays */}
+          </>
+        )}
       </svg>
-      {/* 16 px text stops iOS zooming in on focus; 44 px tall; index.css styles its popup list. */}
-      <select
-        id="theme-control" // the label points here
-        value={choice} // the shared pick
-        onChange={(event) => setChoice(event.target.value as ThemeChoice)} // the options are the three choices only
-        className="theme-select border-on-header/40 text-on-header focus-visible:outline-focus-ring rounded-pill min-h-11 border bg-transparent pr-3 pl-10 text-base focus-visible:outline-2 focus-visible:outline-offset-2" // the pill outline reads on the oxblood band
-      >
-        {/* One option per choice. */}
-        {CHOICES.map(({ value, text }) => (
-          <option key={value} value={value}>
-            {text}
-          </option>
-        ))}
-      </select>
-    </div>
+    </button>
   )
 }

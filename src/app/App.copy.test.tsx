@@ -59,7 +59,8 @@ function buyerPhrases(): string {
 
 describe('buyer copy', () => {
   it.each([
-    ['the catalogue', '#/', 'Knot Tying'],
+    ['Home', '#/', 'How ordering works'],
+    ['the shop', '#/shop', 'Knot Tying'],
     ['the cart', '#/cart', 'Your cart'],
     ['the details', '#/details', 'Your details'],
     ['the confirmation', '#/order-sent', 'Order sent'],
@@ -84,10 +85,21 @@ describe('buyer copy', () => {
     expect(buyerPhrases()).not.toMatch(/honor/i)
   })
 
+  it('never names honors in the load error on Home', async () => {
+    // catches: the failed-load message on Home naming honors
+    serveData(true) // every file fails
+    vi.spyOn(console, 'error').mockImplementation(() => {}) // the app logs the failure
+    window.location.hash = '#/' // Home
+    render(<App />)
+    await screen.findAllByText(/couldn't load/) // the error shows in the tile row (and in the hidden shop)
+    expect(buyerPhrases()).not.toMatch(/honor/i)
+  })
+
   it('never names honors in the load error', async () => {
     // catches: the failed-load message naming honors
     serveData(true) // every file fails
     vi.spyOn(console, 'error').mockImplementation(() => {}) // the app logs the failure; keep the output clean
+    window.location.hash = '#/shop' // the shop
     render(<App />)
     await screen.findByText(/couldn't load/) // the error shows
     expect(buyerPhrases()).not.toMatch(/honor/i)

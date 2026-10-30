@@ -1,5 +1,6 @@
 // Tests for Catalogue: loading, error, empty and ready states, the flat A to Z list, search and the category filter, with fetch mocked at the boundary.
 
+import { useState } from 'react' // the stand-in address
 import { act, fireEvent, render, screen, within } from '@testing-library/react' // render and query the screen
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest' // test API and mocks
 import { CartProvider } from '@/features/cart/CartProvider.tsx' // the cart state the steppers edit
@@ -10,11 +11,19 @@ import { useCatalogueData } from './use-catalogue-data.ts' // the load the catal
  * Loads the data and renders the catalogue inside a cart, as the app does.
  * @return the catalogue under a CartProvider
  */
-function CatalogueWithCart() {
+function CatalogueWithCart({ initialCategory = null, onSelect }: { initialCategory?: string | null; onSelect?: (next: string | null) => void }) {
   const data = useCatalogueData() // the one load
+  const [category, setCategory] = useState<string | null>(initialCategory) // stands in for the address, which App owns
   return (
     <CartProvider honors={data.state.status === 'ready' ? data.state.honors : null}>
-      <Catalogue data={data} />
+      <Catalogue
+        data={data}
+        category={category}
+        onSelectCategory={(next) => {
+          onSelect?.(next) // lets a test see the call
+          setCategory(next) // the address follows
+        }}
+      />
     </CartProvider>
   )
 }
@@ -456,6 +465,44 @@ describe('Catalogue', () => {
       type('   ')
       expect(screen.getAllByRole('listitem')).toHaveLength(4)
       expect(screen.getByText('4 items')).toBeInTheDocument()
+    })
+  })
+  describe('category from the address', () => {
+    /** Serves Nature and Recreation items. */
+    function serveTwoCategories() {
+      serve([honor('Ants', 'Nature'), honor('Knot Tying', 'Recreation')]) // one per category
+    }
+
+    it('shows only the category it is given', async () => {
+      // catches: the address's category not reaching the filter
+      serveTwoCategories()
+      render(<CatalogueWithCart initialCategory="Nature" />)
+      await screen.findByText('Ants')
+      expect(screen.getByRole('combobox', { name: 'Category' })).toHaveDisplayValue('Nature')
+      expect(screen.queryByText('Knot Tying')).not.toBeInTheDocument()
+    })
+
+    it.each([['Nope'], [null], ['']])('falls back to All categories for %j', async (category) => {
+      // catches: an unvalidated address hiding every item
+      serveTwoCategories()
+      render(<CatalogueWithCart initialCategory={category} />)
+      await screen.findByText('Ants')
+      expect(screen.getByRole('combobox', { name: 'Category' })).toHaveDisplayValue('All categories')
+      expect(screen.getByText('Knot Tying')).toBeInTheDocument()
+    })
+
+    it('reports a dropdown pick and Clear filters through onSelectCategory', async () => {
+      // catches: the screen keeping the category to itself so the address never changes
+      serveTwoCategories()
+      const onSelect = vi.fn()
+      render(<CatalogueWithCart onSelect={onSelect} />)
+      await screen.findByText('Ants')
+      fireEvent.change(screen.getByRole('combobox', { name: 'Category' }), { target: { value: 'Recreation' } })
+      expect(onSelect).toHaveBeenLastCalledWith('Recreation')
+      fireEvent.change(screen.getByRole('searchbox', { name: 'Search items' }), { target: { value: 'zzz' } })
+      fireEvent.click(screen.getByRole('button', { name: 'Clear filters' }))
+      expect(onSelect).toHaveBeenLastCalledWith(null)
+      expect(screen.getByRole('searchbox', { name: 'Search items' })).toHaveValue('')
     })
   })
 })

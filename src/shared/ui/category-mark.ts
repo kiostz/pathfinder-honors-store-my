@@ -17,6 +17,7 @@ type CategoryMark = {
   icon: CategoryIconName // which icon to draw
   background: string // patch colour of the square
   foreground: string // icon colour
+  strongHalo?: boolean // true when white lettering on this colour needs the stronger halo (a mid-tone patch colour)
 } // what one mark shows
 
 const iconNearBlack = '#171717' // icon colour on the two light patch backgrounds
@@ -34,6 +35,7 @@ const marks: Record<string, CategoryMark> = {
     icon: 'palette', // the category's icon
     background: '#4f8db1', // measured patch colour
     foreground: iconWhite, // icon colour that reads on it
+    strongHalo: true, // white is only 3.6:1 here, so a tile name needs the stronger halo
   },
   'Health and Science': {
     // multi-line entry

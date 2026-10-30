@@ -20,17 +20,27 @@ const LIST_BOX = 'mt-3' // the grid's top, shared by the real list and the skele
 /**
  * The buyer's list of honors.
  * @param data the load: state, skeleton gate and retry
+ * @param category the category the address names, or null; validated here against the data
+ * @param onSelectCategory called with the category picked, or null for All categories
  * @return the toolbar, the status line, the retry or Clear filters button, and the A to Z list
  */
-export function Catalogue({ data }: { data: CatalogueLoad }) {
+export function Catalogue({
+  data, // the load
+  category: requestedCategory, // the address's category, not yet checked
+  onSelectCategory, // the app puts the pick in the address
+}: {
+  data: CatalogueLoad // the load: state, skeleton gate and retry
+  category: string | null // as read from the address
+  onSelectCategory: (next: string | null) => void // reports a pick
+}) {
   const { state, showSkeleton, retry } = data // load state, skeleton gate and retry
   const [query, setQuery] = useState('') // what the buyer typed
-  const [category, setCategory] = useState<string | null>(null) // the chosen category, null for All categories
   const searchRef = useRef<HTMLInputElement>(null) // the search box, focused by Clear filters
   const listRef = useRef<HTMLDivElement>(null) // the list, scrolled to its top on a category change
   const toolbarRef = useRef<HTMLDivElement>(null) // the sticky toolbar, measured so the list top can clear it
   const allHonors = state.status === 'ready' ? state.honors : [] // every honor in the file
   const switchedOn = filterHonors(allHonors, { query: '', category: null }) // what the buyer may see at all
+  const category = requestedCategory !== null && categoryNames(allHonors).includes(requestedCategory) ? requestedCategory : null // an unknown, blank or not yet loaded category is All categories
   const matches = filterHonors(allHonors, { query, category }) // what the search and the category leave
   const sorted = sortByName(matches) // names A to Z
   const filtering = query.trim() !== '' || category !== null // whether any filter is active
@@ -41,7 +51,7 @@ export function Catalogue({ data }: { data: CatalogueLoad }) {
    * @param next the category chosen, or null for All categories
    */
   const selectCategory = (next: string | null) => {
-    setCategory(next) // filter by the category
+    onSelectCategory(next) // the app puts it in the address, and the filter follows
     const list = listRef.current // the list element, if it is on screen
     const toolbarHeight = toolbarRef.current?.getBoundingClientRect().height ?? 0 // measured, so any root font size works
     if (list && list.getBoundingClientRect().top < toolbarHeight) {
@@ -54,7 +64,7 @@ export function Catalogue({ data }: { data: CatalogueLoad }) {
   /** Empties the search, selects All categories and puts the cursor in the search box. */
   const clearFilters = () => {
     setQuery('') // empty the box
-    setCategory(null) // All categories
+    onSelectCategory(null) // All categories
     searchRef.current?.focus() // ready to type again
   }
   return (

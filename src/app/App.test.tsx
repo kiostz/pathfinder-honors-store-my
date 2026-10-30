@@ -1,7 +1,7 @@
 // Tests for App: the header and the catalogue under it, with fetch mocked at the boundary.
 
 import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react' // render and query the page
-import { afterEach, describe, expect, it, vi } from 'vitest' // test API and mocks
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest' // test API and mocks
 import { CART_STORAGE_KEY } from '@/features/cart/cart-storage.ts' // the stored cart's key
 import { writeSentOrder } from '@/features/order/sent-order-storage.ts' // fills the stored order
 import { App } from './App.tsx' // code under test
@@ -19,6 +19,10 @@ vi.mock('@/features/order/Captcha.tsx', () => ({
     </div>
   ),
 }))
+
+beforeEach(() => {
+  window.location.hash = '#/shop' // most cases start on the shop, where the cart bar still is
+})
 
 afterEach(() => {
   window.sessionStorage.clear() // no sent order left
@@ -86,7 +90,7 @@ describe('App', () => {
     render(<App />)
     const header = screen.getByRole('banner') // the header band
     expect(within(header).getByRole('heading', { name: 'AY Store' })).toBeInTheDocument()
-    expect(within(header).getByRole('combobox', { name: 'Theme' })).toHaveValue('system')
+    expect(within(header).getByRole('button', { name: /^Theme:/ })).toBeInTheDocument()
     expect(await screen.findByText('Knot Tying')).toBeInTheDocument()
   })
 
@@ -102,7 +106,7 @@ describe('App', () => {
     const header = screen.getByRole('banner') // the header band
     expect(within(header).getByRole('link', { name: 'Back' })).toBeInTheDocument()
     expect(within(header).getByText('AY Store')).toBeInTheDocument()
-    expect(within(header).queryByRole('combobox', { name: 'Theme' })).not.toBeInTheDocument()
+    expect(within(header).queryByRole('button', { name: /^Theme:/ })).not.toBeInTheDocument()
     expect(await screen.findByRole('heading', { name: title })).toBeInTheDocument() // the page title below it
     expect(screen.queryByRole('link', { name: 'Back to cart' })).not.toBeInTheDocument() // the quiet link is gone
   })
@@ -125,9 +129,9 @@ describe('App', () => {
     expect(back.closest('.print\\:hidden')).not.toBeNull()
     expect(sentBand).toHaveClass('print:bg-transparent', 'print:text-text-default')
     sent.unmount()
-    window.location.hash = '#/' // the catalogue
+    window.location.hash = '#/shop' // the catalogue
     render(<App />)
-    const theme = within(screen.getByRole('banner')).getByRole('combobox') // the Theme control
+    const theme = within(screen.getByRole('banner')).getByRole('button', { name: /^Theme:/ }) // the Theme control
     expect(theme.closest('.print\\:hidden')).not.toBeNull()
   })
 
@@ -203,7 +207,7 @@ describe('App', () => {
     serveTwoHonors()
     render(<App />)
     fireEvent.click(await screen.findByRole('button', { name: 'Add Knot Tying' }))
-    expect(document.title).toBe('AY Store')
+    expect(document.title).toBe('Shop · AY Store')
     fireEvent.click(screen.getByRole('link', { name: /View cart/ }))
     const heading = await screen.findByRole('heading', { name: 'Your cart' })
     expect(heading).toHaveFocus()
@@ -224,7 +228,7 @@ describe('App', () => {
     await waitFor(() => expect(screen.queryByRole('heading', { name: 'Your cart' })).not.toBeInTheDocument())
     expect(screen.getByRole('searchbox', { name: 'Search items' })).toHaveValue('knot')
     expect(screen.getByRole('link', { name: /View cart/ })).toHaveFocus()
-    expect(document.title).toBe('AY Store')
+    expect(document.title).toBe('Shop · AY Store')
   })
 
   it('hides the catalogue from readers while the cart shows', async () => {
@@ -244,24 +248,20 @@ describe('App', () => {
     render(<App />)
     fireEvent.click(await screen.findByRole('button', { name: 'Browse more' }))
     expect(await screen.findByRole('searchbox', { name: 'Search items' })).toBeInTheDocument()
-    expect(window.location.hash).toBe('#/')
+    expect(window.location.hash).toBe('#/shop')
     expect(screen.getByRole('main')).toHaveFocus()
   })
 
-  it('never leaves the store from Browse more, even after browser Back into a cart opened by address', async () => {
-    // catches: Browse more calling history.back() for a cart the buyer reached by browser Back, which leaves the site
+  it('never calls history back from Browse more on a cart opened by address', async () => {
+    // catches: Browse more calling history.back() for a cart the buyer reached by address, which leaves the site
     serveTwoHonors()
     window.location.hash = '#/cart' // opened by address
     render(<App />)
+    const back = vi.spyOn(window.history, 'back') // count history moves
     fireEvent.click(await screen.findByRole('button', { name: 'Browse more' }))
-    await waitFor(() => expect(screen.queryByRole('heading', { name: 'Your cart' })).not.toBeInTheDocument())
-    act(() => window.history.back()) // the buyer presses the browser's Back: the cart again
-    await screen.findByRole('heading', { name: 'Your cart' })
-    const back = vi.spyOn(window.history, 'back') // from here on, count history moves
-    fireEvent.click(screen.getByRole('button', { name: 'Browse more' }))
     expect(back).not.toHaveBeenCalled()
     expect(await screen.findByRole('searchbox', { name: 'Search items' })).toBeInTheDocument()
-    expect(window.location.hash).toBe('#/')
+    expect(window.location.hash).toBe('#/shop')
     back.mockRestore() // put history back
   })
 
@@ -533,5 +533,213 @@ describe('App', () => {
     expect(await screen.findByRole('heading', { name: 'Your cart' })).toBeInTheDocument() // the cart, now empty, not the catalogue
     expect(screen.getByText('Your cart is empty')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Browse more' })).toBeInTheDocument()
+  })
+
+  describe('Home, Shop and the centred header', () => {
+    /** Serves one Nature and two Recreation items. */
+    function serveCategories() {
+      /**
+       * Builds one item at RM 4.
+       * @param id the id
+       * @param name the name
+       * @param category the category
+       * @return the item
+       */
+      const item = (id: string, name: string, category: string) => ({
+        id, name, category, skillLevel: null, issuedBy: 'General Conference', enabled: true, price: 4, image: null,
+      }) // one item
+      vi.stubGlobal(
+        'fetch',
+        vi.fn(async (url: string) =>
+          url.endsWith('clubs.json')
+            ? new Response('[]')
+            : url.endsWith('settings.json')
+              ? new Response(JSON.stringify({ currency: 'MYR', defaultPrice: 4 }))
+              : new Response(JSON.stringify([item('ants', 'Ants', 'Nature'), item('knot-tying', 'Knot Tying', 'Recreation'), item('camping', 'Camping', 'Recreation')])),
+        ),
+      ) // three items in two categories
+    }
+
+    it('shows Home at #/ with the AY Store heading, the theme button, no Back and the plain title', async () => {
+      // catches: an old link to #/ still opening the grid, or a Back on the first screen
+      serveCategories()
+      window.location.hash = '#/'
+      render(<App />)
+      const header = screen.getByRole('banner')
+      expect(within(header).getByRole('heading', { level: 1, name: 'AY Store' })).toBeInTheDocument()
+      expect(within(header).getByRole('button', { name: /^Theme:/ })).toBeInTheDocument()
+      expect(within(header).queryByRole('link', { name: 'Back' })).not.toBeInTheDocument()
+      expect(await screen.findByRole('link', { name: 'Nature' })).toBeInTheDocument()
+      expect(screen.queryByRole('searchbox')).not.toBeInTheDocument()
+      expect(document.title).toBe('AY Store')
+    })
+
+    it('shows Shop at #/shop with a small AY Store over Shop, the theme button, no Back and its own title', async () => {
+      // catches: Shop drawn like an inner screen
+      serveCategories()
+      render(<App />)
+      const header = screen.getByRole('banner')
+      expect(within(header).getByRole('heading', { level: 1, name: 'AY Store' })).toBeInTheDocument()
+      expect(within(header).getByRole('heading', { level: 2, name: 'Shop' })).toBeInTheDocument()
+      expect(within(header).getByRole('button', { name: /^Theme:/ })).toBeInTheDocument()
+      expect(within(header).queryByRole('link', { name: 'Back' })).not.toBeInTheDocument()
+      await screen.findByText('Ants')
+      expect(document.title).toBe('Shop · AY Store')
+    })
+
+    it('opens the grid at the top after a tile, even when Shop was scrolled before', async () => {
+      // catches: a fresh arrival restoring the old scroll instead of the top
+      serveCategories()
+      const scrollTo = vi.spyOn(window, 'scrollTo').mockImplementation(() => {}) // jsdom does not scroll
+      render(<App />)
+      await screen.findByText('Ants')
+      Object.defineProperty(window, 'scrollY', { value: 92, configurable: true })
+      fireEvent.scroll(window) // the buyer scrolled Shop to 92
+      act(() => {
+        window.location.hash = '#/' // Home
+        window.dispatchEvent(new HashChangeEvent('hashchange'))
+      })
+      fireEvent.click(await screen.findByRole('link', { name: 'Nature' }))
+      await waitFor(() => expect(window.location.hash).toBe('#/shop?category=Nature'))
+      await waitFor(() => expect(scrollTo).toHaveBeenLastCalledWith(0, 0))
+      delete (window as { scrollY?: number }).scrollY // jsdom's own again
+      scrollTo.mockRestore() // put scrollTo back
+    })
+
+    it('opens the grid at the top when a typed address names another category while Shop shows', async () => {
+      // catches: a typed #/shop?category= leaving the buyer mid-page on the new filter
+      serveCategories()
+      const scrollTo = vi.spyOn(window, 'scrollTo').mockImplementation(() => {}) // jsdom does not scroll
+      render(<App />)
+      await screen.findByText('Ants')
+      scrollTo.mockClear() // only the arrival counts
+      act(() => {
+        window.location.hash = '#/shop?category=Nature' // typed over the shop address
+        window.dispatchEvent(new HashChangeEvent('hashchange'))
+      })
+      await waitFor(() => expect(screen.queryByText('Knot Tying')).not.toBeInTheDocument())
+      expect(scrollTo).toHaveBeenLastCalledWith(0, 0)
+      scrollTo.mockRestore() // put scrollTo back
+    })
+
+    it('keeps search, filter and scroll when the buyer goes to the cart and comes back', async () => {
+      // catches: the hidden grid forgetting its category once the address is #/cart
+      serveCategories()
+      window.location.hash = '#/shop?category=Recreation'
+      render(<App />)
+      fireEvent.change(await screen.findByRole('searchbox', { name: 'Search items' }), { target: { value: 'knot' } })
+      fireEvent.click(screen.getByRole('button', { name: 'Add Knot Tying' }))
+      fireEvent.click(screen.getByRole('link', { name: /View cart/ }))
+      await screen.findByRole('heading', { name: 'Your cart' })
+      fireEvent.click(screen.getByRole('link', { name: 'Back' }))
+      await waitFor(() => expect(screen.queryByRole('heading', { name: 'Your cart' })).not.toBeInTheDocument())
+      expect(screen.getByRole('searchbox', { name: 'Search items' })).toHaveValue('knot')
+      expect(screen.getByRole('combobox', { name: 'Category' })).toHaveDisplayValue('Recreation')
+      expect(screen.queryByText('Ants')).not.toBeInTheDocument() // still filtered
+    })
+
+    it('opens Home for an unknown address without rewriting it', async () => {
+      // catches: a typo or #/admin opening the grid, or the address being replaced
+      serveCategories()
+      window.location.hash = '#/admin'
+      render(<App />)
+      expect(await screen.findByRole('link', { name: 'Browse the shop' })).toBeInTheDocument()
+      expect(window.location.hash).toBe('#/admin')
+    })
+
+    it('keeps the title in a 44 px, title, 44 px grid on Home, Shop and an inner screen', () => {
+      // catches: a header whose title moves when the < button appears
+      serveCategories()
+      for (const hash of ['#/', '#/shop', '#/cart']) {
+        window.location.hash = hash
+        const { unmount } = render(<App />)
+        const grid = screen.getByRole('banner').firstElementChild!
+        expect(grid.className).toContain('grid-cols-[2.75rem_minmax(0,1fr)_2.75rem]')
+        unmount()
+      }
+    })
+
+    it('opens Shop on the tile\'s category with an empty search, even after a search was typed', async () => {
+      // catches: a tile that opens an unfiltered grid, or a stale search surviving the tile
+      serveCategories()
+      render(<App />)
+      fireEvent.change(await screen.findByRole('searchbox', { name: 'Search items' }), { target: { value: 'camp' } })
+      act(() => {
+        window.location.hash = '#/' // Home
+        window.dispatchEvent(new HashChangeEvent('hashchange'))
+      })
+      fireEvent.click(await screen.findByRole('link', { name: 'Nature' }))
+      await waitFor(() => expect(window.location.hash).toBe('#/shop?category=Nature')) // the browser follows the link a moment later
+      expect(await screen.findByRole('searchbox', { name: 'Search items' })).toHaveValue('')
+      expect(screen.getByRole('combobox', { name: 'Category' })).toHaveDisplayValue('Nature')
+      expect(screen.queryByText('Knot Tying')).not.toBeInTheDocument()
+    })
+
+    it('puts a dropdown pick in the address without a new history entry', async () => {
+      // catches: every filter pick adding a Back step
+      serveCategories()
+      render(<App />)
+      await screen.findByText('Ants')
+      const length = window.history.length // entries before the pick
+      fireEvent.change(screen.getByRole('combobox', { name: 'Category' }), { target: { value: 'Recreation' } })
+      expect(window.location.hash).toBe('#/shop?category=Recreation')
+      expect(window.history.length).toBe(length)
+      fireEvent.change(screen.getByRole('combobox', { name: 'Category' }), { target: { value: '' } })
+      expect(window.location.hash).toBe('#/shop')
+    })
+
+    it('keeps the filter after a reload of a filtered address', async () => {
+      // catches: a filter held only in memory
+      serveCategories()
+      window.location.hash = '#/shop?category=Nature'
+      render(<App />)
+      await screen.findByText('Ants')
+      expect(screen.getByRole('combobox', { name: 'Category' })).toHaveDisplayValue('Nature')
+      expect(screen.queryByText('Knot Tying')).not.toBeInTheDocument()
+    })
+
+    it('sends focus to main on Browse the shop', async () => {
+      // catches: focus left on a link that has gone, or on the search box where a phone keyboard would open
+      serveCategories()
+      window.location.hash = '#/'
+      render(<App />)
+      fireEvent.click(await screen.findByRole('link', { name: 'Browse the shop' }))
+      act(() => window.dispatchEvent(new HashChangeEvent('hashchange')))
+      await screen.findByRole('searchbox', { name: 'Search items' })
+      expect(screen.getByRole('main')).toHaveFocus()
+    })
+
+    it('focuses main without scrolling it into view, so the page stays at its top', async () => {
+      // catches: focus() pulling the page down by the header's height after a screen change
+      serveCategories()
+      window.location.hash = '#/'
+      const focus = vi.spyOn(HTMLElement.prototype, 'focus') // watch every focus call
+      render(<App />)
+      fireEvent.click(await screen.findByRole('link', { name: 'Browse the shop' }))
+      await screen.findByRole('searchbox', { name: 'Search items' })
+      const onMain = focus.mock.instances.map((element, index) => [element, focus.mock.calls[index][0]] as const).filter(([element]) => element === screen.getByRole('main'))
+      expect(onMain.length).toBeGreaterThan(0)
+      for (const [, options] of onMain) expect(options).toEqual({ preventScroll: true })
+    })
+
+    it('leads from < on a cart opened by address to #/shop', async () => {
+      // catches: < leading to Home or leaving the site
+      serveCategories()
+      window.location.hash = '#/cart'
+      render(<App />)
+      fireEvent.click(await screen.findByRole('link', { name: 'Back' }))
+      expect(window.location.hash).toBe('#/shop')
+    })
+
+    it('replaces the address when the empty cart sends the buyer to Shop', async () => {
+      // catches: Browse more adding a history entry, so Back returns to the empty cart
+      serveCategories()
+      window.location.hash = '#/cart'
+      render(<App />)
+      const length = window.history.length // entries before
+      fireEvent.click(await screen.findByRole('button', { name: 'Browse more' }))
+      expect(window.location.hash).toBe('#/shop')
+      expect(window.history.length).toBe(length)
+    })
   })
 })

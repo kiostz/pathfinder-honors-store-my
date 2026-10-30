@@ -1,0 +1,126 @@
+// Tests for CategoryTiles: one coloured link per switched-on category, and the row's loading, error and empty states.
+
+import { fireEvent, render, screen } from '@testing-library/react' // render and query
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest' // test API
+import type { Honor } from '@/shared/data/types.ts' // the shape of an item
+import type { CatalogueLoad } from '@/features/catalogue/use-catalogue-data.ts' // the load the tiles receive
+import { CategoryTiles } from './CategoryTiles.tsx' // code under test
+
+/**
+ * Builds one item.
+ * @param name its name
+ * @param category its category
+ * @param enabled whether it is switched on
+ * @return the item
+ */
+function honor(name: string, category: string, enabled = true): Honor {
+  return {
+    id: name.toLowerCase(),
+    name,
+    category,
+    skillLevel: null,
+    issuedBy: 'General Conference',
+    enabled,
+    price: 4,
+    image: null,
+  } as Honor
+}
+
+/**
+ * Builds a ready load.
+ * @param honors the items
+ * @return the load
+ */
+function ready(honors: Honor[]): CatalogueLoad {
+  return {
+    state: { status: 'ready', honors, settings: { currency: 'MYR', defaultPrice: 4 }, clubs: [] },
+    showSkeleton: false,
+    retry: () => {},
+  } as CatalogueLoad
+}
+
+beforeEach(() => {
+  vi.useFakeTimers() // the skeleton gate is the hook's; nothing here waits
+})
+afterEach(() => {
+  vi.useRealTimers() // real clock again
+})
+
+describe('CategoryTiles', () => {
+  it('draws one link per switched-on category, A to Z, named by the category, with the address of the filtered shop', () => {
+    // catches: a tile for a switched-off category, wrong order, or a link that does not carry the category
+    render(
+      <CategoryTiles
+        data={ready([
+          honor('Leaves', 'Nature'),
+          honor('Ants', 'Arts and Crafts'),
+          honor('Old', 'Vocational', false),
+          honor('Tie', 'Recreation'),
+        ])}
+      />,
+    )
+    const links = screen.getAllByRole('link')
+    expect(links.map((link) => link.textContent)).toEqual(['Arts and Crafts', 'Nature', 'Recreation'])
+    expect(screen.getByRole('link', { name: 'Arts and Crafts' })).toHaveAttribute(
+      'href',
+      '#/shop?category=Arts%20and%20Crafts',
+    )
+  })
+
+  it('fills each tile with its patch colour and the grey award colour for an unknown category, with the name as text and no icon', () => {
+    // catches: a tile with the wrong fill, or an icon or overlay added over the colour
+    render(<CategoryTiles data={ready([honor('A', 'Recreation'), honor('B', 'Club Special')])} />)
+    const recreation = screen.getByRole('link', { name: 'Recreation' })
+    expect(recreation).toHaveStyle({ backgroundColor: '#117155' })
+    expect(screen.getByRole('link', { name: 'Club Special' })).toHaveStyle({ backgroundColor: '#525252' })
+    expect(recreation.querySelector('svg')).toBeNull()
+    expect(recreation).toHaveClass('text-shadow-halo') // the halo token class, no literal
+  })
+
+  it('shows nothing for a load that has not passed the delay, then 3 skeleton tiles, with no links', () => {
+    // catches: a flash of skeleton on a fast load, or a wrong tile count
+    const loading = { state: { status: 'loading' }, showSkeleton: false, retry: () => {} } as CatalogueLoad
+    const { rerender } = render(<CategoryTiles data={loading} />)
+    expect(screen.queryByTestId('tile-skeleton')).not.toBeInTheDocument()
+    rerender(<CategoryTiles data={{ ...loading, showSkeleton: true }} />)
+    expect(screen.getAllByTestId('tile-skeleton')).toHaveLength(3)
+    expect(screen.queryByRole('link')).not.toBeInTheDocument()
+  })
+
+  it('shows the load error with Try again that calls retry', () => {
+    // catches: a failed load with no way to retry
+    const retry = vi.fn()
+    render(<CategoryTiles data={{ state: { status: 'error' }, showSkeleton: false, retry } as CatalogueLoad} />)
+    expect(screen.getByText("We couldn't load the shop. Check your connection and try again.")).toBeInTheDocument()
+    fireEvent.click(screen.getByRole('button', { name: 'Try again' }))
+    expect(retry).toHaveBeenCalledTimes(1)
+  })
+
+  it('says nothing is in the shop yet, with no links, when no item is switched on', () => {
+    // catches: an empty row with no explanation
+    render(<CategoryTiles data={ready([honor('Old', 'Nature', false)])} />)
+    expect(screen.getByText('Nothing is in the shop yet. Check back soon.')).toBeInTheDocument()
+    expect(screen.queryByRole('link')).not.toBeInTheDocument()
+  })
+
+  it('writes the name in near-black on the two light tiles, as the category marks do, and in white on the rest', () => {
+    // catches: white names on Nature and Household Arts, where white has 1.13:1 and 1.96:1
+    render(
+      <CategoryTiles data={ready([honor('A', 'Nature'), honor('B', 'Household Arts'), honor('C', 'Recreation')])} />,
+    )
+    for (const name of ['Nature', 'Household Arts']) {
+      const tile = screen.getByRole('link', { name })
+      expect(tile).toHaveStyle({ color: '#171717' })
+      expect(tile).not.toHaveClass('text-shadow-halo', 'text-shadow-halo-strong') // a dark halo round dark letters would blur them
+    }
+    expect(screen.getByRole('link', { name: 'Recreation' })).toHaveClass('text-on-patch', 'text-shadow-halo')
+  })
+
+  it('gives Arts and Crafts, the one mid-tone tile, the stronger tighter halo', () => {
+    // catches: the plain halo on a tile where white measures only 3.6:1
+    render(<CategoryTiles data={ready([honor('A', 'Arts and Crafts')])} />)
+    const tile = screen.getByRole('link', { name: 'Arts and Crafts' })
+    expect(tile).toHaveClass('text-on-patch', 'text-shadow-halo-strong')
+    expect(tile).not.toHaveClass('text-shadow-halo')
+  })
+})

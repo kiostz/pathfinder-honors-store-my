@@ -26,6 +26,11 @@
   --color-category-mark-border: rgb(
     0 0 0 / 0.12
   ); /* hairline round the category mark, light mode */
+  --color-on-patch: #ffffff; /* white names on the category tiles' full patch colours, the same in both themes, always over the dark halo */
+  --color-band-action: #e8b4bc; /* the rose Browse the shop pill, the same in both themes: 8.2:1 under its lettering */
+  --color-on-band-action: #4a1520; /* oxblood lettering on the rose pill */
+  --color-trace: #e8b4bc; /* the emblem trace's rose, 8.2:1 on the light band and 10.6:1 on the dark one */
+  --color-trace-bright: #fff3f5; /* the trace's bright point and trail head */
 
   /* Type: the system stack, no font download. */
   --font-sans:
@@ -44,11 +49,23 @@
   --duration-fast: 150ms;
   --duration-enter: 240ms;
   --duration-exit: 150ms;
+  --duration-trace: 4800ms; /* the emblem trace's point and trail: under 5 s, so it needs no pause control */
+  --duration-trace-build: 4100ms; /* the emblem trace's faint line drawing itself */
   --delay-loader: 300ms; /* a spinner or skeleton stays hidden this long, so quick waits flash nothing */
 
   /* Easing curves. */
   --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-in-soft: cubic-bezier(0.4, 0, 1, 1);
+
+  /* The dark halo round white tile names: a tight edge fading out, so they read on every patch colour, light ones included. */
+  --text-shadow-halo:
+    0 0 1px rgb(0 0 0 / 0.9), 0 0 3px rgb(0 0 0 / 0.75),
+    0 0 8px rgb(0 0 0 / 0.5);
+
+  /* The stronger, tighter halo for the one mid-tone tile (Arts and Crafts), where white alone is only 3.6:1. */
+  --text-shadow-halo-strong:
+    0 0 1px rgb(0 0 0), 0 0 1px rgb(0 0 0), 0 0 2px rgb(0 0 0),
+    0 0 3px rgb(0 0 0 / 0.9), 0 0 6px rgb(0 0 0 / 0.7);
 
   /* The one entrance animation: a short fade. */
   --animate-fade-in: fade-in var(--duration-enter) var(--ease-out-soft) both;
@@ -144,29 +161,18 @@ body {
   }
 }
 
-/* The theme control's list, where the browser draws a plain popup: readable text on the popup's own surface, not the band's stone. */
-.theme-select option {
-  color: var(
-    --color-text-default
-  ); /* ink, not the stone the closed control uses */
-  background: var(--color-bg-surface); /* white or dark card */
-}
-
 /* Category filter: the select shows the site's own popup list where the browser supports base-select (Chrome 135+, Safari 27); elsewhere it stays the plain select. */
 @supports (appearance: base-select) {
   .category-filter,
   .category-filter::picker(select),
   .club-select,
-  .club-select::picker(select),
-  .theme-select,
-  .theme-select::picker(select) {
+  .club-select::picker(select) {
     appearance: base-select; /* opt the closed control and its popup into custom styling */
   }
 
   /* The closed control: its text centred in the 44 px box, like the search box's. */
   .category-filter,
-  .club-select,
-  .theme-select {
+  .club-select {
     align-items: center; /* vertical centring of the chosen text */
   }
 
@@ -175,15 +181,10 @@ body {
   .club-select::picker-icon {
     color: var(--color-text-muted); /* quieter than the chosen text */
   }
-  /* The theme control's chevron takes the band's stone. */
-  .theme-select::picker-icon {
-    color: var(--color-on-header); /* readable on the oxblood band */
-  }
 
   /* The popup list: its own surface, at least the control's width, scrolls past about 10 options. */
   .category-filter::picker(select),
-  .club-select::picker(select),
-  .theme-select::picker(select) {
+  .club-select::picker(select) {
     box-sizing: border-box; /* so max-height counts the border */
     min-width: anchor-size(width); /* never narrower than the closed control */
     max-height: calc(
@@ -200,22 +201,19 @@ body {
     opacity: 0; /* the closed state the fade runs back to and the open state starts from */
   }
   .category-filter:open::picker(select),
-  .club-select:open::picker(select),
-  .theme-select:open::picker(select) {
+  .club-select:open::picker(select) {
     opacity: 1; /* fully visible while open */
   }
   @starting-style {
     .category-filter:open::picker(select),
-    .club-select:open::picker(select),
-    .theme-select:open::picker(select) {
+    .club-select:open::picker(select) {
       opacity: 0; /* where the fade-in begins */
     }
   }
 
   /* The fade-in; the duration and easing are the tokens'. */
   .category-filter::picker(select),
-  .club-select::picker(select),
-  .theme-select::picker(select) {
+  .club-select::picker(select) {
     transition:
       opacity var(--duration-fast) var(--ease-out-soft),
       display var(--duration-fast) allow-discrete,
@@ -224,8 +222,7 @@ body {
 
   /* One option: 44 px tall, 16 px text; the check mark and a heavier weight show the chosen one. */
   .category-filter option,
-  .club-select option,
-  .theme-select option {
+  .club-select option {
     display: flex; /* lays the check mark and the text in a row */
     align-items: center; /* centres them in the 44 px */
     gap: 0.5rem; /* space between the check mark and the text */
@@ -235,21 +232,17 @@ body {
     cursor: pointer; /* shows it can be chosen */
   }
   .category-filter option:checked,
-  .club-select option:checked,
-  .theme-select option:checked {
+  .club-select option:checked {
     font-weight: 500; /* the chosen option is heavier, as well as ticked */
   }
   .category-filter option:hover,
   .category-filter option:focus-visible,
   .club-select option:hover,
-  .club-select option:focus-visible,
-  .theme-select option:hover,
-  .theme-select option:focus-visible {
+  .club-select option:focus-visible {
     background: var(--color-border-subtle); /* the highlighted option */
   }
   .category-filter option:focus-visible,
-  .club-select option:focus-visible,
-  .theme-select option:focus-visible {
+  .club-select option:focus-visible {
     outline: 2px solid var(--color-focus-ring); /* replaces the browser's orange ring */
     outline-offset: -2px; /* inside the option so the list does not clip it */
   }
@@ -322,6 +315,110 @@ body {
 @keyframes send-spinner-turn {
   to {
     transform: rotate(360deg);
+  }
+}
+
+/* The emblem trace on Home's band: it plays once. The faint line builds, then a point and a three-layer trail ride the same path and fade over their last 15 %. */
+/* The faint line draws itself */
+@keyframes trace-build {
+  from {
+    stroke-dashoffset: 1000;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+/* The bright head: 40 units behind the point */
+@keyframes trace-tail1 {
+  0% {
+    stroke-dashoffset: 40;
+    opacity: 1;
+  }
+  85% {
+    stroke-dashoffset: -960;
+    opacity: 1;
+  }
+  100% {
+    stroke-dashoffset: -960;
+    opacity: 0;
+  }
+}
+/* The softer middle: 110 units */
+@keyframes trace-tail2 {
+  0% {
+    stroke-dashoffset: 110;
+    opacity: 1;
+  }
+  85% {
+    stroke-dashoffset: -890;
+    opacity: 1;
+  }
+  100% {
+    stroke-dashoffset: -890;
+    opacity: 0;
+  }
+}
+/* The faint tail: 240 units */
+@keyframes trace-tail3 {
+  0% {
+    stroke-dashoffset: 240;
+    opacity: 1;
+  }
+  85% {
+    stroke-dashoffset: -760;
+    opacity: 1;
+  }
+  100% {
+    stroke-dashoffset: -760;
+    opacity: 0;
+  }
+}
+/* The point rides the path, then fades */
+@keyframes trace-ride {
+  0% {
+    offset-distance: 0%;
+    opacity: 1;
+  }
+  85% {
+    offset-distance: 100%;
+    opacity: 1;
+  }
+  100% {
+    offset-distance: 100%;
+    opacity: 0;
+  }
+}
+.trace-build {
+  stroke-dasharray: 1000; /* the whole path, as pathLength says */
+  animation: trace-build var(--duration-trace-build) linear forwards; /* draws once and stays */
+}
+.trace-tail1 {
+  stroke-dasharray: 40 2000; /* the bright head, 40 units */
+  animation: trace-tail1 var(--duration-trace) linear forwards; /* once, then gone */
+}
+.trace-tail2 {
+  stroke-dasharray: 110 2000; /* the softer middle, 110 units */
+  animation: trace-tail2 var(--duration-trace) linear forwards; /* once, then gone */
+}
+.trace-tail3 {
+  stroke-dasharray: 240 2000; /* the faint long tail, 240 units */
+  animation: trace-tail3 var(--duration-trace) linear forwards; /* once, then gone */
+}
+.trace-rider {
+  offset-path: var(--emblem-path); /* the path the lines draw, set on the element by EmblemTrace so it is written once */
+  animation: trace-ride var(--duration-trace) linear forwards; /* once, then gone */
+}
+/* Reduce Motion: the still faint outline, with no point or trail. */
+@media (prefers-reduced-motion: reduce) {
+  .trace-build {
+    animation: none; /* no drawing */
+    stroke-dasharray: none; /* the whole line at once; the path's own 0.55 stroke opacity and 2 px stroke, the same as at rest */
+  }
+  .trace-tail1,
+  .trace-tail2,
+  .trace-tail3,
+  .trace-rider {
+    display: none; /* no point and no trail */
   }
 }
 

@@ -120,6 +120,26 @@ describe.each([
   )
 })
 
+describe('Home band colours', () => {
+  it.each([
+    ['light', light],
+    ['dark', darkPick],
+  ])('keeps Browse the shop readable on its pill and the pill visible on the band in %s', (_name, theme) => {
+    // catches: a rose pill that fails text contrast, or one that melts into the band
+    const merged = { ...light, ...theme } // band-action is written once, in @theme
+    expect(contrast(merged['on-band-action'], merged['band-action'])).toBeGreaterThanOrEqual(4.5)
+    expect(contrast(merged['band-action'], merged.header)).toBeGreaterThanOrEqual(3)
+  })
+
+  it('keeps the trace rose and the stone band text distinct from the band in both themes', () => {
+    // catches: the drawing token vanishing on the band
+    for (const theme of [light, darkPick]) {
+      const merged = { ...light, ...theme }
+      expect(contrast(merged.trace, merged.header)).toBeGreaterThanOrEqual(3)
+    }
+  })
+})
+
 describe('palette', () => {
   it('uses oxblood and stone in light', () => {
     // catches: the old navy and gold values surviving the swap

@@ -73,8 +73,33 @@ AY Store                 [◐ v]      AY Store                             [◐ 
 ( 3 items · RM 12.00    View cart )   sticky pill bar at the bottom
 ```
 
+Home, the landing page at `#/` (375 px):
+
+```
+[        AY Store         (☀)]   44 px · title · 44 px
+┌──────────────────────────────┐
+│ Everything your club needs,  │   oxblood band, rounded bottom corners,
+│ in one order        ╱╲ trace │   the emblem outline on its right
+│ Pick the items, send ...  ╲╱ │
+│ (Browse the shop ›)          │   rose pill, the one primary action
+└──────────────────────────────┘
+Shop by category
+[Recreation][Health and S…][Outd…   scrolls sideways, the next tile shows in part
+How ordering works
+┌──────────────────────────────┐
+│ (1) Pick your items          │
+│ (2) Send your details        │
+│ (3) Get your invoice         │
+└──────────────────────────────┘
+```
+
 - Cards: white, large radius, no shadow in light mode, a hairline in dark mode.
-- The header is an oxblood band. On the catalogue it holds the big "AY Store" title and the theme control. On inner screens (cart, details, confirmation) it holds a solid < back button on the left and a small "AY Store" above the page title, with no theme control.
+- The header is an oxblood band in one grid on every screen: a 44 px left slot, the title, a 44 px right slot, so the title never moves. Home shows the big "AY Store" and, on the right, the theme button. Shop shows a small "AY Store" over "Shop" and the theme button. Inner screens (cart, details, confirmation) show a solid < back button on the left and a small "AY Store" above the page title, with no theme button.
+- The theme button is a 44 px outlined circle: a sun while the page is light, a moon while it is dark. A tap flips between the two and remembers the pick; the first visit follows the device.
+- Home's welcome band runs the full width under the header with rounded bottom corners; its text sits in the 1,200 px column. Browse the shop is a rose pill (the same rose in light and dark).
+- A category tile is the category's full patch colour with its name bottom-left. The name follows the category mark's rule: near-black `#171717` on the two light tiles (Nature, Household Arts), white on the rest. White names sit in a dark halo (`text-shadow-halo`), and on Arts and Crafts, where white is only 3.6:1, in a stronger, tighter one (`text-shadow-halo-strong`). Near-black names have no halo.
+- `on-patch` (`#FFFFFF`, the same in light and dark) is the white of those tile names; it is used only over the halo.
+- The emblem trace is decoration. It draws once when Home opens: a rose line (2 px at 55 % opacity) builds in 4.1 s while a point and a fading trail ride it for 4.8 s, then only that outline stays. With Reduce Motion it is the same still outline. The text column stops short of the drawing from 640 px and the drawing sits under the text on a phone, so no letter lies over the line (stone text on the line blended into the band would fall to 3.8:1). It repaints a small SVG every frame for those 4.8 s, accepted because it is one short drawing; nothing moves after 5 s, so it needs no pause control.
 - Buttons are pills. Add turns into a − 1 + pill on the card after the first tap.
 - Content is centred in a 1,200 px column on desktop.
 
@@ -93,6 +118,12 @@ All spacing is on a 4 px scale (Tailwind steps). The gap inside a group is small
 | Inside a card (padding)                 | 8 px under 640 px, 12 px from 640 px        | `p-2 sm:p-3`              |
 | Between parts of a card                 | 8 px                                        | `gap-2`                   |
 | Header band padding                     | 12 px top and bottom, 16 px sides           | `py-3 px-4`               |
+| Header grid                             | 44 px · title · 44 px, 8 px gaps            | `grid-cols-[2.75rem_minmax(0,1fr)_2.75rem]` |
+| Theme button                            | 44 px circle, 20 px icon                    | `size-11`, `size-5`       |
+| Welcome band                            | 20 px top and bottom, 20 px sides, bottom corners 16 px | `p-5 rounded-b-card` |
+| Category tile                           | 104 × 88 px, 10 px padding, 12 px gaps      | `w-26 h-22 p-2.5 gap-3`   |
+| Emblem trace                            | about 174 × 170 px at the band's right      | `w-43.5 h-42.5`           |
+| Step number circle                      | 32 px                                       | `size-8`                  |
 | Patch picture on a card                 | 112 px                                      | `size-28`                 |
 | Tap target (buttons, steppers, fields)  | 44 px tall at least                         | `h-11`                    |
 | Between neighbouring targets            | 8 px at least                               | `gap-2`                   |
@@ -118,7 +149,7 @@ All spacing is on a 4 px scale (Tailwind steps). The gap inside a group is small
 - Oxblood marks every action and the header; nothing else uses it. Dark mode swaps the buttons to rose.
 - The patch is the hero of every card. Text stays small and grey under it.
 - Quiet chrome: no gradients and no decoration. The space between things does the separating.
-- A theme control (System, Light, Dark) sits in the header on the catalogue only.
+- The theme button sits in the header on Home and Shop only.
 - One way back on inner screens: the < button in the header. Other buttons say "Browse more" when they lead to the catalogue.
 
 ## Fixed choices

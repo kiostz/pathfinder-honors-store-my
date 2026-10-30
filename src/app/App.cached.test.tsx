@@ -1,7 +1,7 @@
 // Tests for App when the honors are already loaded at the first draw (a cached load), so the Unavailable line and banner cannot depend on a slow load.
 
 import { fireEvent, render, screen } from '@testing-library/react' // render and query the page
-import { afterEach, describe, expect, it, vi } from 'vitest' // test API and mocks
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest' // test API and mocks
 import { CART_STORAGE_KEY } from '@/features/cart/cart-storage.ts' // the stored cart's key
 import { App } from './App.tsx' // code under test
 
@@ -42,6 +42,10 @@ vi.mock('@/features/catalogue/use-catalogue-data.ts', () => {
     retry: () => {},
   } // the same object every render
   return { useCatalogueData: () => loaded }
+})
+
+beforeEach(() => {
+  window.location.hash = '#/shop' // the shop, where the cart bar still is
 })
 
 afterEach(() => {
