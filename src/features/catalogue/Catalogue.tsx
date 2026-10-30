@@ -34,7 +34,7 @@ export function Catalogue({ data }: { data: CatalogueLoad }) {
   const matches = filterHonors(allHonors, { query, category }) // what the search and the category leave
   const sorted = sortByName(matches) // names A to Z
   const filtering = query.trim() !== '' || category !== null // whether any filter is active
-  const countText = `${matches.length} ${matches.length === 1 ? 'honor' : 'honors'}${filtering ? (matches.length === 1 ? ' matches' : ' match') : ''}` // "299 honors", "12 honors match", "1 honor matches"
+  const countText = `${matches.length} ${matches.length === 1 ? 'item' : 'items'}${filtering ? (matches.length === 1 ? ' matches' : ' match') : ''}` // "299 items", "12 items match", "1 item matches"
 
   /**
    * Chooses a category and returns the list to its top.
@@ -120,9 +120,9 @@ export function Catalogue({ data }: { data: CatalogueLoad }) {
           <p className={`${COUNT_BOX} text-text-muted animate-fade-in`}>
             {/* The three messages share one line so the live region announces whichever applies. */}
             {switchedOn.length === 0
-              ? 'No honors are switched on yet. Check back soon.'
+              ? 'Nothing is in the shop yet. Check back soon.'
               : matches.length === 0
-                ? `No honors match "${query.trim()}"${category !== null ? ` in ${category}` : ''}.`
+                ? `No items match "${query.trim()}"${category !== null ? ` in ${category}` : ''}.`
                 : countText}
           </p>
         )}

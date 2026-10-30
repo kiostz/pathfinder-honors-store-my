@@ -72,7 +72,7 @@ describe('sendOrder', () => {
     expect(init.signal).toBeInstanceOf(AbortSignal) // the 20 s timeout
     expect(JSON.parse(init.body as string)).toEqual({
       access_key: 'test-key',
-      subject: 'Honor order PF-20261028-4K7Q — Eagles — J. Cruz',
+      subject: 'AY Store order PF-20261028-4K7Q — Eagles — J. Cruz',
       from_name: 'AY Store',
       replyto: 'jc@mail.com',
       message:
@@ -184,7 +184,7 @@ describe('sendOrder', () => {
     expect(done).toBe(true)
     expect(fetchFn).not.toHaveBeenCalled()
     expect(info).toHaveBeenCalledWith(
-      'Honor order PF-20261028-4K7Q — Eagles — J. Cruz',
+      'AY Store order PF-20261028-4K7Q — Eagles — J. Cruz',
       expect.stringContaining('Order: PF-20261028-4K7Q'),
     )
   })

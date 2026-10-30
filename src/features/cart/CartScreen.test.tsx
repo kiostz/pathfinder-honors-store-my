@@ -526,7 +526,7 @@ describe('CartScreen empty, loading and error', () => {
     // catches: no way to recover from a failed load, or a Checkout over an error
     const retry = vi.fn()
     renderScreen({ 'knot-tying': 1 }, { state: { status: 'error' }, showSkeleton: false, retry })
-    expect(screen.getByText("We couldn't load the honors. Check your connection and try again.")).toBeInTheDocument()
+    expect(screen.getByText("We couldn't load the shop. Check your connection and try again.")).toBeInTheDocument()
     fireEvent.click(screen.getByRole('button', { name: 'Try again' }))
     expect(retry).toHaveBeenCalledTimes(1)
     expect(screen.queryByRole('button', { name: 'Checkout' })).not.toBeInTheDocument()

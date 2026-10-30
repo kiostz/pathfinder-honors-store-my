@@ -83,10 +83,10 @@ export function toSentOrder(
 /**
  * Words the email subject.
  * @param order the order
- * @return "Honor order PF-… — club — name"
+ * @return "AY Store order PF-… — club — name"
  */
 export function orderEmailSubject(order: SentOrder): string {
-  return `Honor order ${order.number} — ${order.club.subject} — ${order.name}` // number, club, buyer
+  return `AY Store order ${order.number} — ${order.club.subject} — ${order.name}` // number, club, buyer
 }
 
 /**

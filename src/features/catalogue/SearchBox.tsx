@@ -23,7 +23,7 @@ export function SearchBox({
     <div>
       {/* The visible hint disappears while typing, so the label stays for screen readers. */}
       <label htmlFor="honor-search" className="sr-only">
-        Search honors
+        Search items
       </label>
       {/* 16 px text stops iOS zooming in on focus; 44 px tall for a thumb. */}
       <input
@@ -32,7 +32,7 @@ export function SearchBox({
         type="search" // search keyboard and clear button
         value={value} // controlled by the screen
         onChange={(event) => onChange(event.target.value)} // report every keystroke
-        placeholder="Search honors" // visible hint
+        placeholder="Search items" // visible hint
         autoComplete="off" // no browser history dropdown
         className="border-border-subtle bg-bg-surface focus-visible:outline-focus-ring rounded-pill min-h-11 w-full border px-4 text-base focus-visible:outline-2 focus-visible:outline-offset-2" // 44 px tall, 16 px text, focus ring
       />

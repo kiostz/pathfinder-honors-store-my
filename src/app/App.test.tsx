@@ -137,7 +137,7 @@ describe('App', () => {
     window.location.hash = '#/order-sent' // opened by address
     render(<App />)
     fireEvent.click(within(screen.getByRole('banner')).getByRole('link', { name: 'Back' }))
-    expect(await screen.findByRole('searchbox', { name: 'Search honors' })).toBeInTheDocument()
+    expect(await screen.findByRole('searchbox', { name: 'Search items' })).toBeInTheDocument()
   })
 
   it('updates the cart bar when Add is pressed on a card', async () => {
@@ -216,13 +216,13 @@ describe('App', () => {
     // catches: a catalogue that is rebuilt on return and loses the search, or focus dropped on the page
     serveTwoHonors()
     render(<App />)
-    fireEvent.change(await screen.findByRole('searchbox', { name: 'Search honors' }), { target: { value: 'knot' } })
+    fireEvent.change(await screen.findByRole('searchbox', { name: 'Search items' }), { target: { value: 'knot' } })
     fireEvent.click(screen.getByRole('button', { name: 'Add Knot Tying' }))
     fireEvent.click(screen.getByRole('link', { name: /View cart/ }))
     await screen.findByRole('heading', { name: 'Your cart' })
     fireEvent.click(screen.getByRole('link', { name: 'Back' }))
     await waitFor(() => expect(screen.queryByRole('heading', { name: 'Your cart' })).not.toBeInTheDocument())
-    expect(screen.getByRole('searchbox', { name: 'Search honors' })).toHaveValue('knot')
+    expect(screen.getByRole('searchbox', { name: 'Search items' })).toHaveValue('knot')
     expect(screen.getByRole('link', { name: /View cart/ })).toHaveFocus()
     expect(document.title).toBe('AY Store')
   })
@@ -234,7 +234,7 @@ describe('App', () => {
     fireEvent.click(await screen.findByRole('button', { name: 'Add Knot Tying' }))
     fireEvent.click(screen.getByRole('link', { name: /View cart/ }))
     await screen.findByRole('heading', { name: 'Your cart' })
-    expect(screen.queryByRole('searchbox', { name: 'Search honors' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('searchbox', { name: 'Search items' })).not.toBeInTheDocument()
   })
 
   it('goes home from a cart opened by address, and focuses main when the cart is empty', async () => {
@@ -243,7 +243,7 @@ describe('App', () => {
     window.location.hash = '#/cart' // opened by address, not from the catalogue
     render(<App />)
     fireEvent.click(await screen.findByRole('button', { name: 'Browse more' }))
-    expect(await screen.findByRole('searchbox', { name: 'Search honors' })).toBeInTheDocument()
+    expect(await screen.findByRole('searchbox', { name: 'Search items' })).toBeInTheDocument()
     expect(window.location.hash).toBe('#/')
     expect(screen.getByRole('main')).toHaveFocus()
   })
@@ -260,7 +260,7 @@ describe('App', () => {
     const back = vi.spyOn(window.history, 'back') // from here on, count history moves
     fireEvent.click(screen.getByRole('button', { name: 'Browse more' }))
     expect(back).not.toHaveBeenCalled()
-    expect(await screen.findByRole('searchbox', { name: 'Search honors' })).toBeInTheDocument()
+    expect(await screen.findByRole('searchbox', { name: 'Search items' })).toBeInTheDocument()
     expect(window.location.hash).toBe('#/')
     back.mockRestore() // put history back
   })
@@ -289,7 +289,7 @@ describe('App', () => {
       const back = vi.spyOn(window.history, 'back') // count history moves
       fireEvent.click(screen.getByRole('link', { name: 'Back' })) // the link under test
       expect(back).not.toHaveBeenCalled() // went home instead
-      expect(await screen.findByRole('searchbox', { name: 'Search honors' })).toBeInTheDocument() // on the catalogue
+      expect(await screen.findByRole('searchbox', { name: 'Search items' })).toBeInTheDocument() // on the catalogue
       back.mockRestore() // put history back
     },
   )
@@ -304,7 +304,7 @@ describe('App', () => {
     const back = vi.spyOn(window.history, 'back') // count history moves
     fireEvent.click(screen.getByRole('link', { name: 'Back' }))
     expect(back).toHaveBeenCalledTimes(1)
-    await screen.findByRole('searchbox', { name: 'Search honors' })
+    await screen.findByRole('searchbox', { name: 'Search items' })
     back.mockRestore() // put history back
   })
 
@@ -322,7 +322,7 @@ describe('App', () => {
     Object.defineProperty(window, 'scrollY', { value: 0, configurable: true })
     fireEvent.scroll(window) // the hidden catalogue makes the browser clamp to 0; it must not be saved
     fireEvent.click(screen.getByRole('link', { name: 'Back' }))
-    await screen.findByRole('searchbox', { name: 'Search honors' })
+    await screen.findByRole('searchbox', { name: 'Search items' })
     expect(scrollTo).toHaveBeenLastCalledWith(0, 92) // back where the buyer was
     delete (window as { scrollY?: number }).scrollY // jsdom's own again
     scrollTo.mockRestore() // put scrollTo back
@@ -485,7 +485,7 @@ describe('App', () => {
     expect(document.title).toBe('Order sent · AY Store')
     expect(screen.getByText('PF-20261028-4K7Q')).toBeInTheDocument()
     expect(screen.queryByTestId('cart-bar')).not.toBeInTheDocument()
-    expect(screen.queryByRole('searchbox', { name: 'Search honors' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('searchbox', { name: 'Search items' })).not.toBeInTheDocument()
   })
 
   it('sends an order from the cart and lands on the confirmation with an empty cart', async () => {

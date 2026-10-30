@@ -58,7 +58,7 @@ export async function sendOrder(
       }, // JSON in and out
       body: JSON.stringify({
         access_key: import.meta.env.VITE_WEB3FORMS_ACCESS_KEY, // public by design
-        subject, // "Honor order PF-… — club — name"
+        subject, // "AY Store order PF-… — club — name"
         from_name: 'AY Store', // the sender name in the inbox
         replyto: order.email, // so the handler can reply to the buyer
         message, // the order text

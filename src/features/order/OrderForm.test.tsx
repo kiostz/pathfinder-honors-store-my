@@ -230,7 +230,7 @@ function numberOfCall(fetchFn: ReturnType<typeof stubFetch>, call: number): stri
   const body = JSON.parse((fetchFn.mock.calls[call] as unknown as [string, RequestInit])[1].body as string) as {
     subject: string
   }
-  return /PF-\d{8}-[A-Z0-9]{4}/.exec(body.subject)?.[0] ?? '' // the number inside "Honor order PF-… — club — name"
+  return /PF-\d{8}-[A-Z0-9]{4}/.exec(body.subject)?.[0] ?? '' // the number inside "AY Store order PF-… — club — name"
 }
 
 /** Fills the form validly, ticks the captcha and presses Send order. */

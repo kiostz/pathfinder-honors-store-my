@@ -160,7 +160,7 @@ describe('Catalogue', () => {
     serve([honor('Ants', 'Nature'), honor('Knot Tying', 'Recreation')])
     render(<CatalogueWithCart />)
     fireEvent.click(await screen.findByRole('button', { name: 'Add Ants' }))
-    const search = screen.getByRole('searchbox', { name: 'Search honors' })
+    const search = screen.getByRole('searchbox', { name: 'Search items' })
     fireEvent.change(search, { target: { value: 'knot' } }) // Ants is hidden
     expect(screen.queryByText('Ants')).not.toBeInTheDocument()
     fireEvent.change(search, { target: { value: '' } }) // and shown again
@@ -173,14 +173,14 @@ describe('Catalogue', () => {
     // catches: "1 honors" and a count that includes switched-off honors
     serve([honor('Knot Tying', 'Recreation'), honor('Off', 'Recreation', false)])
     render(<CatalogueWithCart />)
-    expect(await screen.findByText('1 honor')).toBeInTheDocument()
+    expect(await screen.findByText('1 item')).toBeInTheDocument()
   })
 
   it('renders all 299 switched-on honors among 422 at once, with no Load more and lazy pictures', async () => {
     // catches: pagination or a Load more button creeping back, rows dropped at full size, or pictures that load eagerly
     serve(Array.from({ length: 422 }, (_, i) => honor(`Honor ${i}`, 'Nature', i < 299, `patches/${i}.png`)))
     render(<CatalogueWithCart />)
-    expect(await screen.findByText('299 honors')).toBeInTheDocument()
+    expect(await screen.findByText('299 items')).toBeInTheDocument()
     expect(screen.getAllByRole('listitem')).toHaveLength(299)
     expect(screen.queryByRole('button', { name: /load more/i })).not.toBeInTheDocument()
     const pictures = Array.from(screen.getByRole('list').querySelectorAll('img')) // decorative pictures have no role to query by
@@ -201,7 +201,7 @@ describe('Catalogue', () => {
     // catches: a blank page when the list is empty
     serve([honor('Off', 'Nature', false)])
     render(<CatalogueWithCart />)
-    expect(await screen.findByText('No honors are switched on yet. Check back soon.')).toBeInTheDocument()
+    expect(await screen.findByText('Nothing is in the shop yet. Check back soon.')).toBeInTheDocument()
   })
 
   it('shows nothing for 300 ms, then the toolbar box, the count line box and 6 card shapes with picture, name, label, price and button bars', () => {
@@ -245,7 +245,7 @@ describe('Catalogue', () => {
     vi.unstubAllGlobals() // drop the never-answering fetch
     serve([honor('Knot Tying', 'Recreation')])
     render(<CatalogueWithCart />)
-    expect(await screen.findByText('1 honor')).toHaveClass('mt-3', 'min-h-6')
+    expect(await screen.findByText('1 item')).toHaveClass('mt-3', 'min-h-6')
     expect(screen.getByRole('listitem').className).toBe(skeletonCardClass) // the honor card and the skeleton card share one box
     expect(screen.getByRole('list').className).toBe(skeletonGridClass) // and the grid
   })
@@ -266,7 +266,7 @@ describe('Catalogue', () => {
     vi.stubGlobal('fetch', fetchFn)
     render(<CatalogueWithCart />)
     expect(
-      await screen.findByText("We couldn't load the honors. Check your connection and try again."),
+      await screen.findByText("We couldn't load the shop. Check your connection and try again."),
     ).toBeInTheDocument()
     fireEvent.click(screen.getByRole('button', { name: 'Try again' }))
     expect(await screen.findByText('Knot Tying')).toBeInTheDocument()
@@ -276,9 +276,9 @@ describe('Catalogue', () => {
     // catches: the error message landing 61 px above where the skeleton stood
     vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new TypeError('Failed to fetch'))) // every request fails
     render(<CatalogueWithCart />)
-    await screen.findByText("We couldn't load the honors. Check your connection and try again.")
+    await screen.findByText("We couldn't load the shop. Check your connection and try again.")
     expect(screen.getByTestId('catalogue-toolbar-space')).toHaveClass('border-b', 'px-4', 'py-2') // the toolbar's box, empty
-    expect(screen.getByText("We couldn't load the honors. Check your connection and try again.")).toHaveClass(
+    expect(screen.getByText("We couldn't load the shop. Check your connection and try again.")).toHaveClass(
       'mt-3',
       'min-h-6',
     ) // the count line's box
@@ -288,7 +288,7 @@ describe('Catalogue', () => {
     // catches: the empty message landing 61 px above where the skeleton stood
     serve([honor('Off', 'Nature', false)])
     render(<CatalogueWithCart />)
-    await screen.findByText('No honors are switched on yet. Check back soon.')
+    await screen.findByText('Nothing is in the shop yet. Check back soon.')
     expect(screen.getByTestId('catalogue-toolbar-space')).toBeInTheDocument()
     expect(screen.queryByRole('combobox', { name: 'Category' })).not.toBeInTheDocument() // no real toolbar to filter with
   })
@@ -320,7 +320,7 @@ describe('Catalogue', () => {
      * @param value the text to put in the box
      */
     function type(value: string) {
-      fireEvent.change(screen.getByRole('searchbox', { name: 'Search honors' }), { target: { value } })
+      fireEvent.change(screen.getByRole('searchbox', { name: 'Search items' }), { target: { value } })
     }
 
     /**
@@ -339,7 +339,7 @@ describe('Catalogue', () => {
       type('knot')
       expect(screen.getByText('Knot Tying')).toBeInTheDocument()
       expect(screen.queryByText('Leaves')).not.toBeInTheDocument()
-      expect(screen.getByText('1 honor matches')).toBeInTheDocument()
+      expect(screen.getByText('1 item matches')).toBeInTheDocument()
     })
 
     it('finds "Braiding - Advanced" from "braiding adv"', async () => {
@@ -349,11 +349,11 @@ describe('Catalogue', () => {
       expect(screen.getByText('Braiding - Advanced')).toBeInTheDocument()
     })
 
-    it('says "2 honors match" in the plural', async () => {
-      // catches: a plural count line reading "2 honor matches"
+    it('says "2 items match" in the plural', async () => {
+      // catches: a plural count line reading "2 item matches"
       await renderMixed()
       chooseCategory('Nature')
-      expect(screen.getByText('2 honors match')).toBeInTheDocument()
+      expect(screen.getByText('2 items match')).toBeInTheDocument()
     })
 
     it('lists All categories and the categories A to Z, with All categories chosen at the start', async () => {
@@ -379,7 +379,7 @@ describe('Catalogue', () => {
       ])
       chooseCategory('All categories')
       expect(screen.getAllByRole('listitem')).toHaveLength(4)
-      expect(screen.getByText('4 honors')).toBeInTheDocument()
+      expect(screen.getByText('4 items')).toBeInTheDocument()
     })
 
     /**
@@ -427,9 +427,9 @@ describe('Catalogue', () => {
       await renderMixed()
       chooseCategory('Nature')
       type('knot')
-      expect(screen.getByText('No honors match "knot" in Nature.')).toBeInTheDocument()
+      expect(screen.getByText('No items match "knot" in Nature.')).toBeInTheDocument()
       fireEvent.click(screen.getByRole('button', { name: 'Clear filters' }))
-      const box = screen.getByRole('searchbox', { name: 'Search honors' })
+      const box = screen.getByRole('searchbox', { name: 'Search items' })
       expect(box).toHaveValue('')
       expect(box).toHaveFocus()
       expect(screen.getByRole('combobox', { name: 'Category' })).toHaveDisplayValue('All categories')
@@ -440,14 +440,14 @@ describe('Catalogue', () => {
       // catches: " in null" or " in All" in the message
       await renderMixed()
       type('zzz')
-      expect(screen.getByText('No honors match "zzz".')).toBeInTheDocument()
+      expect(screen.getByText('No items match "zzz".')).toBeInTheDocument()
     })
 
     it('trims the outer spaces of the query in the no-match message', async () => {
-      // catches: a message reading No honors match "  zzz ." with the typed spaces
+      // catches: a message reading No items match "  zzz ." with the typed spaces
       await renderMixed()
       type('  zzz ')
-      expect(screen.getByText('No honors match "zzz".')).toBeInTheDocument()
+      expect(screen.getByText('No items match "zzz".')).toBeInTheDocument()
     })
 
     it('treats a query of spaces as no search', async () => {
@@ -455,7 +455,7 @@ describe('Catalogue', () => {
       await renderMixed()
       type('   ')
       expect(screen.getAllByRole('listitem')).toHaveLength(4)
-      expect(screen.getByText('4 honors')).toBeInTheDocument()
+      expect(screen.getByText('4 items')).toBeInTheDocument()
     })
   })
 })

@@ -125,11 +125,11 @@ describe('toSentOrder', () => {
 })
 
 describe('orderEmailSubject', () => {
-  it('reads Honor order, number, club and name', () => {
+  it('reads AY Store order, number, club and name', () => {
     // catches: a subject that differs from the one the order handler's filters expect
     const order = toSentOrder('PF-20261028-4K7Q', twoLines, values, 'MYR', now)
     expect(orderEmailSubject(order)).toBe(
-      'Honor order PF-20261028-4K7Q — Eagles — J. Cruz',
+      'AY Store order PF-20261028-4K7Q — Eagles — J. Cruz',
     )
   })
 
@@ -143,7 +143,7 @@ describe('orderEmailSubject', () => {
       now,
     )
     expect(orderEmailSubject(order)).toBe(
-      'Honor order PF-20261028-4K7Q — Hilltop Club — J. Cruz',
+      'AY Store order PF-20261028-4K7Q — Hilltop Club — J. Cruz',
     )
   })
 })
