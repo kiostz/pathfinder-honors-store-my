@@ -115,6 +115,22 @@ describe('App', () => {
     await screen.findByText('Knot Tying') // let the load settle
   })
 
+  it('keeps the header controls off paper and the band readable without its background', async () => {
+    // catches: the Back button or theme control printed, or stone title text printed onto white paper
+    serveTwoHonors() // two honors
+    window.location.hash = '#/order-sent' // opened by address
+    const sent = render(<App />)
+    const sentBand = screen.getByRole('banner') // the inner-screen band
+    const back = within(sentBand).getByRole('link', { name: 'Back' }) // the < button
+    expect(back.closest('.print\\:hidden')).not.toBeNull()
+    expect(sentBand).toHaveClass('print:bg-transparent', 'print:text-text-default')
+    sent.unmount()
+    window.location.hash = '#/' // the catalogue
+    render(<App />)
+    const theme = within(screen.getByRole('banner')).getByRole('combobox') // the Theme control
+    expect(theme.closest('.print\\:hidden')).not.toBeNull()
+  })
+
   it('leads from Back on the confirmation to the catalogue', async () => {
     // catches: a confirmation whose header Back goes nowhere
     serveTwoHonors() // two honors

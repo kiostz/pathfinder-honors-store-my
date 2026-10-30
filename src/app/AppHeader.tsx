@@ -26,16 +26,20 @@ export function AppHeader({
   const { sending } = useOrderForm() // an order is being sent: leaving waits
   return (
     // The oxblood band, in the same 1,200 px column as the page.
-    <header className="bg-header text-on-header">
+    // On paper the band drops its fill and takes ink, so the name prints even when the browser leaves backgrounds out.
+    <header className="bg-header text-on-header print:text-text-default print:bg-transparent">
       <div className="mx-auto flex max-w-300 items-center justify-between gap-3 px-4 py-3">
         {onCatalogue ? (
           <>
             <h1 className="sm:text-title text-xl font-bold">{siteTitle}</h1> {/* big */}
-            <ThemeControl /> {/* only here */}
+            {/* Wrapper so the control, whatever it draws, stays off paper. */}
+            <div className="print:hidden">
+              <ThemeControl /> {/* only here, never on paper */}
+            </div>
           </>
         ) : (
           <>
-            <div inert={sending} className="flex shrink-0">
+            <div inert={sending} className="flex shrink-0 print:hidden">
               <BackButton href={backHref} onBack={onBack} /> {/* frozen while sending */}
             </div>
             <h1 className="flex-1 text-sm font-medium">{siteTitle}</h1> {/* small, above the page title below */}

@@ -47,3 +47,13 @@ describe('index.css dark values', () => {
       expect(atRules.some((rule) => /^@media\s+screen\b/.test(rule))).toBe(true)
   })
 })
+
+describe('index.css print block', () => {
+  it('sets the light page and ink colours for every page and for a picked theme', () => {
+    // catches: a picked Dark theme outranking the print values, so paper gets dark-on-dark
+    const print = css.slice(css.indexOf('@media print')) // the print block runs to the end of the file
+    expect(print).toMatch(/:root\s*,\s*:root\[data-theme\]\s*\{/)
+    expect(print).toContain('--color-bg-app: #ffffff')
+    expect(print).toContain('--color-text-default: #1d1d1f')
+  })
+})

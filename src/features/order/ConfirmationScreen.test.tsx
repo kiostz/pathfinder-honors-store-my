@@ -105,40 +105,48 @@ describe('ConfirmationScreen', () => {
     expect(screen.getByText('PF-20261028-4K7Q')).toBeInTheDocument()
   })
 
-  it('opens the print dialog from the Print / save as PDF button', () => {
-    // catches: a print button wired to nothing
+  it('opens the print dialog from the Save as PDF or print button, once', () => {
+    // catches: a print button wired to nothing, or one that opens the dialog twice
     writeSentOrder(order)
     const print = vi.spyOn(window, 'print').mockImplementation(() => {})
     render(<ConfirmationScreen onBack={() => {}} />)
-    fireEvent.click(screen.getByRole('button', { name: 'Print / save as PDF' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Save as PDF or print' }))
     expect(print).toHaveBeenCalledTimes(1)
   })
 
-  it('leads back to the honors from the full page too', () => {
-    // catches: no way out of the confirmation but the browser back button
+  it('leaves the Confirmation page by the header only: no Browse more, no link, one button', () => {
+    // catches: a second way back under the print button, against the one-way-back rule
     writeSentOrder(order)
-    const onBack = vi.fn()
-    render(<ConfirmationScreen onBack={onBack} />)
-    fireEvent.click(screen.getByRole('link', { name: 'Back to honors' }))
-    expect(onBack).toHaveBeenCalledTimes(1)
+    render(<ConfirmationScreen onBack={() => {}} />)
+    expect(screen.queryByText(/Browse more|Back to honors|Browse honors/)).not.toBeInTheDocument()
+    expect(screen.queryAllByRole('link')).toHaveLength(0)
+    expect(screen.getAllByRole('button')).toHaveLength(1)
   })
 
   it('keeps every button and link off the printed page', () => {
-    // catches: a Print button or link printed onto the paper copy
+    // catches: a Save as PDF or print button printed onto the paper copy
     writeSentOrder(order)
     render(<ConfirmationScreen onBack={() => {}} />)
-    for (const control of [...screen.getAllByRole('button'), ...screen.getAllByRole('link')])
+    for (const control of [...screen.getAllByRole('button'), ...screen.queryAllByRole('link')])
       expect(control).toHaveClass('print:hidden')
   })
 
-  it('says there is no order when nothing is stored, and leads back to the honors', () => {
+  it('labels the order number and keeps each order line whole across a printed page break', () => {
+    // catches: an unlabelled number, or a line cut in half between two sheets
+    writeSentOrder(order)
+    render(<ConfirmationScreen onBack={() => {}} />)
+    expect(screen.getByText('Order number')).toBeInTheDocument()
+    for (const line of screen.getAllByRole('listitem')) expect(line).toHaveClass('print:break-inside-avoid')
+  })
+
+  it('says there is no order when nothing is stored, and leads back with Browse more', () => {
     // catches: a blank page for a buyer who opens the address by hand
     const onBack = vi.fn()
     render(<ConfirmationScreen onBack={onBack} />)
     expect(screen.getByText('There is no order to show here.')).toBeInTheDocument()
     expect(screen.queryByRole('heading', { name: 'Order sent' })).not.toBeInTheDocument()
-    expect(screen.queryByRole('button', { name: 'Print / save as PDF' })).not.toBeInTheDocument()
-    fireEvent.click(screen.getByRole('link', { name: 'Browse honors' }))
+    expect(screen.queryByRole('button', { name: 'Save as PDF or print' })).not.toBeInTheDocument()
+    fireEvent.click(screen.getByRole('link', { name: 'Browse more' }))
     expect(onBack).toHaveBeenCalledTimes(1)
   })
   it('shows the empty state, not a crash, for a stored value of the right version but the wrong shape', () => {
