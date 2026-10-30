@@ -59,7 +59,7 @@ export async function sendOrder(
       body: JSON.stringify({
         access_key: import.meta.env.VITE_WEB3FORMS_ACCESS_KEY, // public by design
         subject, // "Honor order PF-… — club — name"
-        from_name: 'Pathfinder Honors', // the sender name in the inbox
+        from_name: 'AY Store', // the sender name in the inbox
         replyto: order.email, // so the handler can reply to the buyer
         message, // the order text
         'h-captcha-response': captchaToken, // Web3Forms checks it

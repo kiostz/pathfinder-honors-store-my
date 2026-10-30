@@ -73,7 +73,7 @@ describe('sendOrder', () => {
     expect(JSON.parse(init.body as string)).toEqual({
       access_key: 'test-key',
       subject: 'Honor order PF-20261028-4K7Q — Eagles — J. Cruz',
-      from_name: 'Pathfinder Honors',
+      from_name: 'AY Store',
       replyto: 'jc@mail.com',
       message:
         'Order: PF-20261028-4K7Q\nName:  J. Cruz\nEmail: jc@mail.com\nPhone: +60 12-345 6789\nClub:  Eagles\n\n3 × Knot Tying @ RM 3.00 = RM 9.00\n\nEstimated total: RM 9.00',

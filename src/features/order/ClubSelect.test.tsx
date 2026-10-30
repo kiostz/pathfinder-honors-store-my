@@ -1,5 +1,7 @@
 // Tests for the club select: its options, the closed control's structure, the grey line and the Other field.
 
+import { readFileSync } from 'node:fs' // reads index.css
+import { resolve } from 'node:path' // the path to index.css
 import { fireEvent, render, screen, waitFor } from '@testing-library/react' // render and query
 import { describe, expect, it, vi } from 'vitest' // test API and mocks
 import type { Club } from '@/shared/data/types.ts' // the club shape
@@ -145,5 +147,12 @@ describe('ClubSelect', () => {
     expect(onBlur).toHaveBeenCalledWith('otherClub')
     expect(screen.getByText('Choose your club.')).toBeInTheDocument()
     expect(screen.getByText('Enter your club name, up to 100 characters.')).toBeInTheDocument()
+  })
+
+  it('gives the closed control\'s inner button a 44 px target', () => {
+    // catches: the "Choose your club" part shrinking to its 24 px text line, so only a strip of the 44 px select takes a tap; jsdom cannot cascade the stylesheet's nested rules or lay out base-select, so this reads the rule's text and the browser check measures the real size
+    const css = readFileSync(resolve(process.cwd(), 'src/styles/index.css'), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '') // the stylesheet without comments
+    const rule = /\.club-select > button \{([^}]*)\}/.exec(css)?.[1] ?? '' // the inner button's declarations
+    expect(rule).toMatch(/min-height:\s*calc\(2\.75rem - 2px\)/) // the select's 44 px box less its 1 px borders
   })
 })

@@ -26,6 +26,8 @@ vi.mock('./Captcha.tsx', () => ({
         <button type="button" onClick={() => onToken(null)}>
           Expire captcha
         </button>
+        {/* The widget's frame, which takes focus after a reset. */}
+        <iframe title="Captcha frame" />
       </div>
     )
   },
@@ -238,6 +240,29 @@ function fillTickAndSend() {
   fireEvent.click(screen.getByRole('button', { name: 'Send order' }))
 }
 
+describe('OrderForm look', () => {
+  it('draws the fields and Send order as 44 px pills with 16 px text', () => {
+    // catches: square fields and a rounded-rectangle Send order beside the pill search box and bars
+    renderForm()
+    for (const label of ['Name', 'Email', 'Phone']) {
+      const field = screen.getByLabelText(label)
+      expect(field).toHaveClass('rounded-pill', 'min-h-11', 'text-base')
+    }
+    expect(screen.getByRole('combobox', { name: 'Club' })).toHaveClass('rounded-pill', 'min-h-11')
+    expect(screen.getByRole('button', { name: 'Send order' })).toHaveClass('rounded-pill', 'min-h-11', 'w-full')
+  })
+
+  it('puts a field error as text under the field and not in the label', () => {
+    // catches: red used as the only sign of an error, or an error away from its field
+    renderForm()
+    fireEvent.blur(screen.getByLabelText('Name'))
+    const error = screen.getByText('Enter your name, up to 100 characters.')
+    expect(error).toHaveClass('text-danger')
+    expect(screen.getByLabelText('Name')).toHaveAttribute('aria-describedby', error.id)
+    expect(screen.getByLabelText('Name').parentElement?.lastElementChild).toBe(error)
+  })
+})
+
 describe('OrderForm sending', () => {
   it('on a failure keeps the cart and form, shows the alert, resets the captcha and keeps focus on Send', async () => {
     // catches: a failed send that empties the cart, loses the typing, reuses a spent captcha token or leaves focus nowhere
@@ -317,6 +342,34 @@ describe('OrderForm sending', () => {
     fireEvent.click(tick) // the widget reports a token
     tick.focus()
     expect(tick).toHaveFocus()
+  })
+
+  it('takes focus back to Send order when the widget frame takes focus with only a window blur and no focus event on the page', async () => {
+    // catches: the real browser's hCaptcha reset, which moves focus into its frame without a focusin reaching the form, leaving a keyboard buyer inside the widget after a failed send
+    vi.spyOn(console, 'error').mockImplementation(() => {})
+    stubFetch(new Response('{}', { status: 500 }))
+    renderForm()
+    fillTickAndSend()
+    await screen.findByRole('alert')
+    screen.getByLabelText('Name').focus() // focus is away from Send order, as it is the instant the frame takes it
+    const frame = screen.getByTitle('Captcha frame')
+    const active = vi.spyOn(document, 'activeElement', 'get').mockReturnValue(frame) // the page now reports the frame as focused
+    act(() => void fireEvent.blur(window)) // the only event the page gets
+    active.mockRestore() // the page's own focus tracking again
+    await waitFor(() => expect(screen.getByRole('button', { name: 'Send order' })).toHaveFocus())
+  })
+
+  it('leaves focus alone on a window blur that is not the captcha frame', async () => {
+    // catches: a refocus on every window blur, so switching tabs right after a failure pulls the buyer to Send order
+    vi.spyOn(console, 'error').mockImplementation(() => {})
+    stubFetch(new Response('{}', { status: 500 }))
+    renderForm()
+    fillTickAndSend()
+    await screen.findByRole('alert')
+    const name = screen.getByLabelText('Name')
+    name.focus() // the buyer is in a field
+    act(() => void fireEvent.blur(window)) // the window loses focus to another tab
+    expect(name).toHaveFocus()
   })
 
   it('logs an unexpected error by name and stack, never its message', async () => {

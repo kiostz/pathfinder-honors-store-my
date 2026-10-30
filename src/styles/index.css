@@ -263,6 +263,9 @@ body {
     all: unset; /* the browser's button look is not wanted: the select draws the box */
     flex: 1; /* takes the width the chevron leaves */
     min-width: 0; /* lets a long name truncate rather than push the chevron out */
+    min-height: calc(2.75rem - 2px); /* fills the select's 44 px box (its 1 px borders take the 2 px), not just the 24 px text line */
+    display: block; /* a block container, so text-overflow can draw the ellipsis */
+    line-height: calc(2.75rem - 2px); /* centres the one-line name in that height */
     overflow: hidden; /* the name stays on one line in the control */
     text-overflow: ellipsis; /* a very long name ends in an ellipsis */
     white-space: nowrap; /* one line in the closed control */
@@ -286,6 +289,10 @@ body {
     color: var(--color-text-muted); /* quieter than the name */
     font-size: 0.875rem; /* 14 px */
     overflow-wrap: anywhere; /* a long church name wraps */
+  }
+  /* In the closed control the name is plain inline text, so the button's ellipsis reaches it. */
+  .club-select selectedcontent .club-option {
+    display: contents; /* drops the two-line flex box the list uses */
   }
   /* The closed control keeps to the name. */
   .club-select selectedcontent .club-detail {

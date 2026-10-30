@@ -1,8 +1,9 @@
 // Tests for the Captcha wrapper with the hCaptcha package mocked at its boundary: what its callbacks hand the form, the reset handle and the theme.
 
-import { act, render } from '@testing-library/react' // render and flush updates
+import { act, render, renderHook } from '@testing-library/react' // render and flush updates
 import { createRef, useImperativeHandle, type Ref } from 'react' // the stand-in widget and a handle to reset it
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest' // test API and mocks
+import { useTheme } from '@/shared/theme/use-theme.ts' // the hook the Theme control uses
 import { Captcha, type CaptchaHandle } from './Captcha.tsx' // code under test
 
 type WidgetProps = {
@@ -49,6 +50,8 @@ beforeEach(() => {
 
 afterEach(() => {
   vi.restoreAllMocks() // spies from the test are removed
+  document.documentElement.removeAttribute('data-theme') // the next test starts on System
+  window.localStorage.clear() // no saved pick left
 })
 
 describe('Captcha', () => {
@@ -103,5 +106,56 @@ describe('Captcha', () => {
     dark = true // the system switches to dark
     act(() => schemeListeners.forEach((listener) => listener()))
     expect(widget.props?.theme).toBe('dark')
+  })
+
+  it('follows a picked Dark while the system is light', () => {
+    // catches: a widget that reads only the system scheme, so a Dark pick leaves a light widget on a dark page
+    document.documentElement.dataset.theme = 'dark' // the pick, as the theme control sets it
+    render(<Captcha onToken={() => {}} />)
+    expect(widget.props?.theme).toBe('dark')
+  })
+
+  it('follows a picked Light while the system is dark', () => {
+    // catches: the system scheme beating the buyer's pick
+    dark = true
+    document.documentElement.dataset.theme = 'light'
+    render(<Captcha onToken={() => {}} />)
+    expect(widget.props?.theme).toBe('light')
+  })
+
+  it('does not report a token on mount', () => {
+    // catches: the theme-change clear firing at mount and wiping a form's state
+    const onToken = vi.fn()
+    render(<Captcha onToken={onToken} />)
+    expect(onToken).not.toHaveBeenCalled()
+  })
+
+  it('clears the token and re-themes the widget when the buyer picks another theme', () => {
+    // catches: a stale token kept after the widget is redrawn, so the next send fails with a dead token
+    const onToken = vi.fn()
+    render(<Captcha onToken={onToken} />)
+    const { result } = renderHook(() => useTheme()) // the theme control's hook
+    act(() => result.current.setChoice('dark'))
+    expect(widget.props?.theme).toBe('dark')
+    expect(onToken).toHaveBeenCalledExactlyOnceWith(null)
+  })
+
+  it('clears the token when the system scheme flips while the choice is System', () => {
+    // catches: only a picked theme clearing the token, while a system switch redraws the widget silently
+    const onToken = vi.fn()
+    render(<Captcha onToken={onToken} />)
+    dark = true
+    act(() => schemeListeners.forEach((listener) => listener()))
+    expect(onToken).toHaveBeenCalledExactlyOnceWith(null)
+  })
+
+  it('keeps the token when a pick leaves the widget in the same theme', () => {
+    // catches: a clear on every theme control press, so a ticked buyer must tick again for nothing
+    dark = true // the system is dark
+    const onToken = vi.fn()
+    render(<Captcha onToken={onToken} />)
+    const { result } = renderHook(() => useTheme())
+    act(() => result.current.setChoice('dark')) // Dark on a dark system: the same theme
+    expect(onToken).not.toHaveBeenCalled()
   })
 })

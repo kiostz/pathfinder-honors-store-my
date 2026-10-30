@@ -5,6 +5,7 @@ import type { OrderLine } from '@/features/cart/cart.ts' // the order lines bein
 import { useCart } from '@/features/cart/use-cart.ts' // the sent order lines leave it
 import type { ClubList } from '@/shared/data/types.ts' // the clubs
 import { ORDER_SENT_HASH } from '@/shared/routes.ts' // the confirmation page's address
+import { ACTION_BOX } from '@/shared/ui/button-box.ts' // the primary pill's shape
 import { Captcha, type CaptchaHandle } from './Captcha.tsx' // the hCaptcha widget
 import { ClubSelect } from './ClubSelect.tsx' // the club field
 import { FIELD_BOX, FIELD_ERROR, FIELD_LABEL } from './field-box.ts' // the shared field look
@@ -57,6 +58,7 @@ export function OrderForm({ lines, currency, clubs }: { lines: OrderLine[]; curr
   const captchaRef = useRef<CaptchaHandle>(null) // reset after every failed send, because Web3Forms spends the token
   const sendRef = useRef<HTMLButtonElement>(null) // focused after a failure
   const missingRef = useRef<HTMLParagraphElement>(null) // focused when only the captcha is missing
+  const captchaBoxRef = useRef<HTMLDivElement>(null) // holds the widget's frame, to tell its focus grab from any other window blur
   const takeFocusBackRef = useRef(false) // set by a failure, cleared by the buyer's first key or tap, a captcha token or a second's wait: the captcha's reset may then grab focus once
   const errors = validateOrderForm(values, clubs) // what is wrong now
   const complete = Object.keys(errors).length === 0 && token !== null // ready to send
@@ -74,7 +76,19 @@ export function OrderForm({ lines, currency, clubs }: { lines: OrderLine[]; curr
     sendRef.current?.focus() // the screen is no longer inert by now
     takeFocusBackRef.current = true // hCaptcha's reset may take focus for its frame soon; the captcha's focus event hands it back
     const timer = window.setTimeout(() => (takeFocusBackRef.current = false), TAKE_BACK_MS) // a tap inside the frame cannot be seen, so the window closes
-    return () => window.clearTimeout(timer) // a new failure or leaving the screen
+    /** Hands focus back when the widget's frame takes it: the page gets a window blur and no focus event of its own. */
+    const onWindowBlur = () => {
+      const frame = document.activeElement // the frame, when it now holds focus
+      if (!takeFocusBackRef.current) return // the buyer is steering, or the window closed
+      if (!(frame instanceof HTMLIFrameElement) || !captchaBoxRef.current?.contains(frame)) return // another tab or window, not the widget
+      takeFocusBackRef.current = false // once
+      sendRef.current?.focus() // back to Send order
+    }
+    window.addEventListener('blur', onWindowBlur) // a frame taking focus blurs the window
+    return () => {
+      window.clearTimeout(timer) // a new failure or leaving the screen
+      window.removeEventListener('blur', onWindowBlur) // stop listening
+    }
   }, [failure])
 
   /**
@@ -226,6 +240,7 @@ export function OrderForm({ lines, currency, clubs }: { lines: OrderLine[]; curr
       />
       {/* The captcha; its token is what lets Send order look ready. */}
       <div
+        ref={captchaBoxRef} // the widget's frame lives in here
         onFocus={() => {
           if (!takeFocusBackRef.current) return // the buyer went here on purpose, or nothing failed
           takeFocusBackRef.current = false // once
@@ -260,7 +275,7 @@ export function OrderForm({ lines, currency, clubs }: { lines: OrderLine[]; curr
           type="submit" // Enter in a field presses it too
           aria-disabled={!complete || sending} // looks disabled until complete, and while sending
           aria-describedby={missing ? 'order-missing' : undefined} // read what is missing with the button
-          className="bg-accent text-on-accent focus-visible:outline-focus-ring inline-flex min-h-11 w-full items-center justify-center rounded-md px-6 font-medium transition-transform duration-(--duration-press) focus-visible:outline-2 focus-visible:outline-offset-2 active:scale-[0.97] aria-disabled:opacity-50"
+          className={`${ACTION_BOX} bg-accent text-on-accent w-full px-6 aria-disabled:opacity-50`} // the screen's one primary pill, full width
         >
           {sending ? 'Sending…' : 'Send order'}
           {/* Appears only after the loader delay, so a quick send flashes nothing. */}
