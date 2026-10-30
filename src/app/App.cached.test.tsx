@@ -45,7 +45,7 @@ vi.mock('@/features/catalogue/use-catalogue-data.ts', () => {
 })
 
 beforeEach(() => {
-  window.location.hash = '#/shop' // the shop, where the cart bar still is
+  window.location.hash = '#/shop' // the shop, where the tab pill is
 })
 
 afterEach(() => {
@@ -57,7 +57,7 @@ describe('App with honors loaded at the first draw', () => {
     // catches: the unavailable line taken out on first mount of the catalogue, so a buyer is never shown what went
     window.localStorage.setItem(CART_STORAGE_KEY, '{"version":1,"quantities":{"knot-tying":1,"africa-lore":1}}') // a saved cart holding a switched-off honor
     render(<App />)
-    fireEvent.click(screen.getByRole('link', { name: /View cart/ })) // open the cart
+    fireEvent.click(screen.getByRole('link', { name: /^Cart, / })) // open the cart
     expect(await screen.findByText('1 item is no longer available')).toBeInTheDocument() // told once
     expect(screen.getByText('Africa Lore')).toBeInTheDocument() // and still in the list
   })

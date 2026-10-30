@@ -82,6 +82,7 @@ describe('buyer copy', () => {
     window.location.hash = hash // opened by address
     render(<App />)
     await screen.findAllByText(ready) // the screen has loaded
+    if (hash === '#/' || hash === '#/shop') await screen.findByRole('link', { name: 'Cart, 1 item, estimated total RM 4.00' }) // the grown Cart tab is in the page too
     expect(buyerPhrases()).not.toMatch(/honor/i)
   })
 

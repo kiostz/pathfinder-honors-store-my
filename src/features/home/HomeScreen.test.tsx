@@ -3,7 +3,7 @@
 import { readFileSync } from 'node:fs' // reads the keyframes' stylesheet
 import { resolve } from 'node:path' // the stylesheet's path
 import { render, screen, within } from '@testing-library/react' // render and query
-import { describe, expect, it } from 'vitest' // test API
+import { afterEach, describe, expect, it, vi } from 'vitest' // test API
 import type { CatalogueLoad } from '@/features/catalogue/use-catalogue-data.ts' // the load Home receives
 import { HomeScreen } from './HomeScreen.tsx' // code under test
 
@@ -115,5 +115,140 @@ describe('emblem trace styles', () => {
     const rules = css.match(/\.trace-[a-z0-9-]+\s*\{[^}]*\}/g) ?? []
     expect(rules.length).toBeGreaterThan(0)
     for (const rule of rules) expect(rule).not.toMatch(/infinite/)
+  })
+})
+
+describe('emblem sparks canvas', () => {
+  const getContext = HTMLCanvasElement.prototype.getContext // jsdom's own, put back after each test
+  const readFrom: SVGElement[] = [] // the elements whose points were read
+  afterEach(() => {
+    HTMLCanvasElement.prototype.getContext = getContext // put back the canvas
+    vi.useRealTimers() // real clock again
+    vi.unstubAllGlobals() // matchMedia and animation frames back
+    document.documentElement.style.removeProperty('--duration-trace') // the stylesheet is not loaded in jsdom
+    document.documentElement.style.removeProperty('--color-trace') // same
+    document.documentElement.style.removeProperty('--color-trace-bright') // same
+    delete (SVGElement.prototype as Partial<SVGGeometryElement>).getPointAtLength // the path method the test added
+    delete (SVGElement.prototype as Partial<SVGGeometryElement>).getTotalLength // same
+  })
+
+  /**
+   * Gives jsdom what the spark loop needs: a drawing context that records, path reading and the style tokens.
+   * @return the context's recorded calls
+   */
+  function giveCanvas() {
+    readFrom.length = 0 // a fresh record
+    const context = {
+      clearRect: vi.fn(),
+      setTransform: vi.fn(),
+      beginPath: vi.fn(),
+      moveTo: vi.fn(),
+      lineTo: vi.fn(),
+      stroke: vi.fn(),
+    } // what the loop calls
+    HTMLCanvasElement.prototype.getContext = (() => context) as never // a canvas that has a context
+    ;(SVGElement.prototype as unknown as SVGGeometryElement).getTotalLength = () => 1000 // the path length
+    ;(SVGElement.prototype as unknown as SVGGeometryElement).getPointAtLength = function (
+      this: SVGElement,
+      at: number,
+    ) {
+      readFrom.push(this) // which element the loop reads
+      return { x: at / 10, y: 20 } as DOMPoint // a straight line
+    }
+    document.documentElement.style.setProperty('--duration-trace', '4800ms') // read like the stylesheet's token
+    document.documentElement.style.setProperty('--color-trace', '#e8b4bc') // the rose
+    document.documentElement.style.setProperty('--color-trace-bright', '#fff3f5') // the bright rose
+    return context
+  }
+
+  it('is hidden from assistive tech, ignores the pointer and stays off paper', () => {
+    // catches: a decorative canvas that a screen reader announces, blocks the button or prints
+    const { container } = render(<HomeScreen data={loading} />)
+    const canvas = container.querySelector('[data-testid="emblem-sparks"]')!
+    expect(canvas.tagName).toBe('CANVAS')
+    expect(canvas).toHaveAttribute('aria-hidden', 'true')
+    expect(canvas).toHaveClass('pointer-events-none', 'print:hidden')
+  })
+
+  it('requests no animation frame under Reduce Motion', () => {
+    // catches: sparks running for people who asked for no motion
+    giveCanvas()
+    vi.stubGlobal('matchMedia', (query: string) => ({ matches: query.includes('reduce'), media: query }))
+    const frame = vi.fn(() => 1)
+    vi.stubGlobal('requestAnimationFrame', frame)
+    render(<HomeScreen data={loading} />)
+    expect(frame).not.toHaveBeenCalled()
+  })
+
+  it('does nothing and throws nothing without a canvas context', () => {
+    // catches: an error on a browser or test DOM with no 2D canvas
+    giveCanvas() // a readable path and tokens, so only the context is missing
+    HTMLCanvasElement.prototype.getContext = (() => null) as never // no context
+    const frame = vi.fn(() => 1)
+    vi.stubGlobal('requestAnimationFrame', frame)
+    expect(() => render(<HomeScreen data={loading} />)).not.toThrow()
+    expect(frame).not.toHaveBeenCalled()
+  })
+
+  it('does nothing and throws nothing when the path cannot be read', () => {
+    // catches: an error where getPointAtLength is missing (old browsers, jsdom)
+    HTMLCanvasElement.prototype.getContext = (() => ({ clearRect: vi.fn() })) as never // a context but no path reading
+    const frame = vi.fn(() => 1)
+    vi.stubGlobal('requestAnimationFrame', frame)
+    expect(() => render(<HomeScreen data={loading} />)).not.toThrow()
+    expect(frame).not.toHaveBeenCalled()
+  })
+
+  it('draws sparks, then stops asking for frames and clears the canvas once the trace is over', () => {
+    // catches: a loop that never ends (WCAG 2.2.2) or leaves the last sparks frozen on the band
+    vi.useFakeTimers({ toFake: ['requestAnimationFrame', 'cancelAnimationFrame', 'performance'] })
+    const context = giveCanvas()
+    vi.stubGlobal('matchMedia', (query: string) => ({ matches: false, media: query }))
+    render(<HomeScreen data={loading} />)
+    vi.advanceTimersByTime(2500)
+    expect(context.stroke).toHaveBeenCalled() // sparks while the point rides
+    expect(readFrom.length).toBeGreaterThan(0)
+    for (const element of readFrom) expect(element).toHaveAttribute('pathLength', '1000') // the emblem line, not the Browse the shop chevron
+    vi.advanceTimersByTime(2500) // past the 4.8 s
+    expect(context.clearRect).toHaveBeenCalled()
+    const frames = vi.getTimerCount() // pending animation frames
+    expect(frames).toBe(0)
+    context.stroke.mockClear()
+    vi.advanceTimersByTime(2000)
+    expect(context.stroke).not.toHaveBeenCalled()
+  })
+  it('stops requesting frames and draws nothing more once Home is left mid-ride', () => {
+    // catches: a clean-up that cancels the wrong frame, leaving a loop drawing on a detached canvas for each visit
+    vi.useFakeTimers({ toFake: ['requestAnimationFrame', 'cancelAnimationFrame', 'performance'] })
+    const context = giveCanvas()
+    vi.stubGlobal('matchMedia', (query: string) => ({ matches: false, media: query }))
+    const { unmount } = render(<HomeScreen data={loading} />)
+    vi.advanceTimersByTime(1000)
+    expect(context.stroke).toHaveBeenCalled() // it was drawing
+    unmount()
+    expect(vi.getTimerCount()).toBe(0) // no frame left pending
+    context.stroke.mockClear()
+    context.clearRect.mockClear()
+    vi.advanceTimersByTime(4000)
+    expect(context.stroke).not.toHaveBeenCalled()
+    expect(context.clearRect).not.toHaveBeenCalled()
+  })
+
+  it('reads each birth point from the path once, however many frames it lives', () => {
+    // catches: a path walk per spark per frame (about 1,100 a second) for a point that never changes
+    vi.useFakeTimers({ toFake: ['requestAnimationFrame', 'cancelAnimationFrame', 'performance'] })
+    giveCanvas()
+    vi.stubGlobal('matchMedia', (query: string) => ({ matches: false, media: query }))
+    render(<HomeScreen data={loading} />)
+    vi.advanceTimersByTime(3000) // about 180 frames
+    expect(readFrom.length).toBeLessThanOrEqual(3000 / 25 + 3) // at most one read per 40 per second birth, plus slack
+  })
+
+  it('does not ask for a canvas context when the path cannot be read or Reduce Motion is on', () => {
+    // catches: jsdom's "Not implemented: getContext" noise on every Home render, and a context allocated and never drawn
+    const spy = vi.fn(() => null)
+    HTMLCanvasElement.prototype.getContext = spy as never
+    render(<HomeScreen data={loading} />) // jsdom: no getPointAtLength
+    expect(spy).not.toHaveBeenCalled()
   })
 })

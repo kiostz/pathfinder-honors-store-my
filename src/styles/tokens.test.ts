@@ -140,6 +140,34 @@ describe('Home band colours', () => {
   })
 })
 
+describe('trace spark colours', () => {
+  it('has the white-hot core token, plain white', () => {
+    // catches: the spark core missing from the tokens, or drifting to a tint that reads as pink
+    expect(light['trace-core']).toBe('#ffffff')
+  })
+})
+
+describe.each([
+  ['light', light],
+  ['dark', darkPick],
+])('tab pill colours in %s', (_name, theme) => {
+  it.each([
+    ['text-muted', 'bg-surface', 4.5], // an idle tab's icon and label on the pill
+    ['accent', 'bg-soft', 4.5], // the current tab on its capsule
+    ['on-accent', 'accent', 4.5], // the count and total on the grown Cart tab
+    ['accent', 'bg-surface', 3], // the grown Cart tab's fill against the pill, so its edge shows
+    ['focus-ring', 'bg-surface', 3], // the ring round a tab, drawn on the pill
+  ])('keeps %s on %s at %s:1 or more', (foreground, background, ratio) => {
+    // catches: a palette edit that leaves a pill tab unreadable, its Cart fill invisible or its ring lost
+    expect(contrast(theme[foreground], theme[background])).toBeGreaterThanOrEqual(ratio)
+  })
+
+  it('keeps the current tab\'s capsule different from the pill by more than a rounding error', () => {
+    // catches: a capsule that melts into the pill, leaving only bold type to mark the current tab
+    expect(contrast(theme['bg-soft'], theme['bg-surface'])).toBeGreaterThan(1.05)
+  })
+})
+
 describe('palette', () => {
   it('uses oxblood and stone in light', () => {
     // catches: the old navy and gold values surviving the swap

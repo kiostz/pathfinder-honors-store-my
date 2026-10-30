@@ -1,7 +1,6 @@
 // App shell: the site header and the screen the address names (Home, shop, cart, details page or order confirmation), so every screen hangs off one frame.
 
 import { useEffect, useLayoutEffect, useRef, useState, type MouseEvent } from 'react' // scroll, focus and title around a screen change, and the click's type
-import { CartBar } from '@/features/cart/CartBar.tsx' // the fixed bar with the item count
 import { CartProvider } from '@/features/cart/CartProvider.tsx' // the cart state
 import { CartScreen } from '@/features/cart/CartScreen.tsx' // the cart screen
 import { Catalogue } from '@/features/catalogue/Catalogue.tsx' // the buyer's list of honors
@@ -12,10 +11,11 @@ import { DetailsScreen } from '@/features/order/DetailsScreen.tsx' // the order 
 import { OrderFormProvider } from '@/features/order/OrderFormProvider.tsx' // the order form's values, kept across screens
 import { CART_HASH, CATALOGUE_HASH, shopHash } from '@/shared/routes.ts' // the shop's and the cart's addresses
 import { AppHeader } from './AppHeader.tsx' // the header band
+import { TabPill } from './TabPill.tsx' // the floating Home, Shop and Cart tabs
 import { useHashRoute, useShopCategory } from './use-hash-route.ts' // which screen the address names, and the shop's category
 
 const SITE_TITLE = 'AY Store' // the site's name: the tab title and the header
-const FROM_CATALOGUE_STATE = { fromCatalogue: true } // marks a cart history entry the bar pushed, so history back leads to the catalogue
+const TAB_PILL_SELECTOR = 'nav[aria-label="Main"]' // the tab pill, to tell whether focus is on a tab
 const FROM_CART_STATE = { fromCart: true } // marks a details history entry Checkout pushed, so history back leads to the cart
 
 /**
@@ -29,11 +29,12 @@ export function App() {
   const [shop, setShop] = useState<{ category: string | null; key: number }>({ category: null, key: 0 }) // the category the grid shows, and a key that remounts it on a fresh arrival
   const lastKey = useRef(shop.key) // the key at the last screen change
   const lastRoute = useRef(route) // the screen before this one
-  const barClicked = useRef(false) // set by the bar's click, read when the cart's history entry exists
+  const tabClicked = useRef(false) // set by the Cart tab's click, read when the cart's history entry exists
+  const browsed = useRef(false) // set by the empty cart's Browse more, so focus goes to the page and not to the Cart tab
   const catalogueScroll = useRef(0) // where the catalogue was scrolled to
   // A different category from the one shown, arriving by tile or typed address, remounts the grid (empty search, top of the page); a pick in the dropdown has already set it.
   if (route === 'catalogue' && category !== shop.category) setShop({ category, key: shop.key + 1 })
-  const barRef = useRef<HTMLAnchorElement>(null) // the cart bar's link, focused on return
+  const cartTabRef = useRef<HTMLAnchorElement>(null) // the Cart tab's link, focused on return
   const mainRef = useRef<HTMLElement>(null) // focused on return when the cart is empty
 
   // The app restores scroll itself, so the browser must not do it too, later and from a clamped value.
@@ -64,24 +65,25 @@ export function App() {
       return // first draw or nothing changed
     }
     if (route === 'cart') {
-      if (barClicked.current) window.history.replaceState(FROM_CATALOGUE_STATE, '') // this entry follows the catalogue one
-      barClicked.current = false // only this opening
+      if (tabClicked.current) window.history.replaceState({ fromTab: true, fromShop: previous === 'catalogue' }, '') // this entry follows a tab one, and says whether that was Shop
+      tabClicked.current = false // only this opening
       window.scrollTo(0, 0) // the cart opens at its top (its heading takes focus itself)
     } else if (route === 'details') {
       if (previous === 'cart') window.history.replaceState(FROM_CART_STATE, '') // this entry follows the cart one (Checkout pushed it)
       window.scrollTo(0, 0) // the details page opens at its top (its heading takes focus itself)
     } else if (route === 'order-sent') {
       window.scrollTo(0, 0) // the confirmation opens at its top (its heading takes focus itself)
-    } else if (route === 'home') {
-      window.scrollTo(0, 0) // Home opens at its top
-      mainRef.current?.focus({ preventScroll: true }) // the link or tile that led here is gone
     } else {
-      window.scrollTo(0, catalogueScroll.current) // back to where the buyer was, or the top after a fresh arrival
-      const bar = barRef.current // the bar, when the cart has lines
-      if (previous !== 'home' && bar && !bar.hasAttribute('inert'))
-        bar.focus() // back where the buyer left from
-      else mainRef.current?.focus({ preventScroll: true }) // never the search box: a phone keyboard would open
+      if (route === 'home') window.scrollTo(0, 0) // Home opens at its top
+      else window.scrollTo(0, catalogueScroll.current) // back to where the buyer was, or the top after a fresh arrival
+      const cartTab = cartTabRef.current // the Cart tab, drawn in this same commit
+      if (previous === 'cart' && !browsed.current && cartTab)
+        cartTab.focus() // back from the cart: where the buyer left from
+      else if (!document.activeElement?.closest(TAB_PILL_SELECTOR))
+        mainRef.current?.focus({ preventScroll: true }) // the link or tile that led here is gone; never the search box, where a phone keyboard would open
+      // else a tab was tapped: focus stays on it
     }
+    browsed.current = false // only this arrival
   }, [route, shop.key])
 
   // The tab title follows the screen.
@@ -99,18 +101,18 @@ export function App() {
   }, [route])
 
   /**
-   * Notes a plain click on the bar; a click that opens a new tab or window leaves this tab's route alone, so it must not mark.
-   * @param event the click on the bar's link
+   * Notes a plain click on the Cart tab; a click that opens a new tab or window leaves this tab's route alone, so it must not mark.
+   * @param event the click on the Cart tab's link
    */
-  const markBarOpen = (event: MouseEvent<HTMLAnchorElement>) => {
+  const markTabOpen = (event: MouseEvent<HTMLAnchorElement>) => {
     if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return // new tab or window: no route change here
-    barClicked.current = true // the next cart entry follows the catalogue one
+    tabClicked.current = true // the next cart entry follows a tab one
   }
 
-  /** Back from the cart: history back when this very history entry was pushed by the bar, otherwise the catalogue. */
+  /** Back from the cart: history back when this very history entry was pushed by a tab, otherwise the shop. */
   const goBack = () => {
-    const fromCatalogue = (window.history.state as { fromCatalogue?: boolean } | null)?.fromCatalogue === true // the entry's own mark, true also after browser Back or Forward into it
-    if (fromCatalogue)
+    const fromTab = (window.history.state as { fromTab?: boolean } | null)?.fromTab === true // the entry's own mark, true also after browser Back or Forward into it
+    if (fromTab)
       window.history.back() // the same as the back button
     else window.location.hash = CATALOGUE_HASH // opened by address or reload: there is nothing to go back to
   }
@@ -123,9 +125,13 @@ export function App() {
     else window.location.replace(CART_HASH) // opened by address or reload: there is nothing to go back to, and no bounce entry is left
   }
 
-  /** Empty cart's Browse more: to Shop, replacing the cart's entry so Back from Shop reaches the screen before the cart. */
+  /** Empty cart's Browse more: back to the Shop entry when the Shop tab opened this cart (so Back does not land on a second copy of Shop), otherwise to Shop in place of the cart's entry. */
   const goToShop = () => {
-    window.location.replace(CATALOGUE_HASH) // no new history entry
+    browsed.current = true // the buyer asked to browse: focus the page, not the Cart tab
+    const fromShop = (window.history.state as { fromShop?: boolean } | null)?.fromShop === true // the entry's own mark: Shop was the screen before the cart
+    if (fromShop)
+      window.history.back() // the Shop entry itself, with its search, filter and scroll
+    else window.location.replace(CATALOGUE_HASH) // no new history entry: Back reaches the screen before the cart
   }
 
   /**
@@ -175,13 +181,15 @@ export function App() {
             {/* Its < leads to the shop: the cart it came from is gone. */}
             {route === 'order-sent' && <ConfirmationScreen onBack={goToCatalogue} />}
           </main>
-          {/* Only on the catalogue, once the honors are loaded; slides up when something is picked. */}
-          {route === 'catalogue' && data.state.status === 'ready' && (
-            <CartBar
-              honors={data.state.honors}
-              currency={data.state.settings.currency}
-              linkRef={barRef}
-              onOpen={markBarOpen}
+          {/* Home and Shop only; the other screens keep their < and their own bottom bars. */}
+          {(route === 'home' || route === 'catalogue') && (
+            <TabPill
+              current={route} // the tab for this screen
+              honors={data.state.status === 'ready' ? data.state.honors : null} // the Cart tab counts once they have loaded
+              currency={data.state.status === 'ready' ? data.state.settings.currency : null} // and prices once they have
+              shopHref={shopHash(shop.category)} // the Shop tab reopens the last Shop address
+              cartLinkRef={cartTabRef} // focused on return from the cart
+              onOpenCart={markTabOpen} // marks the cart's history entry
             />
           )}
         </div>

@@ -86,6 +86,29 @@ describe('index.css emblem trace', () => {
     }
   })
 
+  it('gives the spark head rays and a flicker that end, and a light-bloom blend, with the rays and flicker off under Reduce Motion', () => {
+    // catches: a flicker or turn that never stops (WCAG 2.2.2), or sparks and rays left running for people who asked for no motion
+    const base = css.slice(0, css.indexOf('@media (prefers-reduced-motion')) // the rules before the Reduce Motion block
+    for (const name of ['trace-rays', 'trace-flicker']) {
+      const rule = base.match(new RegExp(`\\.${name}\\s*\\{[^}]*\\}`))?.[0] ?? '' // the base rule
+      expect(rule).toMatch(/forwards/)
+      expect(rule).not.toMatch(/infinite/)
+    }
+    expect(base.match(/\.trace-flicker\s*\{[^}]*\}/)![0]).toMatch(/animation:[^;]*\s\d+\s/) // a finite count
+    expect(base.match(/\.trace-rider\s*\{[^}]*\}/)![0]).toMatch(/mix-blend-mode:\s*plus-lighter/)
+    const reduced = block('@media (prefers-reduced-motion: reduce)')
+    for (const name of ['trace-rays', 'trace-flicker', 'emblem-sparks']) expect(reduced).toContain(name)
+  })
+
+  it('ends the flicker before the trace does: steps times flicker duration is at most the trace duration', () => {
+    // catches: a token edit that lets the flicker outlive the ride and pass 5 s (WCAG 2.2.2)
+    const rule = css.match(/\.trace-flicker\s*\{[^}]*\}/)![0] // the base rule
+    const steps = Number(/linear\s+(\d+)\s+alternate/.exec(rule)![1]) // the iteration count
+    const flicker = Number(/--duration-trace-flicker:\s*(\d+)ms/.exec(css)![1]) // one step in ms
+    const trace = Number(/--duration-trace:\s*(\d+)ms/.exec(css)![1]) // the trace in ms
+    expect(steps * flicker).toBeLessThanOrEqual(trace)
+  })
+
   it('holds the emblem path in one place, not in the stylesheet', () => {
     // catches: a second copy of the path, which a swap would miss (the rider would leave the line)
     expect(css).not.toMatch(/path\(\s*['"]M/)
@@ -121,5 +144,54 @@ describe('index.css theme select', () => {
     expect(css).toContain('.category-filter')
     expect(css).toContain('.club-select')
     expect(css).toContain('appearance: base-select')
+  })
+})
+
+describe('index.css tab pill', () => {
+  /**
+   * Reads the text of a rule or at-rule block from its header to its own closing brace.
+   * @param header the text before the opening brace
+   * @return the text inside the braces
+   */
+  function inside(header: string): string {
+    const start = css.indexOf(`${header} {`) // block start
+    if (start < 0) throw new Error(`index.css has no block "${header}"`) // the test's own precondition
+    let depth = 0 // open braces
+    for (let at = css.indexOf('{', start); at < css.length; at += 1) {
+      if (css[at] === '{') depth += 1 // opens
+      if (css[at] === '}') depth -= 1 // closes
+      if (depth === 0) return css.slice(css.indexOf('{', start) + 1, at) // the inside
+    }
+    throw new Error('unclosed block') // malformed css
+  }
+
+  it('defines the pill shadow, the 250 ms toggle duration and the on-screen easing as tokens', () => {
+    // catches: a pill whose shadow, duration or easing is a literal in a component
+    expect(css).toMatch(/--shadow-pill:\s*0 6px 20px rgb\(74 21 32 \/ 0\.16\)/)
+    expect(css).toMatch(/\.pill-edge\s*\{[^}]*box-shadow:\s*var\(--shadow-pill\)/) // read through the variable, so the dark override reaches it
+    expect(css).toMatch(/--duration-toggle:\s*250ms/)
+    expect(css).toMatch(/--ease-in-out-soft:\s*cubic-bezier\(0\.65,\s*0,\s*0\.35,\s*1\)/)
+  })
+
+  it('swaps the pill shadow for a border-subtle hairline in both dark blocks', () => {
+    // catches: a shadow that does not read on black, so the pill melts into the page in Dark
+    const hairline = /--shadow-pill:\s*0 0 0 1px var\(--color-border-subtle\)/g // a 1 px ring in the hairline colour
+    expect(css.match(hairline)).toHaveLength(2) // the Dark pick and the System-dark block
+  })
+
+  it('animates the tabs\' flex-grow and flex-basis with the toggle duration and easing', () => {
+    // catches: a width change that snaps, or one with a literal duration
+    const rule = inside('.pill-tab')
+    expect(rule).toMatch(/transition:[^;]*flex-grow var\(--duration-toggle\) var\(--ease-in-out-soft\)/)
+    expect(rule).toMatch(/transition:[^;]*flex-basis var\(--duration-toggle\) var\(--ease-in-out-soft\)/)
+  })
+
+  it('switches the width transition off under Reduce Motion and fades the content faster instead', () => {
+    // catches: a width animation for people who asked for none
+    const reduced = inside('@media (prefers-reduced-motion: reduce)')
+    expect(reduced).toMatch(/\.pill-tab\s*\{[^}]*transition:\s*none/)
+    expect(reduced).toMatch(/\.pill-content\s*\{[^}]*animation-duration:\s*var\(--duration-fast\)/)
+    const base = css.slice(0, css.indexOf('@media (prefers-reduced-motion'))
+    expect(base).toMatch(/\.pill-tab\s*\{[^}]*transition:/) // the transition itself sits outside the reduced block
   })
 })

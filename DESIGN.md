@@ -70,7 +70,8 @@ AY Store                 [◐ v]      AY Store                             [◐ 
 │RM 4.00   │ │RM 4.00   │           │ (Add)  │ │(− 1 +) │ │ (Add)  │ │ (Add)  │
 │  (Add)   │ │ (− 1 +)  │           └────────┘ └────────┘ └────────┘ └────────┘
 └──────────┘ └──────────┘
-( 3 items · RM 12.00    View cart )   sticky pill bar at the bottom
+[ Home ][ Shop ][ Cart ]              tab pill floating at the bottom of Home and Shop
+(Home)(Shop)( 3 items · RM 12.00  › ) the Cart tab grows once something is picked
 ```
 
 Home, the landing page at `#/` (375 px):
@@ -99,7 +100,10 @@ How ordering works
 - Home's welcome band runs the full width under the header with rounded bottom corners; its text sits in the 1,200 px column. Browse the shop is a rose pill (the same rose in light and dark).
 - A category tile is the category's full patch colour with its name bottom-left. The name follows the category mark's rule: near-black `#171717` on the two light tiles (Nature, Household Arts), white on the rest. White names sit in a dark halo (`text-shadow-halo`), and on Arts and Crafts, where white is only 3.6:1, in a stronger, tighter one (`text-shadow-halo-strong`). Near-black names have no halo.
 - `on-patch` (`#FFFFFF`, the same in light and dark) is the white of those tile names; it is used only over the halo.
-- The emblem trace is decoration. It draws once when Home opens: a rose line (2 px at 55 % opacity) builds in 4.1 s while a point and a fading trail ride it for 4.8 s, then only that outline stays. With Reduce Motion it is the same still outline. The text column stops short of the drawing from 640 px and the drawing sits under the text on a phone, so no letter lies over the line (stone text on the line blended into the band would fall to 3.8:1). It repaints a small SVG every frame for those 4.8 s, accepted because it is one short drawing; nothing moves after 5 s, so it needs no pause control.
+- The emblem trace is decoration. It draws once when Home opens: a rose line (2 px at 55 % opacity) builds in 4.1 s while a point and a fading trail ride it for 4.8 s, then only that outline stays. With Reduce Motion it is the same still outline. The text column stops short of the drawing from 640 px and the drawing sits under the text on a phone, so no letter lies over the line (stone text on the line blended into the band would fall to 3.8:1). The point is a spark in rose and white: a soft halo, a bright ring and a white-hot core that flickers, four short rays that turn once, and a light bloom (`plus-lighter`) on the band. It throws about 40 rose sparks a second, drawn on a canvas laid over the SVG in the same box. It repaints a small SVG every frame and redraws that canvas for those 4.8 s, accepted because a canvas is the one way to draw many short-lived streaks cheaply, and it is one short drawing; the frame loop stops and the canvas clears by 4.8 s, so nothing moves after 5 s and it needs no pause control. With Reduce Motion there are no rays, flicker or sparks, and the loop never starts.
+- The tab pill floats on Home and Shop only: Home, Shop and Cart. The current tab sits on the stone capsule (`bg-soft`) in oxblood (rose in dark). With an empty cart the three tabs are equal. Once an item is orderable, Home and Shop shrink to 64 px and the Cart tab grows into an oxblood button reading the Item count over the estimated total (the full words "Estimated total" from 640 px), then ›. Its accessible name is "Cart, 5 items, estimated total RM 20.00". Cart, details and Order sent show no pill; they keep the < and their own bottom bar. The Shop tab reopens the last Shop address.
+- The tab pill's width change is 250 ms (`duration-toggle`, `ease-in-out-soft`: the move stays on screen). The tabs are flex items that transition `flex-grow` and `flex-basis`, because a grid's `1fr` and `64px` tracks do not interpolate. That animates layout, not only transform and opacity; it is accepted for one 64 px bar. With Reduce Motion the widths jump and the content takes a plain quick fade.
+- The pill's edge: a soft shadow (`--shadow-pill`, drawn by `.pill-edge`) in light, and in dark a 1 px `border-subtle` hairline in its place, because a shadow does not read on black (cards do the same).
 - Buttons are pills. Add turns into a − 1 + pill on the card after the first tap.
 - Content is centred in a 1,200 px column on desktop.
 
@@ -132,9 +136,13 @@ All spacing is on a 4 px scale (Tailwind steps). The gap inside a group is small
 | Cart row                                | 80 px                                       | `min-h-20 p-3`            |
 | Cart Patch picture                      | 56 px, 10 px corners                        | `size-14 rounded-picture` |
 | Removed note                            | held 5 s, fades in its last 150 ms          |                           |
-| Cart bar                                | 16 px from the screen edges and bottom      | `inset-x-4 bottom-4`      |
+| Tab pill                                | 64 px tall, white, 16 px from the sides     | `h-16 inset-x-4`          |
+| Tab pill from the bottom                | 22 px (off the 4 px scale on purpose: it floats the pill clear of the phone's home indicator and the edge a thumb rests on) | `bottom-5.5` |
+| Tab pill width (desktop)                | 420 px max, centred                         | `max-w-105 mx-auto`       |
+| Tab pill tabs                           | 52 px tall in 6 px padding, 4 px gaps; Home and Shop 64 px wide once Cart grows | `h-13 px-1.5 gap-1 basis-16` |
+| Bottom clearance under every screen     | 112 px: 26 px above the pill's top edge (64 + 22 = 86 px) | `pb-28`      |
 | Card radius                             | 16 px                                       | `rounded-card`            |
-| Buttons, fields, cart bar               | pill                                        | `rounded-pill`            |
+| Buttons, fields, tab pill               | pill                                        | `rounded-pill`            |
 | Screen title                            | 20 px under 640 px, 28 px from 640 px, bold | `text-xl sm:text-title`   |
 
 - Cart, order form and confirmation use the same values: a 16 px gutter, 12 px between cards or lines, 24 px between sections, 44 px targets.

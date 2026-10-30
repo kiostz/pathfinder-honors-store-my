@@ -43,8 +43,16 @@ export function EmblemTrace() {
         {line('trace-tail1', 'stroke-trace-bright', 0.95, 1.6)} {/* bright head */}
         {/* The rider follows the same path through offset-path, set here so the path is written once. */}
         <g className="trace-rider" style={{ '--emblem-path': `path('${EMBLEM_PATH}')` } as CSSProperties}>
-          <circle r="8" className="fill-trace" fillOpacity="0.28" /> {/* the glow */}
-          <circle r="3" className="fill-trace-bright" /> {/* the point */}
+          <circle r="12" className="fill-trace" fillOpacity="0.2" /> {/* the soft halo */}
+          {/* The flicker runs on this inner group, so it never fights the ride's fade on the rider. */}
+          <g className="trace-flicker">
+            <circle r="5" className="fill-trace-bright" /> {/* the bright ring */}
+            <circle r="2" className="fill-trace-core" /> {/* the white-hot core */}
+          </g>
+          {/* Four short rays, a quarter turn apart, that turn once over the ride. */}
+          <g className="trace-rays stroke-trace-bright" strokeWidth="1" strokeLinecap="round">
+            <path d="M0 -3V-7.5 M3 0H9 M0 3V6.5 M-3 0H-8" /> {/* each ray ends 6.5 to 9 px from the core */}
+          </g>
         </g>
       </g>
     </svg>

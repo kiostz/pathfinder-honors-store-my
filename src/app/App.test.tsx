@@ -21,7 +21,7 @@ vi.mock('@/features/order/Captcha.tsx', () => ({
 }))
 
 beforeEach(() => {
-  window.location.hash = '#/shop' // most cases start on the shop, where the cart bar still is
+  window.location.hash = '#/shop' // most cases start on the shop, where the tab pill is
 })
 
 afterEach(() => {
@@ -144,8 +144,8 @@ describe('App', () => {
     expect(await screen.findByRole('searchbox', { name: 'Search items' })).toBeInTheDocument()
   })
 
-  it('updates the cart bar when Add is pressed on a card', async () => {
-    // catches: cards and bar holding separate state, or a bar that never appears
+  it('grows the Cart tab when Add is pressed on a card', async () => {
+    // catches: cards and the pill holding separate state, or a Cart tab that never grows
     vi.stubGlobal(
       'fetch',
       vi.fn(async (url: string) =>
@@ -171,16 +171,13 @@ describe('App', () => {
     ) // one honor at RM 4
     render(<App />)
     fireEvent.click(await screen.findByRole('button', { name: 'Add Knot Tying' }))
-    expect(screen.getByTestId('cart-bar')).not.toHaveAttribute('inert')
-    expect(screen.getByTestId('cart-bar')).toHaveTextContent('1 item')
-    expect(screen.getByTestId('cart-bar')).toHaveTextContent(/Estimated total RM\s?4\.00/)
+    expect(screen.getByRole('link', { name: 'Cart, 1 item, estimated total RM 4.00' })).toBeInTheDocument()
     fireEvent.click(screen.getByRole('button', { name: 'One more Knot Tying' })) // the stepper that replaced Add
-    expect(screen.getByTestId('cart-bar')).toHaveTextContent('2 items')
-    expect(screen.getByTestId('cart-bar')).toHaveTextContent(/Estimated total RM\s?8\.00/)
+    expect(screen.getByRole('link', { name: 'Cart, 2 items, estimated total RM 8.00' })).toBeInTheDocument()
   })
 
-  it('shows no cart bar when the load fails', async () => {
-    // catches: a bar over an error screen
+  it('shows a plain Cart tab when the load fails', async () => {
+    // catches: a count or a crash in the pill over an error screen
     vi.spyOn(console, 'error').mockImplementation(() => {}) // the failed load is logged
     vi.stubGlobal(
       'fetch',
@@ -188,7 +185,7 @@ describe('App', () => {
     ) // every file fails
     render(<App />)
     await screen.findByRole('button', { name: 'Try again' })
-    expect(screen.queryByTestId('cart-bar')).not.toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Cart' })).toBeInTheDocument()
     vi.restoreAllMocks() // put console back
   })
 
@@ -202,32 +199,32 @@ describe('App', () => {
     expect(screen.queryByRole('contentinfo')).not.toBeInTheDocument()
   })
 
-  it('opens the cart from the bar with its heading focused and the title changed', async () => {
-    // catches: a bar that does not lead to the cart, focus left behind, or a stale tab title
+  it('opens the cart from the Cart tab with its heading focused and the title changed', async () => {
+    // catches: a Cart tab that does not lead to the cart, focus left behind, or a stale tab title
     serveTwoHonors()
     render(<App />)
     fireEvent.click(await screen.findByRole('button', { name: 'Add Knot Tying' }))
     expect(document.title).toBe('Shop · AY Store')
-    fireEvent.click(screen.getByRole('link', { name: /View cart/ }))
+    fireEvent.click(screen.getByRole('link', { name: /^Cart, / }))
     const heading = await screen.findByRole('heading', { name: 'Your cart' })
     expect(heading).toHaveFocus()
     expect(document.title).toBe('Your cart · AY Store')
-    expect(screen.queryByTestId('cart-bar')).not.toBeInTheDocument() // no bar on the cart screen
+    expect(screen.queryByRole('navigation', { name: 'Main' })).not.toBeInTheDocument() // no pill on the cart screen
     expect(screen.getByText('Estimated total')).toBeInTheDocument()
   })
 
-  it('keeps a typed search in the hidden catalogue and focuses the bar on return', async () => {
+  it('keeps a typed search in the hidden catalogue and focuses the Cart tab on return', async () => {
     // catches: a catalogue that is rebuilt on return and loses the search, or focus dropped on the page
     serveTwoHonors()
     render(<App />)
     fireEvent.change(await screen.findByRole('searchbox', { name: 'Search items' }), { target: { value: 'knot' } })
     fireEvent.click(screen.getByRole('button', { name: 'Add Knot Tying' }))
-    fireEvent.click(screen.getByRole('link', { name: /View cart/ }))
+    fireEvent.click(screen.getByRole('link', { name: /^Cart, / }))
     await screen.findByRole('heading', { name: 'Your cart' })
     fireEvent.click(screen.getByRole('link', { name: 'Back' }))
     await waitFor(() => expect(screen.queryByRole('heading', { name: 'Your cart' })).not.toBeInTheDocument())
     expect(screen.getByRole('searchbox', { name: 'Search items' })).toHaveValue('knot')
-    expect(screen.getByRole('link', { name: /View cart/ })).toHaveFocus()
+    expect(screen.getByRole('link', { name: /^Cart, / })).toHaveFocus()
     expect(document.title).toBe('Shop · AY Store')
   })
 
@@ -236,7 +233,7 @@ describe('App', () => {
     serveTwoHonors()
     render(<App />)
     fireEvent.click(await screen.findByRole('button', { name: 'Add Knot Tying' }))
-    fireEvent.click(screen.getByRole('link', { name: /View cart/ }))
+    fireEvent.click(screen.getByRole('link', { name: /^Cart, / }))
     await screen.findByRole('heading', { name: 'Your cart' })
     expect(screen.queryByRole('searchbox', { name: 'Search items' })).not.toBeInTheDocument()
   })
@@ -273,15 +270,15 @@ describe('App', () => {
     ['middle auxclick', 'auxclick', { button: 1 }],
     ['click with button 1 (defensive: real browsers send auxclick for a middle button)', 'click', { button: 1 }],
   ])(
-    'does not mark a cart entry after a %s on View cart that opens another tab',
+    'does not mark a cart entry after a %s on the Cart tab that opens another tab',
     async (_label, eventType, eventInit) => {
-      // catches: a stale bar-click flag from this click marking a later address-opened cart, so Back to honors leaves the store
+      // catches: a stale tab-click flag from this click marking a later address-opened cart, so Back leaves the store
       serveTwoHonors() // two honors
       window.location.hash = '#/cart' // opened by address
       render(<App />) // draw the app
       fireEvent.click(await screen.findByRole('link', { name: 'Back' })) // to the catalogue
       fireEvent.click(await screen.findByRole('button', { name: 'Add Knot Tying' })) // pick one
-      const bar = screen.getByRole('link', { name: /View cart/ }) // the bar's link
+      const bar = screen.getByRole('link', { name: /^Cart, / }) // the Cart tab's link
       bar.addEventListener('click', (event) => event.preventDefault()) // a browser opens a new tab: this tab's address stays
       fireEvent(bar, new MouseEvent(eventType, { ...eventInit, bubbles: true, cancelable: true })) // the click under test
       act(() => window.history.back()) // the buyer presses the browser's Back: the address-opened cart
@@ -294,12 +291,12 @@ describe('App', () => {
     },
   )
 
-  it('goes back in history from a cart opened by the bar', async () => {
-    // catches: Browse more pushing a new entry when the bar opened the cart, so back and the link disagree
+  it('goes back in history from a cart opened by the Cart tab', async () => {
+    // catches: Browse more pushing a new entry when the Cart tab opened the cart, so back and the link disagree
     serveTwoHonors()
     render(<App />)
     fireEvent.click(await screen.findByRole('button', { name: 'Add Knot Tying' }))
-    fireEvent.click(screen.getByRole('link', { name: /View cart/ }))
+    fireEvent.click(screen.getByRole('link', { name: /^Cart, / }))
     await screen.findByRole('heading', { name: 'Your cart' })
     const back = vi.spyOn(window.history, 'back') // count history moves
     fireEvent.click(screen.getByRole('link', { name: 'Back' }))
@@ -316,7 +313,7 @@ describe('App', () => {
     fireEvent.click(await screen.findByRole('button', { name: 'Add Knot Tying' }))
     Object.defineProperty(window, 'scrollY', { value: 92, configurable: true })
     fireEvent.scroll(window) // the buyer scrolled to 92
-    fireEvent.click(screen.getByRole('link', { name: /View cart/ }))
+    fireEvent.click(screen.getByRole('link', { name: /^Cart, / }))
     await screen.findByRole('heading', { name: 'Your cart' })
     expect(scrollTo).toHaveBeenLastCalledWith(0, 0) // the cart opens at its top
     Object.defineProperty(window, 'scrollY', { value: 0, configurable: true })
@@ -414,7 +411,7 @@ describe('App', () => {
     serveTwoHonors()
     render(<App />)
     fireEvent.click(await screen.findByRole('button', { name: 'Add Knot Tying' }))
-    fireEvent.click(screen.getByRole('link', { name: /View cart/ }))
+    fireEvent.click(screen.getByRole('link', { name: /^Cart, / }))
     await screen.findByRole('heading', { name: 'Your cart' })
     fireEvent.click(screen.getByRole('button', { name: 'Checkout' }))
     expect(await screen.findByRole('heading', { name: 'Your details' })).toHaveFocus()
@@ -451,22 +448,22 @@ describe('App', () => {
     serveTwoHonors()
     render(<App />)
     fireEvent.click(await screen.findByRole('button', { name: 'Add Knot Tying' }))
-    fireEvent.click(screen.getByRole('link', { name: /View cart/ }))
+    fireEvent.click(screen.getByRole('link', { name: /^Cart, / }))
     fireEvent.click(await screen.findByRole('button', { name: 'Checkout' }))
     fireEvent.change(await screen.findByLabelText('Name'), { target: { value: 'Jo Tan' } })
     fireEvent.click(screen.getByRole('link', { name: 'Back' })) // to the cart
     await screen.findByRole('heading', { name: 'Your cart' }) // the cart shows before the next Back
     fireEvent.click(screen.getByRole('link', { name: 'Back' })) // to the catalogue
     await waitFor(() => expect(screen.queryByRole('heading', { name: 'Your cart' })).not.toBeInTheDocument())
-    fireEvent.click(screen.getByRole('link', { name: /View cart/ }))
+    fireEvent.click(screen.getByRole('link', { name: /^Cart, / }))
     fireEvent.click(await screen.findByRole('button', { name: 'Checkout' }))
     expect(await screen.findByLabelText('Name')).toHaveValue('Jo Tan')
   })
 
-  it('shows the confirmation at #/order-sent with its heading focused, its title and no cart bar or catalogue', async () => {
-    // catches: the confirmation address opening the catalogue, a stale title, focus left behind, or a cart bar over the confirmation
+  it('shows the confirmation at #/order-sent with its heading focused, its title and no pill or catalogue', async () => {
+    // catches: the confirmation address opening the catalogue, a stale title, focus left behind, or a pill over the confirmation
     serveTwoHonors()
-    window.localStorage.setItem(CART_STORAGE_KEY, '{"version":1,"quantities":{"knot-tying":2}}') // would show a bar on the catalogue
+    window.localStorage.setItem(CART_STORAGE_KEY, '{"version":1,"quantities":{"knot-tying":2}}') // would grow the Cart tab on the shop
     writeSentOrder({
       number: 'PF-20261028-4K7Q',
       sentAt: '2026-10-28T10:00:00.000Z',
@@ -484,7 +481,7 @@ describe('App', () => {
     expect(heading).toHaveFocus()
     expect(document.title).toBe('Order sent · AY Store')
     expect(screen.getByText('PF-20261028-4K7Q')).toBeInTheDocument()
-    expect(screen.queryByTestId('cart-bar')).not.toBeInTheDocument()
+    expect(screen.queryByRole('navigation', { name: 'Main' })).not.toBeInTheDocument()
     expect(screen.queryByRole('searchbox', { name: 'Search items' })).not.toBeInTheDocument()
   })
 
@@ -517,7 +514,7 @@ describe('App', () => {
     ) // data files and Web3Forms answer
     render(<App />)
     fireEvent.click(await screen.findByRole('button', { name: 'Add Knot Tying' }))
-    fireEvent.click(screen.getByRole('link', { name: /View cart/ }))
+    fireEvent.click(screen.getByRole('link', { name: /^Cart, / }))
     fireEvent.click(await screen.findByRole('button', { name: 'Checkout' }))
     fireEvent.change(await screen.findByLabelText('Name'), { target: { value: 'Jo Tan' } })
     fireEvent.change(screen.getByLabelText('Email'), { target: { value: 'jc@mail.com' } })
@@ -528,7 +525,7 @@ describe('App', () => {
     expect(await screen.findByRole('heading', { name: 'Order sent' })).toHaveFocus()
     expect(screen.getByText(/^PF-\d{8}-[2-9A-HJKMNP-Z]{4}$/)).toBeInTheDocument()
     expect(window.localStorage.getItem(CART_STORAGE_KEY)).toBe('{"version":1,"quantities":{}}')
-    expect(screen.queryByTestId('cart-bar')).not.toBeInTheDocument()
+    expect(screen.queryByRole('navigation', { name: 'Main' })).not.toBeInTheDocument()
     act(() => window.history.back()) // the buyer presses Back on the confirmation
     expect(await screen.findByRole('heading', { name: 'Your cart' })).toBeInTheDocument() // the cart, now empty, not the catalogue
     expect(screen.getByText('Your cart is empty')).toBeInTheDocument()
@@ -629,7 +626,7 @@ describe('App', () => {
       render(<App />)
       fireEvent.change(await screen.findByRole('searchbox', { name: 'Search items' }), { target: { value: 'knot' } })
       fireEvent.click(screen.getByRole('button', { name: 'Add Knot Tying' }))
-      fireEvent.click(screen.getByRole('link', { name: /View cart/ }))
+      fireEvent.click(screen.getByRole('link', { name: /^Cart, / }))
       await screen.findByRole('heading', { name: 'Your cart' })
       fireEvent.click(screen.getByRole('link', { name: 'Back' }))
       await waitFor(() => expect(screen.queryByRole('heading', { name: 'Your cart' })).not.toBeInTheDocument())
@@ -740,6 +737,166 @@ describe('App', () => {
       fireEvent.click(await screen.findByRole('button', { name: 'Browse more' }))
       expect(window.location.hash).toBe('#/shop')
       expect(window.history.length).toBe(length)
+    })
+
+    describe('tab pill', () => {
+      /**
+       * Moves to an address the way a followed link does, once the page has reacted.
+       * @param hash the address to open
+       */
+      const goTo = (hash: string) => {
+        act(() => {
+          window.location.hash = hash // the new address
+          window.dispatchEvent(new HashChangeEvent('hashchange')) // jsdom may not announce it at once
+        })
+      }
+
+      it.each([
+        ['Home', '#/', true],
+        ['Shop', '#/shop', true],
+        ['the cart', '#/cart', false],
+        ['the details page', '#/details', false],
+        ['Order sent', '#/order-sent', false],
+      ])('shows the Main pill on %s: %s', async (_name, hash, shown) => {
+        // catches: a pill on a screen with its own bottom bar, or none on Home and Shop; and the old cart bar element
+        serveCategories()
+        window.localStorage.setItem(CART_STORAGE_KEY, '{"version":1,"quantities":{"knot-tying":1}}') // an orderable line, so the details page stays
+        window.location.hash = hash
+        render(<App />)
+        await screen.findByRole('heading', { level: 1, name: 'AY Store' })
+        const pill = screen.queryByRole('navigation', { name: 'Main' })
+        if (shown) expect(pill).toBeInTheDocument()
+        else expect(pill).not.toBeInTheDocument()
+        expect(screen.queryByTestId('cart-bar')).not.toBeInTheDocument()
+      })
+
+      it('leaves 112 px at the bottom of every screen, which clears the 86 px pill by 26 px', async () => {
+        // catches: the last row of cards or the steps card ending under the pill
+        serveCategories()
+        for (const hash of ['#/', '#/shop']) {
+          window.location.hash = hash
+          const { unmount } = render(<App />)
+          expect(screen.getByRole('main')).toHaveClass('pb-28')
+          expect(screen.getByRole('navigation', { name: 'Main' })).toHaveClass('bottom-5.5', 'h-16')
+          unmount()
+        }
+      })
+
+      it('opens the cart from Home by the Cart tab, and < returns to Home with focus on the Cart tab', async () => {
+        // catches: < leaving the buyer on the cart, or focus dropped when the pill is drawn again
+        serveCategories()
+        window.location.hash = '#/'
+        render(<App />)
+        fireEvent.click(await screen.findByRole('link', { name: 'Cart' }))
+        await screen.findByRole('heading', { name: 'Your cart' })
+        expect(screen.queryByRole('navigation', { name: 'Main' })).not.toBeInTheDocument()
+        fireEvent.click(screen.getByRole('link', { name: 'Back' }))
+        await screen.findByRole('link', { name: 'Browse the shop' })
+        expect(screen.getByRole('link', { name: 'Cart' })).toHaveFocus()
+        expect(window.location.hash).toBe('#/')
+      })
+
+      it('keeps focus on the tapped tab when the buyer goes Home to Shop and back', async () => {
+        // catches: focus thrown to the page body or the main region on a tab change
+        serveCategories()
+        window.location.hash = '#/'
+        render(<App />)
+        const nav = within(await screen.findByRole('navigation', { name: 'Main' }))
+        nav.getByRole('link', { name: 'Shop' }).focus()
+        fireEvent.click(nav.getByRole('link', { name: 'Shop' }))
+        await screen.findByRole('searchbox', { name: 'Search items' })
+        expect(nav.getByRole('link', { name: 'Shop' })).toHaveFocus()
+        nav.getByRole('link', { name: 'Home' }).focus()
+        fireEvent.click(nav.getByRole('link', { name: 'Home' }))
+        await screen.findByRole('link', { name: 'Browse the shop' })
+        expect(nav.getByRole('link', { name: 'Home' })).toHaveFocus()
+      })
+
+      it('brings back Nature, the search and the scroll when the Shop tab follows the Home tab', async () => {
+        // catches: the Shop tab resetting the filter, the search or the scroll
+        serveCategories()
+        const scrollTo = vi.spyOn(window, 'scrollTo').mockImplementation(() => {}) // jsdom does not scroll
+        window.location.hash = '#/shop?category=Nature'
+        render(<App />)
+        fireEvent.change(await screen.findByRole('searchbox', { name: 'Search items' }), { target: { value: 'ant' } })
+        Object.defineProperty(window, 'scrollY', { value: 92, configurable: true })
+        fireEvent.scroll(window) // the buyer scrolled Shop to 92
+        const nav = within(screen.getByRole('navigation', { name: 'Main' }))
+        fireEvent.click(nav.getByRole('link', { name: 'Home' }))
+        await screen.findByRole('link', { name: 'Browse the shop' })
+        const shopHref = nav.getByRole('link', { name: 'Shop' }).getAttribute('href') // the last Shop address
+        expect(shopHref).toBe('#/shop?category=Nature')
+        fireEvent.click(nav.getByRole('link', { name: 'Shop' }))
+        await waitFor(() => expect(screen.getByRole('searchbox', { name: 'Search items' })).toBeVisible())
+        expect(screen.getByRole('searchbox', { name: 'Search items' })).toHaveValue('ant')
+        expect(screen.getByRole('combobox', { name: 'Category' })).toHaveDisplayValue('Nature')
+        expect(scrollTo).toHaveBeenLastCalledWith(0, 92)
+        delete (window as { scrollY?: number }).scrollY // jsdom's own again
+        scrollTo.mockRestore() // put scrollTo back
+      })
+
+      it('does not push two history entries for a double click on the Cart tab', async () => {
+        // catches: a double tap stacking two cart entries, so Back needs two presses
+        serveCategories()
+        render(<App />)
+        const tab = await screen.findByRole('link', { name: 'Cart' })
+        const length = window.history.length // entries before
+        fireEvent.click(tab)
+        fireEvent.click(tab)
+        await screen.findByRole('heading', { name: 'Your cart' })
+        expect(window.history.length).toBe(length + 1)
+      })
+
+      it('lands Back on Home, not on a dead copy of Shop, after Home, Shop, Cart tab and the empty cart\'s Browse more', async () => {
+        // catches: Browse more replacing the cart entry with #/shop when the entry before it is already Shop, so the next Back looks dead
+        serveCategories()
+        window.location.hash = '#/'
+        render(<App />)
+        const nav = within(await screen.findByRole('navigation', { name: 'Main' }))
+        fireEvent.click(nav.getByRole('link', { name: 'Shop' }))
+        await screen.findByRole('searchbox', { name: 'Search items' })
+        fireEvent.click(screen.getByRole('link', { name: 'Cart' }))
+        fireEvent.click(await screen.findByRole('button', { name: 'Browse more' }))
+        await screen.findByRole('searchbox', { name: 'Search items' })
+        expect(window.location.hash).toBe('#/shop')
+        act(() => window.history.back()) // the buyer presses Back
+        expect(await screen.findByRole('link', { name: 'Browse the shop' })).toBeInTheDocument() // Home, not Shop again
+        expect(window.location.hash).toBe('#/')
+      })
+
+      it('still lands Back on Home after Home, Cart tab and the empty cart\'s Browse more', async () => {
+        // catches: the fix for the Shop case breaking the Home case
+        serveCategories()
+        window.location.hash = '#/'
+        render(<App />)
+        fireEvent.click(await screen.findByRole('link', { name: 'Cart' }))
+        fireEvent.click(await screen.findByRole('button', { name: 'Browse more' }))
+        await screen.findByRole('searchbox', { name: 'Search items' })
+        expect(window.location.hash).toBe('#/shop')
+        act(() => window.history.back())
+        expect(await screen.findByRole('link', { name: 'Browse the shop' })).toBeInTheDocument()
+      })
+
+      it('keeps the Shop search when Browse more comes from a cart the Shop tab opened', async () => {
+        // catches: Browse more rebuilding the grid and dropping what the buyer typed
+        serveCategories()
+        render(<App />)
+        fireEvent.change(await screen.findByRole('searchbox', { name: 'Search items' }), { target: { value: 'knot' } })
+        fireEvent.click(screen.getByRole('link', { name: 'Cart' }))
+        fireEvent.click(await screen.findByRole('button', { name: 'Browse more' }))
+        await waitFor(() => expect(screen.getByRole('searchbox', { name: 'Search items' })).toBeVisible())
+        expect(screen.getByRole('searchbox', { name: 'Search items' })).toHaveValue('knot')
+        expect(screen.getByRole('main')).toHaveFocus() // not the Cart tab: the buyer asked to browse
+      })
+
+      it('goes to #/shop by Browse more for a cart opened by address', async () => {
+        // catches: the new back rule applying to an address-opened cart, which has no Shop entry behind it
+        serveCategories()
+        goTo('#/cart')
+        render(<App />)
+        fireEvent.click(await screen.findByRole('button', { name: 'Browse more' }))
+        expect(window.location.hash).toBe('#/shop')
+      })
     })
   })
 })

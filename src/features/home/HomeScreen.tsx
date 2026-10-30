@@ -3,6 +3,7 @@
 import { CATALOGUE_HASH } from '@/shared/routes.ts' // the shop's address
 import type { CatalogueLoad } from '@/features/catalogue/use-catalogue-data.ts' // the load, made by the app
 import { CategoryTiles } from './CategoryTiles.tsx' // the tile row
+import { EmblemSparks } from './EmblemSparks.tsx' // the sparks over the drawing
 import { EmblemTrace } from './EmblemTrace.tsx' // the drawing behind the band's text
 
 const STEPS = [
@@ -53,6 +54,7 @@ export function HomeScreen({ data }: { data: CatalogueLoad }) {
             </a>
           </div>
           <EmblemTrace /> {/* after the text, so it sits under it on a phone */}
+          <EmblemSparks /> {/* in the drawing's box, after it so the sparks lie over the point */}
         </div>
       </section>
       {/* The page's own column under the band. */}

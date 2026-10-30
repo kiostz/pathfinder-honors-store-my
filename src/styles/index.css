@@ -31,6 +31,7 @@
   --color-on-band-action: #4a1520; /* oxblood lettering on the rose pill */
   --color-trace: #e8b4bc; /* the emblem trace's rose, 8.2:1 on the light band and 10.6:1 on the dark one */
   --color-trace-bright: #fff3f5; /* the trace's bright point and trail head */
+  --color-trace-core: #ffffff; /* the spark's white-hot core, 15.3:1 on the light band */
 
   /* Type: the system stack, no font download. */
   --font-sans:
@@ -49,13 +50,16 @@
   --duration-fast: 150ms;
   --duration-enter: 240ms;
   --duration-exit: 150ms;
+  --duration-toggle: 250ms; /* the tab pill's width change: Cart growing, Home and Shop shrinking */
   --duration-trace: 4800ms; /* the emblem trace's point and trail: under 5 s, so it needs no pause control */
+  --duration-trace-flicker: 120ms; /* one flicker step of the spark; times the 38 steps in `.trace-flicker` it must stay within --duration-trace (index-css.test.ts checks it) */
   --duration-trace-build: 4100ms; /* the emblem trace's faint line drawing itself */
   --delay-loader: 300ms; /* a spinner or skeleton stays hidden this long, so quick waits flash nothing */
 
   /* Easing curves. */
   --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-in-soft: cubic-bezier(0.4, 0, 1, 1);
+  --ease-in-out-soft: cubic-bezier(0.65, 0, 0.35, 1); /* a move that stays on screen: the tabs changing width */
 
   /* The dark halo round white tile names: a tight edge fading out, so they read on every patch colour, light ones included. */
   --text-shadow-halo:
@@ -93,8 +97,15 @@
 }
 
 /* Light controls (scrollbars, form widgets) unless the buyer picks Dark or the system is dark. */
+/* The tab pill's edge: a soft shadow here; the dark blocks swap it for a hairline, since a shadow does not read on black. Kept out of @theme because Tailwind would write the value into its utility and ignore a dark override. */
 :root {
   color-scheme: light; /* the browser draws light controls */
+  --shadow-pill: 0 6px 20px rgb(74 21 32 / 0.16); /* oxblood-tinted, soft */
+}
+
+/* The tab pill's edge, whichever of the two values the theme gives. */
+.pill-edge {
+  box-shadow: var(--shadow-pill); /* a shadow in light, a hairline in dark */
 }
 
 /* The page colour on the body itself, so the first paint, before React draws, is already the right theme. */
@@ -129,6 +140,7 @@ body {
     --color-category-mark-border: rgb(
       255 255 255 / 0.2
     ); /* hairline round the category mark, dark mode */
+    --shadow-pill: 0 0 0 1px var(--color-border-subtle); /* the pill's edge in Dark: a 1 px hairline, as the cards have */
   }
 }
 
@@ -158,6 +170,7 @@ body {
     --color-category-mark-border: rgb(
       255 255 255 / 0.2
     ); /* hairline round the category mark, dark mode */
+    --shadow-pill: 0 0 0 1px var(--color-border-subtle); /* the pill's edge in Dark: a 1 px hairline, as the cards have */
   }
 }
 
@@ -318,6 +331,18 @@ body {
   }
 }
 
+/* The tab pill's tabs are flex items whose grow and basis change over --duration-toggle when the Cart tab grows or shrinks. This animates layout, which is accepted for one 64 px bar (DESIGN.md). */
+.pill-tab {
+  transition:
+    flex-grow var(--duration-toggle) var(--ease-in-out-soft),
+    flex-basis var(--duration-toggle) var(--ease-in-out-soft); /* both move together so the three tabs share the width smoothly */
+}
+
+/* The Cart tab's new content, fading in as the width changes. */
+.pill-content {
+  animation-duration: var(--duration-toggle); /* in step with the width */
+}
+
 /* The emblem trace on Home's band: it plays once. The faint line builds, then a point and a three-layer trail ride the same path and fade over their last 15 %. */
 /* The faint line draws itself */
 @keyframes trace-build {
@@ -373,6 +398,24 @@ body {
     opacity: 0;
   }
 }
+/* The spark's rays turn once, as long as the ride */
+@keyframes trace-rays-turn {
+  from {
+    transform: rotate(0deg); /* start upright */
+  }
+  to {
+    transform: rotate(360deg); /* one full turn */
+  }
+}
+/* The spark's flicker between 85 % and full light */
+@keyframes trace-flicker {
+  from {
+    opacity: 0.85; /* a little dimmer */
+  }
+  to {
+    opacity: 1; /* full light */
+  }
+}
 /* The point rides the path, then fades */
 @keyframes trace-ride {
   0% {
@@ -407,9 +450,23 @@ body {
 .trace-rider {
   offset-path: var(--emblem-path); /* the path the lines draw, set on the element by EmblemTrace so it is written once */
   animation: trace-ride var(--duration-trace) linear forwards; /* once, then gone */
+  mix-blend-mode: plus-lighter; /* the head adds light to the band, a bloom */
+}
+.trace-rays {
+  transform-origin: 0 0; /* the core, so the rays turn about the point */
+  animation: trace-rays-turn var(--duration-trace) linear forwards; /* one turn in the ride's time, then still */
+}
+.trace-flicker {
+  animation: trace-flicker var(--duration-trace-flicker) linear 38 alternate forwards; /* 38 steps of 120 ms: 4.56 s, done before 4.8 s */
 }
 /* Reduce Motion: the still faint outline, with no point or trail. */
 @media (prefers-reduced-motion: reduce) {
+  .pill-tab {
+    transition: none; /* no width change: the tabs jump to their new sizes */
+  }
+  .pill-content {
+    animation-duration: var(--duration-fast); /* a plain, quicker fade of the content instead */
+  }
   .trace-build {
     animation: none; /* no drawing */
     stroke-dasharray: none; /* the whole line at once; the path's own 0.55 stroke opacity and 2 px stroke, the same as at rest */
@@ -417,8 +474,11 @@ body {
   .trace-tail1,
   .trace-tail2,
   .trace-tail3,
-  .trace-rider {
-    display: none; /* no point and no trail */
+  .trace-rider,
+  .trace-rays,
+  .trace-flicker,
+  .emblem-sparks {
+    display: none; /* no point, trail, rays, flicker or sparks */
   }
 }
 
