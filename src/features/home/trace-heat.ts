@@ -1,4 +1,4 @@
-// The pure heat functions behind the emblem trace: where the pieces of line are, how hot each looks at an age, and what the head looks like at a time, repeatable so the same input always gives the same picture.
+// The pure heat functions behind the emblem trace: where the pieces of line are, how hot each looks at an age, what the head looks like at a time, and the colour tokens they start from, repeatable so the same input always gives the same picture.
 
 /** Red, green and blue, each 0 to 255. */
 export type Rgb = [number, number, number]
@@ -141,4 +141,18 @@ export function headLook(t: number): { flicker: number; rays: { angle: number; l
     length: RAY_MIN + RAY_SPAN * hash(n, 2 + k), // each its own reach
   }))
   return { flicker: FLICKER_MIN + (1 - FLICKER_MIN) * hash(n, 0), rays } // the look
+}
+
+/**
+ * Reads a hex colour token, #rrggbb or the #rgb the production build shortens it to.
+ * @param value the custom property's text
+ * @return red, green and blue from 0 to 255, or null when the text is not a hex colour
+ */
+export function rgb(value: string): Rgb | null {
+  const match = /^\s*#([0-9a-f]{3}|[0-9a-f]{6})\s*$/i.exec(value) // three or six hex digits
+  if (!match) return null // not a hex colour
+  const short = match[1].length === 3 // #rgb, as the build writes it
+  const digits = short ? match[1].replace(/./g, '$&$&') : match[1] // #fff becomes ffffff
+  const n = parseInt(digits, 16) // the number
+  return [(n >> 16) & 255, (n >> 8) & 255, n & 255] // split into channels
 }

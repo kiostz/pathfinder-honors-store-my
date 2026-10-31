@@ -1,7 +1,8 @@
-// Tests for the pure heat functions behind the emblem trace: where the pieces of line are, how hot a piece looks at an age, and what the head looks like at a time.
+// Tests for the pure heat functions behind the emblem trace: where the pieces of line are, how hot a piece looks at an age, what the head looks like at a time, and how a colour token is read.
 
 import { describe, expect, it } from 'vitest' // test API
 import { headLook, heatLook, PIECE_STEP, tracePieces } from './trace-heat.ts' // code under test
+import { rgb } from './trace-heat.ts' // the colour reader under test
 
 /**
  * A fake path of two straight subpaths, 400 long each, with a jump between them (a pen lift).
@@ -148,5 +149,25 @@ describe('headLook', () => {
     for (let i = 0; i < 100; i += 1) looks.add(JSON.stringify(headLook(i / 100))) // one second at 100 samples
     expect(looks.size).toBeGreaterThanOrEqual(25)
     expect(looks.size).toBeLessThanOrEqual(35)
+  })
+})
+
+describe('rgb', () => {
+  it('reads the six-digit hex the CSS source writes', () => {
+    // catches: the dev server's unshortened tokens no longer read
+    expect(rgb('#e8b4bc')).toEqual([232, 180, 188])
+    expect(rgb(' #FFFFFF ')).toEqual([255, 255, 255])
+  })
+
+  it('reads the three-digit hex the production build shortens #ffffff to', () => {
+    // catches: the deployed site's trace never playing because the minified "#fff" token reads as no colour
+    expect(rgb('#fff')).toEqual([255, 255, 255])
+    expect(rgb('#e8b')).toEqual([238, 136, 187])
+  })
+
+  it('gives null for text that is not a hex colour', () => {
+    // catches: a broken token drawn as black instead of falling back to the still outline
+    const notHex = ['', 'white', '#ffff', '#gggggg', 'rgb(1 2 3)'] // a name, wrong lengths, bad digits, a function
+    for (const value of notHex) expect(rgb(value)).toBeNull()
   })
 })

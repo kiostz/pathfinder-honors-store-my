@@ -2,7 +2,7 @@
 
 import { useLayoutEffect, useRef, useState } from 'react' // decide before paint, draw after mount, stop on unmount
 import { RIDE_SHARE, sparkStreaks, type SparkPoint } from './spark-streaks.ts' // which spark streaks exist at a time
-import { headLook, heatLook, PIECE_STEP, tracePieces, type Rgb, type TracePiece } from './trace-heat.ts' // pieces, heat and head looks
+import { headLook, heatLook, PIECE_STEP, rgb, tracePieces, type Rgb, type TracePiece } from './trace-heat.ts' // pieces, heat, head looks and the colour reader
 
 const EMBLEM_PATH =
   'M2 2H164V36L83 161L2 36Z M10 9H156V33H10Z M29 40Q56 50 83 40Q110 50 137 40Q121 100 83 120Q45 100 29 40Z M49 89L145 51 M57 73L68 95 M44 86Q47 92 50 94' // outer triangle, banner box, inner shield, blade, crossguard and pommel; no letters; the one copy, read by the outline and by the canvas
@@ -27,18 +27,6 @@ function seconds(value: string): number | null {
   const match = /^\s*([\d.]+)(ms|s)\s*$/.exec(value) // number and unit
   if (!match) return null // not a time
   return match[2] === 'ms' ? Number(match[1]) / 1000 : Number(match[1]) // to seconds
-}
-
-/**
- * Reads a #rrggbb colour token.
- * @param value the custom property's text
- * @return red, green and blue from 0 to 255, or null when the text is not a hex colour
- */
-function rgb(value: string): Rgb | null {
-  const match = /^\s*#([0-9a-f]{6})\s*$/i.exec(value) // six hex digits
-  if (!match) return null // not a hex colour
-  const n = parseInt(match[1], 16) // the number
-  return [(n >> 16) & 255, (n >> 8) & 255, n & 255] // split into channels
 }
 
 /**

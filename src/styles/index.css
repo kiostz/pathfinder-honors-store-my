@@ -31,6 +31,7 @@
   --color-on-patch: #ffffff; /* white names on the category tiles' full patch colours, the same in both themes, always over the dark halo */
   --color-band-action: #e8b4bc; /* the rose Browse the shop pill, the same in both themes: 8.2:1 under its lettering */
   --color-on-band-action: #4a1520; /* oxblood lettering on the rose pill */
+  /* The three trace colours are read by EmblemTrace as hex: keep them opaque hex the build cannot shorten to a colour name (#ff0000 becomes red), or the trace silently stops playing on the built site. */
   --color-trace: #e8b4bc; /* the emblem trace's rose, 8.2:1 on the light band and 10.6:1 on the dark one */
   --color-trace-bright: #fff3f5; /* the trace's bright point and trail head */
   --color-trace-core: #ffffff; /* the spark's white-hot core, 15.3:1 on the light band */
