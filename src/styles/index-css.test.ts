@@ -195,3 +195,12 @@ describe('index.css tab pill', () => {
     expect(base).toMatch(/\.pill-tab\s*\{[^}]*transition:/) // the transition itself sits outside the reduced block
   })
 })
+
+describe('scroll padding under the floating pill', () => {
+  it('keeps a focused field clear of the dock, and clear of the taller failure note', () => {
+    // catches: Tab landing on the captcha or a field behind the fixed pill, which scrolls only to the viewport's edge
+    const rem = (selector: string) => Number(new RegExp(`${selector}\\s*\\{[^}]*scroll-padding-bottom:\\s*([\\d.]+)rem`).exec(css)?.[1] ?? 0) // the padding in rem, 0 when missing
+    expect(rem('html')).toBeGreaterThanOrEqual(9) // the strip, the pill and the gap: 144 px
+    expect(rem('html:has\\(\\[data-failure-note\\]\\)')).toBeGreaterThanOrEqual(16) // the note adds about 100 px
+  })
+})

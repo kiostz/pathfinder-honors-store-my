@@ -10,11 +10,11 @@ import { HomeScreen } from '@/features/home/HomeScreen.tsx' // the landing page
 import { DetailsScreen } from '@/features/order/DetailsScreen.tsx' // the order form's page
 import { OrderFormProvider } from '@/features/order/OrderFormProvider.tsx' // the order form's values, kept across screens
 import { CART_HASH, CATALOGUE_HASH, shopHash } from '@/shared/routes.ts' // the shop's and the cart's addresses
+import { STORE_NAME } from '@/shared/store-name.ts' // the store's name
 import { AppHeader } from './AppHeader.tsx' // the header band
 import { TabPill } from './TabPill.tsx' // the floating Home, Shop and Cart tabs
 import { useHashRoute, useShopCategory } from './use-hash-route.ts' // which screen the address names, and the shop's category
 
-const SITE_TITLE = 'AY Store' // the site's name: the tab title and the header
 const TAB_PILL_SELECTOR = 'nav[aria-label="Main"]' // the tab pill, to tell whether focus is on a tab
 const FROM_CART_STATE = { fromCart: true } // marks a details history entry Checkout pushed, so history back leads to the cart
 
@@ -90,14 +90,14 @@ export function App() {
   useEffect(() => {
     document.title =
       route === 'cart' // the cart screen
-        ? `Your cart · ${SITE_TITLE}` // names the cart
+        ? `Your cart · ${STORE_NAME}` // names the cart
         : route === 'details' // the details page
-          ? `Your details · ${SITE_TITLE}` // names the details page
+          ? `Your details · ${STORE_NAME}` // names the details page
           : route === 'order-sent' // the confirmation
-            ? `Order sent · ${SITE_TITLE}` // names the confirmation
+            ? `Order sent · ${STORE_NAME}` // names the confirmation
             : route === 'catalogue' // the shop
-              ? `Shop · ${SITE_TITLE}` // names the shop
-              : SITE_TITLE // Home
+              ? `Shop · ${STORE_NAME}` // names the shop
+              : STORE_NAME // Home
   }, [route])
 
   /**
@@ -153,7 +153,7 @@ export function App() {
       <OrderFormProvider>
         <div className="bg-bg-app text-text-default min-h-screen">
           <AppHeader
-            siteTitle={SITE_TITLE}
+            siteTitle={STORE_NAME}
             variant={route === 'home' ? 'home' : route === 'catalogue' ? 'shop' : 'inner'} // the header grid's three looks
             backHref={route === 'details' ? CART_HASH : CATALOGUE_HASH} // where the < button leads: the details page to the cart, the rest to the catalogue
             onBack={route === 'cart' ? goBack : route === 'details' ? goBackToCart : goToCatalogue} // each screen's own back rule

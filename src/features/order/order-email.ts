@@ -2,6 +2,7 @@
 
 import type { OrderLine } from '@/features/cart/cart.ts' // an order line
 import { formatPrice } from '@/shared/format/price.ts' // "RM 9.00"
+import { STORE_NAME } from '@/shared/store-name.ts' // the store's name in the subject
 import { clubText, type OrderFormValues } from './order-form.ts' // the club's names for the email
 
 // An order as sent: lines in cents with the buyer's details, kept for the confirmation and the email.
@@ -83,10 +84,10 @@ export function toSentOrder(
 /**
  * Words the email subject.
  * @param order the order
- * @return "AY Store order PF-… — club — name"
+ * @return "PEM Pathfinder Store order PF-… — club — name"
  */
 export function orderEmailSubject(order: SentOrder): string {
-  return `AY Store order ${order.number} — ${order.club.subject} — ${order.name}` // number, club, buyer
+  return `${STORE_NAME} order ${order.number} — ${order.club.subject} — ${order.name}` // number, club, buyer
 }
 
 /**

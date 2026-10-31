@@ -120,6 +120,17 @@ describe.each([
   )
 })
 
+describe('Note colours', () => {
+  it.each([
+    ['light', light],
+    ['dark', darkPick],
+  ])('keeps the white x readable on the red close circle in %s', (_name, theme) => {
+    // catches: a close mark that fades into its circle
+    const merged = { ...light, ...theme } // note-close is written once, in @theme
+    expect(contrast(merged['on-note-close'], merged['note-close'])).toBeGreaterThanOrEqual(4.5)
+  })
+})
+
 describe('Home band colours', () => {
   it.each([
     ['light', light],

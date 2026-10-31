@@ -7,6 +7,7 @@ import { useCart } from '@/features/cart/use-cart.ts' // the cart
 import type { Honor } from '@/shared/data/types.ts' // the shape of an honor
 import { formatPrice } from '@/shared/format/price.ts' // "RM 20.00"
 import { CART_HASH, HOME_HASH } from '@/shared/routes.ts' // the Home and cart addresses
+import { PILL_DOCK, PILL_SURFACE } from '@/shared/ui/floating-pill-box.ts' // the one pill shape
 import { HomeIcon, ShopIcon } from './tab-icons.tsx' // the Home and Shop icons
 
 const TAB_BOX = 'pill-tab focus-visible:outline-focus-ring rounded-pill flex h-13 min-w-0 items-center focus-visible:outline-2 focus-visible:outline-offset-2' // what every tab shares: 52 px tall inside the 64 px pill, a pill-shaped target, the focus ring outside it
@@ -63,7 +64,7 @@ export function TabPill({
   return (
     <nav
       aria-label="Main" // the site's main navigation
-      className="bg-bg-surface rounded-pill pill-edge fixed inset-x-4 bottom-5.5 z-20 mx-auto flex h-16 max-w-105 items-center gap-1 px-1.5 print:hidden" // 16 px from the sides, 22 px from the bottom, 64 px tall, 420 px at most
+      className={`${PILL_DOCK} ${PILL_SURFACE} flex-row! gap-1!`} // the shared dock and surface; the tabs sit in a row with 4 px gaps, not in the dock's stack
     >
       {/* Always in the page, so the first add is announced; the count and total are as the Cart tab's name says. */}
       <p

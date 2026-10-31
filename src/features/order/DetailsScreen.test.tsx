@@ -1,6 +1,6 @@
 // Tests for the details page: the order form with only orderable lines, the way back to the cart when something unavailable is left, and the order the buyer's Checkout actually sends.
 
-import { act, fireEvent, render, screen } from '@testing-library/react' // render and query
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react' // render and query
 import { afterEach, describe, expect, it, vi } from 'vitest' // test API and mocks
 import { useHashRoute } from '@/app/use-hash-route.ts' // which screen the address names
 import { CART_STORAGE_KEY } from '@/features/cart/cart-storage.ts' // where the cart is kept
@@ -8,6 +8,7 @@ import { CartProvider } from '@/features/cart/CartProvider.tsx' // the cart stat
 import { CartScreen } from '@/features/cart/CartScreen.tsx' // Checkout lives here
 import type { CatalogueLoad } from '@/features/catalogue/use-catalogue-data.ts' // the load the screen receives
 import type { Honor } from '@/shared/data/types.ts' // the shape of an honor
+import { PILL_DOCK } from '@/shared/ui/floating-pill-box.ts' // the dock Send order floats in
 import { DetailsScreen } from './DetailsScreen.tsx' // code under test
 import { OrderFormProvider } from './OrderFormProvider.tsx' // the form state
 
@@ -73,7 +74,7 @@ describe('DetailsScreen', () => {
     renderDetails({ 'knot-tying': 1 })
     expect(screen.getByRole('heading', { name: 'Your details' })).toBeInTheDocument()
     expect(screen.getByLabelText('Name')).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Send order' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /^Send order/ })).toBeInTheDocument()
     expect(screen.queryByRole('link', { name: 'Back to cart' })).not.toBeInTheDocument()
   })
 
@@ -171,7 +172,7 @@ describe('DetailsScreen', () => {
     await screen.findByRole('heading', { name: 'Your details' })
     fillForm()
     await act(async () => {
-      fireEvent.click(screen.getByRole('button', { name: 'Send order' }))
+      fireEvent.click(screen.getByRole('button', { name: /^Send order/ }))
     })
     expect(fetchFn).toHaveBeenCalledTimes(1)
     const body = JSON.parse((fetchFn.mock.calls[0] as unknown as [string, RequestInit])[1].body as string) as {
@@ -192,11 +193,87 @@ describe('DetailsScreen', () => {
     vi.spyOn(console, 'error').mockImplementation(() => {})
     renderDetails({ 'knot-tying': 1 })
     fillForm()
-    fireEvent.click(screen.getByRole('button', { name: 'Send order' }))
+    fireEvent.click(screen.getByRole('button', { name: /^Send order/ }))
     expect(screen.getByLabelText('Name').closest('[inert]')).not.toBeNull()
     expect(screen.getByLabelText('Name').closest('[aria-busy="true"]')).not.toBeNull()
     expect(screen.getByRole('heading', { name: 'Your details' }).closest('[inert]')).not.toBeNull()
     await act(async () => finish(new Response('{}', { status: 500 }))) // the send fails
     expect(screen.getByLabelText('Name').closest('[inert]')).toBeNull()
+  })
+})
+
+describe('DetailsScreen pill', () => {
+  it('names Send order with the total of a 6 x RM 4.00 cart, inside the form and a dock', () => {
+    // catches: a name that drops the total, or Send leaving the form or the dock
+    renderDetails({ 'knot-tying': 6 })
+    const send = screen.getByRole('button', { name: 'Send order RM 24.00' })
+    expect(send.closest('form')).not.toBeNull()
+    const names = PILL_DOCK.split(' ')
+    let dock: Element | null = send.parentElement
+    while (dock && !names.every((name) => dock?.classList.contains(name))) dock = dock.parentElement
+    expect(dock).not.toBeNull()
+  })
+
+  it('keeps the bottom padding that clears the line, the gap and the pill', () => {
+    // catches: the end of the form hidden behind the floating pill
+    renderDetails({ 'knot-tying': 1 })
+    expect(screen.getByRole('heading', { name: 'Your details' }).parentElement).toHaveClass('pb-24')
+  })
+})
+
+describe('DetailsScreen failure note padding', () => {
+  it('grows the bottom padding while the failure note shows, and returns it when it is dismissed', async () => {
+    // catches: the failure note covering the line that says what is missing, with focus landing under it
+    vi.spyOn(console, 'error').mockImplementation(() => {})
+    vi.stubGlobal('fetch', vi.fn(async () => new Response('{}', { status: 500 }))) // the send fails
+    renderDetails({ 'knot-tying': 6 })
+    const column = screen.getByRole('heading', { name: 'Your details' }).parentElement
+    fillForm()
+    fireEvent.click(screen.getByRole('button', { name: /^Send order/ }))
+    await screen.findByRole('alert')
+    expect(column).toHaveClass('pb-60')
+    expect(column).not.toHaveClass('pb-24')
+    fireEvent.click(screen.getByRole('button', { name: 'Dismiss' }))
+    await waitFor(() => expect(column).toHaveClass('pb-24'))
+  })
+})
+
+describe('DetailsScreen while sending', () => {
+  it('keeps Send order focused and outside the inert area, and says "Sending…" in a polite live region', async () => {
+    // catches: focus dropping to the page and nothing announced when the whole dock goes inert
+    let finish: (response: Response) => void = () => {}
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(() => new Promise<Response>((resolve) => (finish = resolve))),
+    ) // never answers until told
+    vi.spyOn(console, 'error').mockImplementation(() => {})
+    renderDetails({ 'knot-tying': 1 })
+    fillForm()
+    const live = document.querySelector('[aria-live="polite"]') // mounted before the send, so the first announcement is heard
+    expect(live).not.toBeNull()
+    expect(live).toHaveTextContent('')
+    fireEvent.click(screen.getByRole('button', { name: /^Send order/ }))
+    const send = screen.getByRole('button', { name: 'Sending…' })
+    expect(send.closest('[inert]')).toBeNull()
+    expect(send).toHaveFocus()
+    expect(send).toHaveAttribute('aria-disabled', 'true')
+    expect(live).toHaveTextContent('Sending…')
+    expect(live?.closest('[aria-busy="true"]')).toBeNull() // a busy ancestor can hold back the announcement
+    expect(screen.getByLabelText('Name').closest('[aria-busy="true"]')).not.toBeNull() // the fields are the busy part
+    expect(screen.getByLabelText('Name').closest('[inert]')).not.toBeNull() // everything else still waits
+    await act(async () => finish(new Response('{}', { status: 500 }))) // the send fails
+    expect(live).toHaveTextContent('')
+    expect(screen.getByRole('button', { name: /^Send order/ })).toHaveFocus() // focus back on Send after a failure
+  })
+
+  it('sends once when Send order is pressed again while sending', async () => {
+    // catches: a Send that stays pressable while sending, once it is outside the inert area
+    const fetchFn = vi.fn(() => new Promise<Response>(() => {})) // never answers
+    vi.stubGlobal('fetch', fetchFn)
+    renderDetails({ 'knot-tying': 1 })
+    fillForm()
+    fireEvent.click(screen.getByRole('button', { name: /^Send order/ }))
+    fireEvent.click(screen.getByRole('button', { name: 'Sending…' }))
+    expect(fetchFn).toHaveBeenCalledTimes(1)
   })
 })

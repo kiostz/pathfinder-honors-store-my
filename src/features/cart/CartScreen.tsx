@@ -7,10 +7,11 @@ import type { Honor } from '@/shared/data/types.ts' // the shape of an honor
 import { DETAILS_HASH } from '@/shared/routes.ts' // the details page's address
 import { ACTION_BOX } from '@/shared/ui/button-box.ts' // the retry button
 import { byText } from '@/shared/sort/sort-by-name.ts' // names A to Z
+import { PILL_DOCK } from '@/shared/ui/floating-pill-box.ts' // where the pill and the note sit
 import { LOAD_ERROR_TEXT } from '@/shared/ui/load-error-text.ts' // the failed-load message
 import { CartIcon, InfoIcon } from './cart-icons.tsx' // the empty cart's icon and the banner's i
 import { CART_CARD_BOX, CART_LINE_BOX, CART_PICTURE_BOX } from './cart-line-box.ts' // the card and line boxes, shared with the loading lines
-import { estimatedTotalCents, GONE_NAME, lineLabel, resolveCart } from './cart.ts' // the cart maths and a line's label
+import { cartCount, estimatedTotalCents, GONE_NAME, lineLabel, resolveCart } from './cart.ts' // the cart maths and a line's label
 import { CartLine } from './CartLine.tsx' // one line
 import { CheckoutBar } from './CheckoutBar.tsx' // the bottom bar
 import { RemovedNote } from './RemovedNote.tsx' // the note with Undo
@@ -222,23 +223,22 @@ export function CartScreen({ data, onBack }: { data: CatalogueLoad; onBack: () =
       <p role="status" className="sr-only">
         {removal !== null ? `${removal.name} removed` : ''}
       </p>
-      {/* Fixed to the bottom: the note floats above the bar. */}
+      {/* The dock: the note floats 12 px above the pill, both as wide as the pill. */}
       {state.status === 'ready' && (
-        <div className="fixed inset-x-0 bottom-0 z-20 print:hidden">
+        <div className={PILL_DOCK}>
           {removal !== null && (
-            <div className="px-4 pb-3">
-              <RemovedNote
-                key={`${removal.id}:${removal.quantity}`} // a new removal is a new note with a fresh timer
-                name={removal.name}
-                label={removal.label}
-                onUndo={undo}
-                onEnd={endNote}
-                takeFocus={removal.keyboard}
-              />
-            </div>
+            <RemovedNote
+              key={`${removal.id}:${removal.quantity}`} // a new removal is a new note with a fresh timer
+              name={removal.name}
+              label={removal.label}
+              onUndo={undo}
+              onEnd={endNote}
+              takeFocus={removal.keyboard}
+            />
           )}
           <CheckoutBar
             totalCents={totalCents}
+            itemCount={cartCount(lines)}
             currency={currency}
             orderable={lines.length > 0}
             onCheckout={checkout}

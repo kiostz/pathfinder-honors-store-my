@@ -106,14 +106,14 @@ describe('App checkout path', () => {
     await screen.findByRole('heading', { name: 'Your details' })
     fillAndTick()
     await act(async () => {
-      fireEvent.click(screen.getByRole('button', { name: 'Send order' }))
+      fireEvent.click(screen.getByRole('button', { name: /^Send order/ }))
     })
     expect(await screen.findByRole('alert')).toHaveTextContent('Your order was not sent')
     expect(window.location.hash).toBe('#/details') // still here, not on the confirmation
     expect(window.localStorage.getItem(CART_STORAGE_KEY)).toBe('{"version":1,"quantities":{"knot-tying":2}}') // the cart is kept, without the unavailable lines
     fireEvent.click(screen.getByRole('button', { name: 'Tick captcha' })) // the token was spent
     await act(async () => {
-      fireEvent.click(screen.getByRole('button', { name: 'Send order' }))
+      fireEvent.click(screen.getByRole('button', { name: /^Send order/ }))
     })
     expect(await screen.findByRole('heading', { name: 'Order sent' })).toBeInTheDocument()
     const messages = sentMessages(fetchFn)
@@ -139,7 +139,7 @@ describe('App checkout path', () => {
     render(<App />)
     await screen.findByRole('heading', { name: 'Your details' })
     fillAndTick()
-    fireEvent.click(screen.getByRole('button', { name: 'Send order' }))
+    fireEvent.click(screen.getByRole('button', { name: /^Send order/ }))
     expect(within(screen.getByRole('banner')).getByRole('link', { name: 'Back' }).closest('[inert]')).not.toBeNull()
     await act(async () => finish(new Response('{}', { status: 500 }))) // the send fails
     expect(within(screen.getByRole('banner')).getByRole('link', { name: 'Back' }).closest('[inert]')).toBeNull()
@@ -222,5 +222,22 @@ describe('App checkout path', () => {
     await waitFor(() => expect(window.location.hash).toBe('#/cart')) // bounced
     expect(screen.queryByLabelText('Name')).not.toBeInTheDocument()
     expect(screen.getByText('Your cart is empty')).toBeInTheDocument()
+  })
+
+  it('shows the same count and total in the cart pill, after a reload, as on the Send order button once Checkout takes the unavailable lines out', async () => {
+    // catches: a pill whose count or total includes an unavailable line, or a Send order total that disagrees with the pill
+    serve(async () => new Response(JSON.stringify({ success: true })))
+    saveMixedCart() // 2 orderable at RM 4.00, 4 unavailable
+    window.location.hash = '#/cart'
+    const first = render(<App />)
+    await screen.findByText('2 items are no longer available')
+    first.unmount() // the reload mid-cart
+    render(<App />)
+    await screen.findByText('2 items are no longer available')
+    const pill = screen.getByRole('button', { name: 'Checkout' }).parentElement as HTMLElement // the pill's text and button
+    expect(pill).toHaveTextContent('Estimated total · 2 items') // only the orderable count
+    expect(pill).toHaveTextContent('RM 8.00') // only the orderable total
+    fireEvent.click(screen.getByRole('button', { name: 'Checkout' }))
+    expect(await screen.findByRole('button', { name: 'Send order RM 8.00' })).toBeInTheDocument() // the same total
   })
 })

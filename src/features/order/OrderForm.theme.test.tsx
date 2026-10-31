@@ -71,7 +71,7 @@ describe('OrderForm with a theme change', () => {
     // catches: a form that keeps a token the redrawn widget no longer holds, or loses the cart after the retry fails
     vi.spyOn(console, 'error').mockImplementation(() => {})
     readyForm(500) // filled, ticked, and the send will fail
-    const send = screen.getByRole('button', { name: 'Send order' })
+    const send = screen.getByRole('button', { name: /^Send order/ })
     expect(send).toHaveAttribute('aria-disabled', 'false') // ready
     const { result } = renderHook(() => useTheme())
     act(() => result.current.setChoice('dark')) // the buyer picks Dark in the Theme control
@@ -118,7 +118,7 @@ describe('OrderForm with a theme change', () => {
     const fetchMock = readyForm(200)
     const { result } = renderHook(() => useTheme())
     act(() => result.current.setChoice('dark')) // the token is cleared
-    fireEvent.click(screen.getByRole('button', { name: 'Send order' }))
+    fireEvent.click(screen.getByRole('button', { name: /^Send order/ }))
     await act(async () => {}) // let any send start
     expect(fetchMock).not.toHaveBeenCalled()
     expect(screen.getByTestId('cart')).toHaveTextContent('{"knot-tying":3}')
@@ -130,11 +130,11 @@ describe('OrderForm with a theme change', () => {
     const { result } = renderHook(() => useTheme())
     act(() => result.current.setChoice('dark'))
     fireEvent.click(screen.getByRole('button', { name: 'Tick captcha' })) // token-2
-    fireEvent.click(screen.getByRole('button', { name: 'Send order' }))
+    fireEvent.click(screen.getByRole('button', { name: /^Send order/ }))
     await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1))
     const body = JSON.parse((fetchMock.mock.calls[0] as unknown as [string, { body: string }])[1].body)
     expect(body['h-captcha-response']).toBe('token-2')
-    expect(body.from_name).toBe('AY Store') // the sender name still goes with it
+    expect(body.from_name).toBe('PEM Pathfinder Store') // the sender name still goes with it
   })
 
   it('sends once when Send order is double-clicked after a theme change and a new tick', async () => {
@@ -143,7 +143,7 @@ describe('OrderForm with a theme change', () => {
     const { result } = renderHook(() => useTheme())
     act(() => result.current.setChoice('dark'))
     fireEvent.click(screen.getByRole('button', { name: 'Tick captcha' }))
-    const send = screen.getByRole('button', { name: 'Send order' })
+    const send = screen.getByRole('button', { name: /^Send order/ })
     fireEvent.click(send)
     fireEvent.click(send)
     await waitFor(() => expect(fetchMock).toHaveBeenCalled())
@@ -161,7 +161,7 @@ describe('OrderForm with a theme change', () => {
     const { result } = renderHook(() => useTheme())
     act(() => result.current.setChoice('dark'))
     fireEvent.click(screen.getByRole('button', { name: 'Tick captcha' }))
-    fireEvent.click(screen.getByRole('button', { name: 'Send order' }))
+    fireEvent.click(screen.getByRole('button', { name: /^Send order/ }))
     const alert = await screen.findByRole('alert')
     const seen =
       JSON.stringify([errorSpy, warnSpy, logSpy, infoSpy].map((spy) => spy.mock.calls)) +

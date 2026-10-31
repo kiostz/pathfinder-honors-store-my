@@ -40,7 +40,7 @@ export function AppHeader({
         )}
         <div className="text-center">
           {variant === 'home' ? (
-            <h1 className="sm:text-title text-xl font-bold">{siteTitle}</h1> // big
+            <h1 className="sm:text-title min-[400px]:text-xl text-lg font-bold text-balance">{siteTitle}</h1> // big: 18 px under 400 px so the long name stays on one line, balanced when it must wrap
           ) : (
             <h1 className="text-sm font-medium">{siteTitle}</h1> // small, above the page title below
           )}

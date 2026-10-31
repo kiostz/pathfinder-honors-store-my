@@ -89,7 +89,7 @@ describe('App', () => {
     ) // one honor
     render(<App />)
     const header = screen.getByRole('banner') // the header band
-    expect(within(header).getByRole('heading', { name: 'AY Store' })).toBeInTheDocument()
+    expect(within(header).getByRole('heading', { name: 'PEM Pathfinder Store' })).toBeInTheDocument()
     expect(within(header).getByRole('button', { name: /^Theme:/ })).toBeInTheDocument()
     expect(await screen.findByText('Knot Tying')).toBeInTheDocument()
   })
@@ -97,7 +97,7 @@ describe('App', () => {
   it.each([
     ['#/cart', 'Your cart'],
     ['#/details', 'Your details'],
-  ])('shows Back, a small AY Store and no theme control in the header of %s', async (hash, title) => {
+  ])('shows Back, a small PEM Pathfinder Store and no theme control in the header of %s', async (hash, title) => {
     // catches: the theme control or the big name leaking onto inner screens, or a screen with no way back in the header
     serveTwoHonors() // two honors
     window.localStorage.setItem(CART_STORAGE_KEY, '{"version":1,"quantities":{"knot-tying":1}}') // an orderable line, so the details page stays
@@ -105,7 +105,7 @@ describe('App', () => {
     render(<App />)
     const header = screen.getByRole('banner') // the header band
     expect(within(header).getByRole('link', { name: 'Back' })).toBeInTheDocument()
-    expect(within(header).getByText('AY Store')).toBeInTheDocument()
+    expect(within(header).getByText('PEM Pathfinder Store')).toBeInTheDocument()
     expect(within(header).queryByRole('button', { name: /^Theme:/ })).not.toBeInTheDocument()
     expect(await screen.findByRole('heading', { name: title })).toBeInTheDocument() // the page title below it
     expect(screen.queryByRole('link', { name: 'Back to cart' })).not.toBeInTheDocument() // the quiet link is gone
@@ -204,13 +204,13 @@ describe('App', () => {
     serveTwoHonors()
     render(<App />)
     fireEvent.click(await screen.findByRole('button', { name: 'Add Knot Tying' }))
-    expect(document.title).toBe('Shop · AY Store')
+    expect(document.title).toBe('Shop · PEM Pathfinder Store')
     fireEvent.click(screen.getByRole('link', { name: /^Cart, / }))
     const heading = await screen.findByRole('heading', { name: 'Your cart' })
     expect(heading).toHaveFocus()
-    expect(document.title).toBe('Your cart · AY Store')
+    expect(document.title).toBe('Your cart · PEM Pathfinder Store')
     expect(screen.queryByRole('navigation', { name: 'Main' })).not.toBeInTheDocument() // no pill on the cart screen
-    expect(screen.getByText('Estimated total')).toBeInTheDocument()
+    expect(screen.getByText('Estimated total · 1 item')).toBeInTheDocument()
   })
 
   it('keeps a typed search in the hidden catalogue and focuses the Cart tab on return', async () => {
@@ -225,7 +225,7 @@ describe('App', () => {
     await waitFor(() => expect(screen.queryByRole('heading', { name: 'Your cart' })).not.toBeInTheDocument())
     expect(screen.getByRole('searchbox', { name: 'Search items' })).toHaveValue('knot')
     expect(screen.getByRole('link', { name: /^Cart, / })).toHaveFocus()
-    expect(document.title).toBe('Shop · AY Store')
+    expect(document.title).toBe('Shop · PEM Pathfinder Store')
   })
 
   it('hides the catalogue from readers while the cart shows', async () => {
@@ -415,13 +415,13 @@ describe('App', () => {
     await screen.findByRole('heading', { name: 'Your cart' })
     fireEvent.click(screen.getByRole('button', { name: 'Checkout' }))
     expect(await screen.findByRole('heading', { name: 'Your details' })).toHaveFocus()
-    expect(document.title).toBe('Your details · AY Store')
+    expect(document.title).toBe('Your details · PEM Pathfinder Store')
     expect(window.location.hash).toBe('#/details')
     const back = vi.spyOn(window.history, 'back') // history back when the cart came before
     fireEvent.click(screen.getByRole('link', { name: 'Back' }))
     expect(back).toHaveBeenCalledTimes(1)
     await screen.findByRole('heading', { name: 'Your cart' })
-    expect(document.title).toBe('Your cart · AY Store')
+    expect(document.title).toBe('Your cart · PEM Pathfinder Store')
     back.mockRestore() // put history back
   })
 
@@ -479,7 +479,7 @@ describe('App', () => {
     render(<App />)
     const heading = await screen.findByRole('heading', { name: 'Order sent' })
     expect(heading).toHaveFocus()
-    expect(document.title).toBe('Order sent · AY Store')
+    expect(document.title).toBe('Order sent · PEM Pathfinder Store')
     expect(screen.getByText('PF-20261028-4K7Q')).toBeInTheDocument()
     expect(screen.queryByRole('navigation', { name: 'Main' })).not.toBeInTheDocument()
     expect(screen.queryByRole('searchbox', { name: 'Search items' })).not.toBeInTheDocument()
@@ -521,7 +521,7 @@ describe('App', () => {
     fireEvent.change(screen.getByLabelText('Phone'), { target: { value: '0312345678' } })
     fireEvent.change(screen.getByLabelText('Club name'), { target: { value: 'Hilltop Club' } })
     fireEvent.click(screen.getByRole('button', { name: 'Tick captcha' }))
-    fireEvent.click(screen.getByRole('button', { name: 'Send order' }))
+    fireEvent.click(screen.getByRole('button', { name: /^Send order/ }))
     expect(await screen.findByRole('heading', { name: 'Order sent' })).toHaveFocus()
     expect(screen.getByText(/^PF-\d{8}-[2-9A-HJKMNP-Z]{4}$/)).toBeInTheDocument()
     expect(window.localStorage.getItem(CART_STORAGE_KEY)).toBe('{"version":1,"quantities":{}}')
@@ -557,31 +557,34 @@ describe('App', () => {
       ) // three items in two categories
     }
 
-    it('shows Home at #/ with the AY Store heading, the theme button, no Back and the plain title', async () => {
+    it('shows Home at #/ with the PEM Pathfinder Store heading, the theme button, no Back and the plain title', async () => {
       // catches: an old link to #/ still opening the grid, or a Back on the first screen
       serveCategories()
       window.location.hash = '#/'
       render(<App />)
       const header = screen.getByRole('banner')
-      expect(within(header).getByRole('heading', { level: 1, name: 'AY Store' })).toBeInTheDocument()
+      expect(within(header).getByRole('heading', { level: 1, name: 'PEM Pathfinder Store' })).toBeInTheDocument()
       expect(within(header).getByRole('button', { name: /^Theme:/ })).toBeInTheDocument()
       expect(within(header).queryByRole('link', { name: 'Back' })).not.toBeInTheDocument()
+      const title = within(header).getByRole('heading', { level: 1, name: 'PEM Pathfinder Store' }) // the big name
+      expect(title).toHaveClass('text-balance') // a wrap leaves two even lines, never a lone "Store"
+      expect(title).toHaveClass('text-lg') // 18 px under 400 px so the long name fits on one line
       expect(await screen.findByRole('link', { name: 'Nature' })).toBeInTheDocument()
       expect(screen.queryByRole('searchbox')).not.toBeInTheDocument()
-      expect(document.title).toBe('AY Store')
+      expect(document.title).toBe('PEM Pathfinder Store')
     })
 
-    it('shows Shop at #/shop with a small AY Store over Shop, the theme button, no Back and its own title', async () => {
+    it('shows Shop at #/shop with a small PEM Pathfinder Store over Shop, the theme button, no Back and its own title', async () => {
       // catches: Shop drawn like an inner screen
       serveCategories()
       render(<App />)
       const header = screen.getByRole('banner')
-      expect(within(header).getByRole('heading', { level: 1, name: 'AY Store' })).toBeInTheDocument()
+      expect(within(header).getByRole('heading', { level: 1, name: 'PEM Pathfinder Store' })).toBeInTheDocument()
       expect(within(header).getByRole('heading', { level: 2, name: 'Shop' })).toBeInTheDocument()
       expect(within(header).getByRole('button', { name: /^Theme:/ })).toBeInTheDocument()
       expect(within(header).queryByRole('link', { name: 'Back' })).not.toBeInTheDocument()
       await screen.findByText('Ants')
-      expect(document.title).toBe('Shop · AY Store')
+      expect(document.title).toBe('Shop · PEM Pathfinder Store')
     })
 
     it('opens the grid at the top after a tile, even when Shop was scrolled before', async () => {
@@ -763,7 +766,7 @@ describe('App', () => {
         window.localStorage.setItem(CART_STORAGE_KEY, '{"version":1,"quantities":{"knot-tying":1}}') // an orderable line, so the details page stays
         window.location.hash = hash
         render(<App />)
-        await screen.findByRole('heading', { level: 1, name: 'AY Store' })
+        await screen.findByRole('heading', { level: 1, name: 'PEM Pathfinder Store' })
         const pill = screen.queryByRole('navigation', { name: 'Main' })
         if (shown) expect(pill).toBeInTheDocument()
         else expect(pill).not.toBeInTheDocument()

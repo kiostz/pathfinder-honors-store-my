@@ -18,7 +18,7 @@ import { useOrderForm } from './use-order-form.ts' // whether a send is running
 export function DetailsScreen({ data }: { data: CatalogueLoad }) {
   const { state, retry } = data // load state and retry
   const { quantities } = useCart() // the cart
-  const { sending } = useOrderForm() // an order is being sent: the page waits
+  const { sending, failure } = useOrderForm() // an order is being sent: the page waits; a failed send shows the failure note
   const headingRef = useRef<HTMLHeadingElement>(null) // focused on arrival
   const ready = state.status === 'ready' // the honors are known
   const { lines, unavailable } = resolveCart(quantities, ready ? state.honors : []) // what can be ordered, what cannot
@@ -37,10 +37,10 @@ export function DetailsScreen({ data }: { data: CatalogueLoad }) {
   }, [mustLeave])
 
   return (
-    // A 768 px centred column like the cart's; inert and busy while an order sends.
-    <div inert={sending} aria-busy={sending} className="mx-auto max-w-3xl pb-6">
+    // A 768 px centred column like the cart's; while an order sends the heading and the fields are inert and busy, Send order and its live region are not; the bottom padding clears the floating pill and what stacks over it, and grows while the failure note shows so it never covers a line of the form.
+    <div className={`mx-auto max-w-3xl ${failure ? 'pb-60' : 'pb-24'}`}>
       {/* Where focus lands on arrival. */}
-      <h2 ref={headingRef} tabIndex={-1} className="sm:text-title mt-2 text-xl font-bold outline-none">
+      <h2 ref={headingRef} inert={sending} tabIndex={-1} className="sm:text-title mt-2 text-xl font-bold outline-none">
         Your details
       </h2>
       {/* The same copy as the catalogue, and the way to retry. */}

@@ -1,6 +1,7 @@
 // The Removed note: "<Name> removed" with Undo above the Checkout bar, held 5 s (paused while the pointer or focus is on it), so a buyer can take a removal back.
 
 import { useEffect, useRef, useState } from 'react' // the hold timer, the pause and focus
+import { PILL_NOTE } from '@/shared/ui/floating-pill-box.ts' // the note's look and width, shared with the failure note
 import { TrashIcon } from './cart-icons.tsx' // the decorative trash
 
 const HOLD_MS = 5000 // how long the note stays, in total
@@ -69,7 +70,7 @@ export function RemovedNote({
       onBlur={(event) => {
         if (!event.currentTarget.contains(event.relatedTarget)) setPaused(false) // focus left the note: a fresh 5 s
       }}
-      className={`bg-bg-inverse text-on-inverse animate-note-in motion-reduce:animate-fade-in rounded-card mx-auto flex w-full max-w-3xl items-center gap-3 py-1 pr-1 pl-4 transition-opacity duration-(--duration-exit) ${fading ? 'opacity-0' : 'opacity-100'}`} // slides up and fades in; the last 150 ms fade out
+      className={`${PILL_NOTE} animate-note-in motion-reduce:animate-fade-in transition-opacity duration-(--duration-exit) ${fading ? 'opacity-0' : 'opacity-100'}`} // slides up and fades in; the last 150 ms fade out
     >
       <TrashIcon className="text-trash size-5 shrink-0" /> {/* decorative: the text says it */}
       <span className="min-w-0 flex-1 wrap-break-word">{`${name} removed`}</span> {/* what happened */}

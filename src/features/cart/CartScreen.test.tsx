@@ -10,6 +10,7 @@ import type { Honor } from '@/shared/data/types.ts' // the shape of an honor
 import { CART_STORAGE_KEY } from './cart-storage.ts' // where the cart is kept
 import { CartProvider } from './CartProvider.tsx' // the state the screen edits
 import { CartScreen } from './CartScreen.tsx' // code under test
+import { PILL_DOCK } from '@/shared/ui/floating-pill-box.ts' // the dock the pill and the note share
 import { useCart } from './use-cart.ts' // reads the cart
 
 const honors: Honor[] = [
@@ -86,7 +87,7 @@ describe('CartScreen lines', () => {
     expect(within(lines[0]).getByText('RM 10.50')).toBeInTheDocument()
     expect(within(lines[1]).getByText('Knot Tying')).toBeInTheDocument()
     expect(within(lines[1]).getByText('RM 8.00')).toBeInTheDocument()
-    expect(screen.getAllByText('Estimated total')).toHaveLength(1) // only the bar's
+    expect(screen.getAllByText('Estimated total · 5 items')).toHaveLength(1) // only the pill's
     expect(screen.getByRole('list').parentElement).not.toHaveTextContent('Estimated total')
     expect(screen.getByText('RM 18.50')).toBeInTheDocument() // the bar's total
   })
@@ -110,7 +111,7 @@ describe('CartScreen lines', () => {
       screen.getByRole('list').parentElement!.compareDocumentPosition(note) & Node.DOCUMENT_POSITION_FOLLOWING,
     ).toBeTruthy()
     expect(screen.queryByLabelText('Name')).not.toBeInTheDocument() // the form lives on the details page
-    expect(screen.queryByRole('button', { name: 'Send order' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: /^Send order/ })).not.toBeInTheDocument()
   })
 
   it('focuses its heading when it opens', () => {
@@ -518,7 +519,7 @@ describe('CartScreen empty, loading and error', () => {
     const lines = screen.getAllByTestId('cart-skeleton-line')
     expect(lines).toHaveLength(3)
     expect(lines[0].className).toContain('min-h-20') // the real row's 80 px
-    expect(screen.queryByText('Estimated total')).not.toBeInTheDocument()
+    expect(screen.queryByText(/^Estimated total/)).not.toBeInTheDocument()
     expect(screen.queryByRole('button', { name: 'Checkout' })).not.toBeInTheDocument()
   })
 
@@ -530,5 +531,51 @@ describe('CartScreen empty, loading and error', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Try again' }))
     expect(retry).toHaveBeenCalledTimes(1)
     expect(screen.queryByRole('button', { name: 'Checkout' })).not.toBeInTheDocument()
+  })
+})
+
+/**
+ * Tells whether an element carries every class of a class string.
+ * @param element the element
+ * @param classes space-separated classes
+ * @return true when all are present
+ */
+function hasAll(element: Element | null, classes: string): boolean {
+  return element !== null && classes.split(' ').every((name) => element.classList.contains(name)) // every one is there
+}
+
+describe('CartScreen floating pill', () => {
+  it('puts the Removed note and the pill in one dock, the note first', () => {
+    // catches: the note drawn under or behind the pill, or outside the dock that gives it the pill's width
+    renderScreen({ ants: 1, 'knot-tying': 2 })
+    removeLine('Ants')
+    const note = screen.getByTestId('removed-note')
+    const pill = screen.getByRole('button', { name: 'Checkout' }).parentElement as HTMLElement // the pill holding Checkout
+    expect(note.parentElement).toBe(pill.parentElement)
+    expect(hasAll(pill.parentElement, PILL_DOCK)).toBe(true)
+    expect(note.nextElementSibling).toBe(pill)
+  })
+
+  it('counts five items in the pill for a 2 + 3 cart with a switched-off line', () => {
+    // catches: a pill that counts unavailable lines or quantities wrongly, so it disagrees with the Cart tab
+    renderScreen({ 'knot-tying': 2, ants: 3, 'africa-lore': 4 })
+    expect(screen.getByText('Estimated total · 5 items')).toBeInTheDocument()
+    expect(screen.getByText('RM 18.50')).toBeInTheDocument()
+  })
+
+  it('shows only Browse more in the pill for an empty cart', () => {
+    // catches: a Checkout or a total over an empty cart
+    renderScreen({})
+    expect(screen.queryByRole('button', { name: 'Checkout' })).not.toBeInTheDocument()
+    expect(screen.queryByText(/^Estimated total/)).not.toBeInTheDocument()
+    const browse = screen.getByRole('button', { name: 'Browse more' })
+    expect(browse.parentElement?.children).toHaveLength(1)
+    expect(hasAll(browse.parentElement?.parentElement ?? null, PILL_DOCK)).toBe(true)
+  })
+
+  it('keeps the bottom padding that clears the note, the gap and the pill', () => {
+    // catches: the last line hidden behind the floating pill
+    renderScreen({ ants: 1 })
+    expect(screen.getByRole('heading', { name: 'Your cart' }).parentElement).toHaveClass('pb-24')
   })
 })

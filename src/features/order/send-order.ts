@@ -5,6 +5,7 @@ import {
   orderEmailText,
   type SentOrder,
 } from './order-email.ts' // the email
+import { STORE_NAME } from '@/shared/store-name.ts' // the sender name in the inbox
 
 const SUBMIT_URL = 'https://api.web3forms.com/submit' // Web3Forms' JSON endpoint
 const TIMEOUT_MS = 20_000 // a send that takes longer counts as failed
@@ -58,8 +59,8 @@ export async function sendOrder(
       }, // JSON in and out
       body: JSON.stringify({
         access_key: import.meta.env.VITE_WEB3FORMS_ACCESS_KEY, // public by design
-        subject, // "AY Store order PF-… — club — name"
-        from_name: 'AY Store', // the sender name in the inbox
+        subject, // "PEM Pathfinder Store order PF-… — club — name"
+        from_name: STORE_NAME, // the sender name in the inbox
         replyto: order.email, // so the handler can reply to the buyer
         message, // the order text
         'h-captcha-response': captchaToken, // Web3Forms checks it

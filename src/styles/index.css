@@ -21,6 +21,8 @@
   --color-on-tag-warning: #8a4b00; /* the Unavailable tag's text, 6.1:1 */
   --color-bg-inverse: #1d1d1f; /* the Removed note's fill */
   --color-on-inverse: #f3f0ec; /* text on the Removed note, 14.8:1 */
+  --color-note-close: #c62828; /* the red circle of the failure note's close button, the same in both themes */
+  --color-on-note-close: #ffffff; /* the white x on it, 5.6:1 */
   --color-focus-ring: #3b82f6; /* a blue that is not the brand colour: 3.2:1 on the page, 3.7:1 on a card, 4.0:1 on the band */
   --color-focus-ring-soft: #4a1520; /* the cart stepper's ring: oxblood, 12.0:1 on the soft fill, 14.8:1 on a card */
   --color-category-mark-border: rgb(
@@ -106,6 +108,14 @@
 /* The tab pill's edge, whichever of the two values the theme gives. */
 .pill-edge {
   box-shadow: var(--shadow-pill); /* a shadow in light, a hairline in dark */
+}
+
+/* A focused field or the captcha scrolls clear of the floating pill and the line over it (144 px), and of the failure note too while it shows (about 100 px more). */
+html {
+  scroll-padding-bottom: 9rem; /* the strip, the pill and the gaps */
+}
+html:has([data-failure-note]) {
+  scroll-padding-bottom: 17rem; /* the same plus the failure note */
 }
 
 /* The page colour on the body itself, so the first paint, before React draws, is already the right theme. */

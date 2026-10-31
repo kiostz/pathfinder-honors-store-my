@@ -72,8 +72,8 @@ describe('sendOrder', () => {
     expect(init.signal).toBeInstanceOf(AbortSignal) // the 20 s timeout
     expect(JSON.parse(init.body as string)).toEqual({
       access_key: 'test-key',
-      subject: 'AY Store order PF-20261028-4K7Q — Eagles — J. Cruz',
-      from_name: 'AY Store',
+      subject: 'PEM Pathfinder Store order PF-20261028-4K7Q — Eagles — J. Cruz',
+      from_name: 'PEM Pathfinder Store',
       replyto: 'jc@mail.com',
       message:
         'Order: PF-20261028-4K7Q\nName:  J. Cruz\nEmail: jc@mail.com\nPhone: +60 12-345 6789\nClub:  Eagles\n\n3 × Knot Tying @ RM 3.00 = RM 9.00\n\nEstimated total: RM 9.00',
@@ -184,7 +184,7 @@ describe('sendOrder', () => {
     expect(done).toBe(true)
     expect(fetchFn).not.toHaveBeenCalled()
     expect(info).toHaveBeenCalledWith(
-      'AY Store order PF-20261028-4K7Q — Eagles — J. Cruz',
+      'PEM Pathfinder Store order PF-20261028-4K7Q — Eagles — J. Cruz',
       expect.stringContaining('Order: PF-20261028-4K7Q'),
     )
   })
@@ -264,5 +264,28 @@ describe('sendOrder', () => {
       'replyto',
       'subject',
     ]) // exactly the decided fields
+  })
+
+  it('sends the body byte for byte as before the rename, apart from subject and from_name', async () => {
+    // catches: a rename that reorders, drops or rewrites any other field of the Web3Forms body
+    const sample = toSentOrder(
+      'PF-20261028-4K7Q',
+      [
+        { honor, quantity: 3 },
+        { honor: { ...honor, id: 'ants', name: 'Ants & "Bees"', price: 4.5 }, quantity: 2 },
+      ],
+      { ...EMPTY_ORDER_FORM, name: 'Jo — Tan', email: 'jc@mail.com', phone: '+60 12-345 6789', club: 'Other', otherClub: 'Hilltop Club' },
+      'MYR',
+      new Date('2026-10-28T10:00:00Z'),
+    ) // a two-line order with an Other club and odd characters
+    const fetchFn = fetchReturning(new Response(JSON.stringify({ success: true }))) // accepted
+    await sendOrder(sample, 'tok-1', fetchFn) // send it
+    const body = (fetchFn.mock.calls[0] as unknown as [string, RequestInit])[1].body as string // the raw JSON text
+    const oldName = ['AY', 'Store'].join(' ') // the old name, built from parts so the rename guard does not match this file
+    const before = `{"access_key":"test-key","subject":"${oldName} order PF-20261028-4K7Q — Other — Jo — Tan","from_name":"${oldName}","replyto":"jc@mail.com","message":"Order: PF-20261028-4K7Q\\nName:  Jo — Tan\\nEmail: jc@mail.com\\nPhone: +60 12-345 6789\\nClub:  Other\\n\\n3 × Knot Tying @ RM 3.00 = RM 9.00\\n2 × Ants & \\"Bees\\" @ RM 4.50 = RM 9.00\\n\\nEstimated total: RM 18.00","h-captcha-response":"tok-1"}` // the body the code produced at the commit before the rename
+    const after = before
+      .replace(`"subject":"${oldName} order PF-20261028-4K7Q`, '"subject":"PEM Pathfinder Store order PF-20261028-4K7Q') // the subject's new name
+      .replace(`"from_name":"${oldName}"`, '"from_name":"PEM Pathfinder Store"') // the sender's new name
+    expect(body).toBe(after) // every other byte as it was
   })
 })

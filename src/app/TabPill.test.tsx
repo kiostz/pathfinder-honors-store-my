@@ -5,6 +5,7 @@ import { describe, expect, it } from 'vitest' // test API
 import { CartProvider } from '@/features/cart/CartProvider.tsx' // the state the pill reads
 import { useCart } from '@/features/cart/use-cart.ts' // reads and sets the cart
 import type { Honor } from '@/shared/data/types.ts' // the shape of an honor
+import { PILL_DOCK, PILL_SURFACE } from '@/shared/ui/floating-pill-box.ts' // the shared pill classes
 import { TabPill } from './TabPill.tsx' // code under test
 
 const honors: Honor[] = [
@@ -199,5 +200,14 @@ describe('TabPill', () => {
     // catches: a floating pill printed over the page
     renderPill()
     expect(screen.getByRole('navigation', { name: 'Main' })).toHaveClass('print:hidden')
+  })
+})
+
+describe('TabPill shell', () => {
+  it('carries the dock and surface classes the cart and details pills share', () => {
+    // catches: the tab pill and the action pills drifting apart in size, position or look
+    renderPill()
+    const nav = screen.getByRole('navigation', { name: 'Main' })
+    for (const name of [...PILL_DOCK.split(' '), ...PILL_SURFACE.split(' ')]) expect(nav).toHaveClass(name)
   })
 })

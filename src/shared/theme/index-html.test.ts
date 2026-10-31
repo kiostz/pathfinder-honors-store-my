@@ -22,9 +22,9 @@ function runScript(storage: { getItem: (key: string) => string | null }) {
 }
 
 describe('index.html', () => {
-  it('names the page AY Store', () => {
+  it('names the page PEM Pathfinder Store', () => {
     // catches: the old site name left in the tab title before React draws
-    expect(/<title>([^<]*)<\/title>/.exec(html)?.[1]).toBe('AY Store')
+    expect(/<title>([^<]*)<\/title>/.exec(html)?.[1]).toBe('PEM Pathfinder Store')
   })
 })
 

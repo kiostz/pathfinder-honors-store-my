@@ -1,11 +1,13 @@
 // The order form under the cart's estimated total: name, email, phone, club and captcha, with Send order that looks ready only when everything is filled in and sends the order.
 
 import { useEffect, useRef, useState, type FormEvent } from 'react' // the captcha token, the send state and focus
-import type { OrderLine } from '@/features/cart/cart.ts' // the order lines being sent
+import { InfoIcon } from '@/features/cart/cart-icons.tsx' // the failure note's icon
+import { estimatedTotalCents, type OrderLine } from '@/features/cart/cart.ts' // the order lines being sent, and their total
 import { useCart } from '@/features/cart/use-cart.ts' // the sent order lines leave it
 import type { ClubList } from '@/shared/data/types.ts' // the clubs
 import { ORDER_SENT_HASH } from '@/shared/routes.ts' // the confirmation page's address
-import { ACTION_BOX } from '@/shared/ui/button-box.ts' // the primary pill's shape
+import { formatPrice } from '@/shared/format/price.ts' // "RM 24.00"
+import { PILL_ACTION, PILL_DOCK, PILL_NOTE, PILL_SURFACE } from '@/shared/ui/floating-pill-box.ts' // the floating pill and the note above it
 import { Captcha, type CaptchaHandle } from './Captcha.tsx' // the hCaptcha widget
 import { ClubSelect } from './ClubSelect.tsx' // the club field
 import { FIELD_BOX, FIELD_ERROR, FIELD_LABEL } from './field-box.ts' // the shared field look
@@ -16,9 +18,9 @@ import { OrderSendError, sendOrder } from './send-order.ts' // the send and its 
 import { writeSentOrder } from './sent-order-storage.ts' // keeps the order for the confirmation
 import { useOrderForm } from './use-order-form.ts' // the form's values
 
-const FAILED_TEXT = 'Your order was not sent. Check your connection, tick the captcha again and press Send order.' // above Send order after a failure
+const FAILED_TEXT = 'Your order was not sent. Check your connection, tick the captcha again and press Send order.' // in the note above Send order after a failure
 const RATE_LIMITED_TEXT =
-  'Too many orders were sent just now. Wait a minute, tick the captcha again and press Send order.' // above Send order after a 429
+  'Too many orders were sent just now. Wait a minute, tick the captcha again and press Send order.' // in the note above Send order after a 429
 
 const TAKE_BACK_MS = 1000 // how long after a failure the widget's own focus grab is handed back to Send order
 
@@ -63,6 +65,7 @@ export function OrderForm({ lines, currency, clubs }: { lines: OrderLine[]; curr
   const errors = validateOrderForm(values, clubs) // what is wrong now
   const complete = Object.keys(errors).length === 0 && token !== null // ready to send
   const missing = missingText(errors, token !== null) // the line under the button
+  const totalText = formatPrice(estimatedTotalCents(lines) / 100, currency).replace(/\u00a0/g, ' ') // "RM 24.00"; Intl puts a no-break space after "RM", and the button's name should read with a plain one
   /**
    * Gives the error text of a field once the buyer has left it.
    * @param field the field
@@ -91,6 +94,12 @@ export function OrderForm({ lines, currency, clubs }: { lines: OrderLine[]; curr
     }
   }, [failure])
 
+  /** Closes the failure note and puts focus back on Send order, where it was. */
+  const dismissFailure = () => {
+    setFailure(null) // the note goes
+    sendRef.current?.focus() // the × is gone with it, so focus returns to Send order
+  }
+
   /**
    * Handles Send order: an incomplete form shows what is missing; a complete one sends the order.
    * @param event the form's submit
@@ -106,6 +115,7 @@ export function OrderForm({ lines, currency, clubs }: { lines: OrderLine[]; curr
       else missingRef.current?.focus() // only the captcha is missing: read the line that says so
       return
     }
+    sendRef.current?.focus() // focus stays on Send order, which sits outside the inert fields, so it is not lost to the page
     setSending(true) // no second press, "Sending…", and the screen freezes
     setFailure(null) // the last failure is old news
     const signature = JSON.stringify([
@@ -153,140 +163,177 @@ export function OrderForm({ lines, currency, clubs }: { lines: OrderLine[]; curr
       onSubmit={handleSubmit}
       onKeyDownCapture={() => (takeFocusBackRef.current = false)} // a key press means the buyer is steering, so the widget may keep focus
       onPointerDownCapture={() => (takeFocusBackRef.current = false)} // so does a tap
-      className="mt-6 space-y-4"
+      className="mt-6"
     >
-      {/* Name. */}
-      <div>
-        <label htmlFor="order-name" className={FIELD_LABEL}>
-          Name
-        </label>
-        <input
-          id="order-name" // the label points here
-          required // screen readers say it is required; noValidate keeps the browser's own messages off
-          type="text" // plain text
-          autoComplete="name" // the browser can fill it
-          maxLength={100} // the longest name
-          value={values.name} // controlled by the form
-          onChange={(event) => setField('name', event.target.value)} // report the typing
-          onBlur={() => touch('name')} // errors show once the field is left
-          aria-invalid={shownError('name') ? true : undefined} // red border with the error text
-          aria-describedby={shownError('name') ? 'order-name-error' : undefined} // read the error with the field
-          className={FIELD_BOX} // the shared field look
+      {/* Everything the buyer edits waits while an order sends; Send order sits outside it, so it keeps focus. */}
+      <div inert={sending} aria-busy={sending} className="space-y-4">
+        {/* Name. */}
+        <div>
+          <label htmlFor="order-name" className={FIELD_LABEL}>
+            Name
+          </label>
+          <input
+            id="order-name" // the label points here
+            required // screen readers say it is required; noValidate keeps the browser's own messages off
+            type="text" // plain text
+            autoComplete="name" // the browser can fill it
+            maxLength={100} // the longest name
+            value={values.name} // controlled by the form
+            onChange={(event) => setField('name', event.target.value)} // report the typing
+            onBlur={() => touch('name')} // errors show once the field is left
+            aria-invalid={shownError('name') ? true : undefined} // red border with the error text
+            aria-describedby={shownError('name') ? 'order-name-error' : undefined} // read the error with the field
+            className={FIELD_BOX} // the shared field look
+          />
+          {shownError('name') && (
+            <p id="order-name-error" className={FIELD_ERROR}>
+              {shownError('name')}
+            </p>
+          )}
+        </div>
+        {/* Email. */}
+        <div>
+          <label htmlFor="order-email" className={FIELD_LABEL}>
+            Email
+          </label>
+          <input
+            id="order-email" // the label points here
+            required // screen readers say it is required; noValidate keeps the browser's own messages off
+            type="email" // the email keyboard on phones
+            autoComplete="email" // the browser can fill it
+            maxLength={254} // the longest address
+            value={values.email} // controlled by the form
+            onChange={(event) => setField('email', event.target.value)} // report the typing
+            onBlur={() => touch('email')} // errors show once the field is left
+            aria-invalid={shownError('email') ? true : undefined} // red border with the error text
+            aria-describedby={shownError('email') ? 'order-email-error' : undefined} // read the error with the field
+            className={FIELD_BOX} // the shared field look
+          />
+          {shownError('email') && (
+            <p id="order-email-error" className={FIELD_ERROR}>
+              {shownError('email')}
+            </p>
+          )}
+        </div>
+        {/* Phone. */}
+        <div>
+          <label htmlFor="order-phone" className={FIELD_LABEL}>
+            Phone
+          </label>
+          <input
+            id="order-phone" // the label points here
+            required // screen readers say it is required; noValidate keeps the browser's own messages off
+            type="tel" // the number pad on phones
+            autoComplete="tel" // the browser can fill it
+            maxLength={30} // room for spaces, dashes and brackets round 15 digits
+            value={values.phone} // controlled by the form
+            onChange={(event) => setField('phone', event.target.value)} // report the typing
+            onBlur={() => touch('phone')} // errors show once the field is left
+            aria-invalid={shownError('phone') ? true : undefined} // red border with the error text
+            aria-describedby={shownError('phone') ? 'order-phone-error' : undefined} // read the error with the field
+            className={FIELD_BOX} // the shared field look
+          />
+          {shownError('phone') && (
+            <p id="order-phone-error" className={FIELD_ERROR}>
+              {shownError('phone')}
+            </p>
+          )}
+        </div>
+        {/* Club: the dropdown and the Other field. */}
+        <ClubSelect
+          clubs={clubs}
+          value={values.club}
+          otherValue={values.otherClub}
+          error={shownError('club')}
+          otherError={shownError('otherClub')}
+          onChange={(value) => setField('club', value)}
+          onOtherChange={(value) => setField('otherClub', value)}
+          onBlur={touch}
         />
-        {shownError('name') && (
-          <p id="order-name-error" className={FIELD_ERROR}>
-            {shownError('name')}
-          </p>
-        )}
-      </div>
-      {/* Email. */}
-      <div>
-        <label htmlFor="order-email" className={FIELD_LABEL}>
-          Email
-        </label>
-        <input
-          id="order-email" // the label points here
-          required // screen readers say it is required; noValidate keeps the browser's own messages off
-          type="email" // the email keyboard on phones
-          autoComplete="email" // the browser can fill it
-          maxLength={254} // the longest address
-          value={values.email} // controlled by the form
-          onChange={(event) => setField('email', event.target.value)} // report the typing
-          onBlur={() => touch('email')} // errors show once the field is left
-          aria-invalid={shownError('email') ? true : undefined} // red border with the error text
-          aria-describedby={shownError('email') ? 'order-email-error' : undefined} // read the error with the field
-          className={FIELD_BOX} // the shared field look
-        />
-        {shownError('email') && (
-          <p id="order-email-error" className={FIELD_ERROR}>
-            {shownError('email')}
-          </p>
-        )}
-      </div>
-      {/* Phone. */}
-      <div>
-        <label htmlFor="order-phone" className={FIELD_LABEL}>
-          Phone
-        </label>
-        <input
-          id="order-phone" // the label points here
-          required // screen readers say it is required; noValidate keeps the browser's own messages off
-          type="tel" // the number pad on phones
-          autoComplete="tel" // the browser can fill it
-          maxLength={30} // room for spaces, dashes and brackets round 15 digits
-          value={values.phone} // controlled by the form
-          onChange={(event) => setField('phone', event.target.value)} // report the typing
-          onBlur={() => touch('phone')} // errors show once the field is left
-          aria-invalid={shownError('phone') ? true : undefined} // red border with the error text
-          aria-describedby={shownError('phone') ? 'order-phone-error' : undefined} // read the error with the field
-          className={FIELD_BOX} // the shared field look
-        />
-        {shownError('phone') && (
-          <p id="order-phone-error" className={FIELD_ERROR}>
-            {shownError('phone')}
-          </p>
-        )}
-      </div>
-      {/* Club: the dropdown and the Other field. */}
-      <ClubSelect
-        clubs={clubs}
-        value={values.club}
-        otherValue={values.otherClub}
-        error={shownError('club')}
-        otherError={shownError('otherClub')}
-        onChange={(value) => setField('club', value)}
-        onOtherChange={(value) => setField('otherClub', value)}
-        onBlur={touch}
-      />
-      {/* The captcha; its token is what lets Send order look ready. */}
-      <div
-        ref={captchaBoxRef} // the widget's frame lives in here
-        onFocus={() => {
-          if (!takeFocusBackRef.current) return // the buyer went here on purpose, or nothing failed
-          takeFocusBackRef.current = false // once
-          sendRef.current?.focus() // the widget's reset grabbed focus; back to Send order
-        }} // focus events bubble from the widget's frame
-      >
-        <Captcha
-          onToken={(next) => {
-            takeFocusBackRef.current = false // the widget has spoken; its focus is the buyer's own
-            setToken(next) // the token, or null when it expires
-          }}
-          ref={captchaRef}
-        />
-      </div>
-      <div>
-        {/* Says the order was not sent, once; read out at once. */}
-        {failure && (
-          <p role="alert" className="text-danger mb-2 text-sm">
-            {failure.text}
-          </p>
-        )}
+        {/* The captcha; its token is what lets Send order look ready. */}
+        <div
+          ref={captchaBoxRef} // the widget's frame lives in here
+          onFocus={() => {
+            if (!takeFocusBackRef.current) return // the buyer went here on purpose, or nothing failed
+            takeFocusBackRef.current = false // once
+            sendRef.current?.focus() // the widget's reset grabbed focus; back to Send order
+          }} // focus events bubble from the widget's frame
+        >
+          <Captcha
+            onToken={(next) => {
+              takeFocusBackRef.current = false // the widget has spoken; its focus is the buyer's own
+              setToken(next) // the token, or null when it expires
+            }}
+            ref={captchaRef}
+          />
+        </div>
         {/* The order went out but the confirmation page could not open. */}
         {sentNumber && (
-          <p role="status" className="mb-2 text-sm">
+          <p role="status" className="text-sm">
             Order sent. Your order number is {sentNumber}. Do not send it again; the treasurer will email you the
             invoice.
           </p>
         )}
-        {/* The screen's one primary action; aria-disabled keeps it focusable so a press can say what is missing. */}
-        <button
-          ref={sendRef} // focused after a failure
-          type="submit" // Enter in a field presses it too
-          aria-disabled={!complete || sending} // looks disabled until complete, and while sending
-          aria-describedby={missing ? 'order-missing' : undefined} // read what is missing with the button
-          className={`${ACTION_BOX} bg-accent text-on-accent w-full px-6 aria-disabled:opacity-50`} // the screen's one primary pill, full width
-        >
-          {sending ? 'Sending…' : 'Send order'}
-          {/* Appears only after the loader delay, so a quick send flashes nothing. */}
-          {sending && <span aria-hidden="true" className="send-spinner ml-2" />}
-        </button>
         {/* Why the button looks disabled. */}
         {missing && (
-          <p ref={missingRef} tabIndex={-1} id="order-missing" className="text-text-muted mt-2 text-sm outline-none">
+          <p ref={missingRef} tabIndex={-1} id="order-missing" className="text-text-muted text-sm outline-none">
             {missing}
           </p>
         )}
+      </div>
+      {/* Heard when a send starts; mounted before, so the first announcement is read. */}
+      <p aria-live="polite" className="sr-only">
+        {sending ? 'Sending…' : ''}
+      </p>
+      {/* The dock: the failure note, the no-payment line and the pill, stacked 12 px apart; Send order stays inside the form, so Enter in a field presses it. */}
+      <div className={PILL_DOCK}>
+        {/* Says the order was not sent, with a red × to close it; no timer, so it stays until the next send or the ×. */}
+        {failure && (
+          <div data-failure-note className={`${PILL_NOTE} animate-note-in motion-reduce:animate-fade-in`}>
+            <InfoIcon className="size-5 shrink-0" /> {/* decorative: the text says it */}
+            <p role="alert" className="min-w-0 flex-1 py-2 text-sm wrap-break-word">
+              {failure.text}
+            </p>
+            <button
+              type="button" // not a form submit
+              aria-label="Dismiss" // the × glyph is decorative
+              onClick={dismissFailure} // close the note
+              className="focus-visible:outline-focus-ring rounded-pill flex size-11 shrink-0 items-center justify-center transition-transform duration-(--duration-press) focus-visible:outline-2 focus-visible:outline-offset-0 active:scale-[0.97]" // 44 px target
+            >
+              <span
+                aria-hidden="true"
+                className="bg-note-close text-on-note-close flex size-8 items-center justify-center rounded-full text-xl leading-none font-bold"
+              >
+                × {/* the close mark: white on a 32 px red circle */}
+              </span>
+            </button>
+          </div>
+        )}
+        {/* What happens after Send: on a stone strip so it reads over the form scrolling beneath. */}
+        <p className="bg-bg-app text-text-muted rounded-card px-3 py-1 text-center text-[0.8125rem]">
+          No payment now. We&apos;ll contact you to confirm.
+        </p>
+        {/* The pill; aria-disabled keeps Send order focusable so a press can say what is missing. */}
+        <div className={PILL_SURFACE}>
+          <button
+            ref={sendRef} // focused after a failure
+            type="submit" // Enter in a field presses it too
+            aria-disabled={!complete || sending} // looks disabled until complete, and while sending
+            aria-describedby={missing ? 'order-missing' : undefined} // read what is missing with the button
+            className={`${PILL_ACTION} w-full px-6 aria-disabled:opacity-50`} // the screen's one primary pill, full width
+          >
+            {sending ? (
+              'Sending…'
+            ) : (
+              <>
+                Send order <span aria-hidden="true">·</span> {totalText}{' '}
+                {/* the label, then the total; the dot is not read */}
+              </>
+            )}
+            {/* Appears only after the loader delay, so a quick send flashes nothing. */}
+            {sending && <span aria-hidden="true" className="send-spinner ml-2" />}
+          </button>
+        </div>
       </div>
     </form>
   )

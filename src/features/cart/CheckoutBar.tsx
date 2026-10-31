@@ -1,29 +1,29 @@
-// The Checkout bar at the foot of the cart screen: Estimated total and Checkout, or one Browse more when nothing can be ordered, so the next step is always one tap away.
+// The cart's floating pill: Estimated total with the item count and Checkout, or one Browse more when nothing can be ordered, so the next step is always one tap away.
 
 import { useRef } from 'react' // the double-tap guard
 import { formatPrice } from '@/shared/format/price.ts' // "RM 20.00"
-import { PILL_BOX } from '@/shared/ui/button-box.ts' // the pill shape
-
-const BAR_BUTTON =
-  'bg-accent text-on-accent focus-visible:outline-focus-ring transition-transform duration-(--duration-press) focus-visible:outline-2 focus-visible:outline-offset-2 active:scale-[0.97]' // the primary pill: colours, press feedback and ring
+import { PILL_ACTION, PILL_SURFACE } from '@/shared/ui/floating-pill-box.ts' // the pill look shared with the tab pill
 
 /**
- * Draws the bar.
+ * Draws the pill; the cart screen places it in the dock.
  * @param totalCents the Estimated total of the orderable lines, in cents
+ * @param itemCount the Item count of the orderable lines
  * @param currency the currency code from the settings
- * @param orderable false when no line can be ordered: the bar then holds Browse more alone
+ * @param orderable false when no line can be ordered: the pill then holds Browse more alone
  * @param onCheckout called once when Checkout is pressed (a second press is ignored)
  * @param onBrowse called when Browse more is pressed
- * @return the bar
+ * @return the pill
  */
 export function CheckoutBar({
   totalCents,
+  itemCount,
   currency,
   orderable,
   onCheckout,
   onBrowse,
 }: {
   totalCents: number
+  itemCount: number
   currency: string
   orderable: boolean
   onCheckout: () => void
@@ -31,42 +31,42 @@ export function CheckoutBar({
 }) {
   const pressed = useRef(false) // set by the first Checkout press, so a double tap goes once
   return (
-    // White strip with a hairline over the page, the width of the cart column inside.
-    <div className="bg-bg-surface border-border-subtle border-t print:hidden">
-      {/* The cart column: total left, action right. */}
-      <div className="mx-auto flex max-w-3xl items-center justify-between gap-3 px-4 py-3">
-        {orderable ? (
-          <>
-            {/* The total, announced politely as it changes. */}
-            <p aria-live="polite" className="min-w-0">
-              <span className="text-text-muted block text-sm">Estimated total</span> {/* the label */}
-              <span className="block text-lg font-bold tabular-nums">
-                {formatPrice(totalCents / 100, currency)}
-              </span>{' '}
-              {/* the sum */}
-            </p>
-            <button
-              type="button" // not a form submit
-              onClick={() => {
-                if (pressed.current) return // a double tap goes once
-                pressed.current = true // the first press
-                onCheckout() // take out the unavailable lines and open the details page
-              }}
-              className={`${PILL_BOX} ${BAR_BUTTON} shrink-0`} // the primary pill
-            >
-              Checkout
-            </button>
-          </>
-        ) : (
+    // The white pill: the total on the left, the action on the right, or one action across.
+    <div className={`${PILL_SURFACE} ${orderable ? 'ps-5 justify-between gap-2' : ''}`}>
+      {orderable ? (
+        <>
+          {/* The total, announced politely as it changes. */}
+          <p aria-live="polite" className="min-w-0 leading-tight">
+            <span className="text-text-muted block truncate text-xs">{`Estimated total · ${itemCount} ${itemCount === 1 ? 'item' : 'items'}`}</span>{' '}
+            {/* the label and the count */}
+            <span className="block truncate text-lg font-bold tabular-nums">
+              {formatPrice(totalCents / 100, currency)}
+            </span>{' '}
+            {/* the sum */}
+          </p>
           <button
             type="button" // not a form submit
-            onClick={onBrowse} // back to the shop
-            className={`${PILL_BOX} ${BAR_BUTTON} w-full`} // one full-width action
+            onClick={() => {
+              if (pressed.current) return // a double tap goes once
+              pressed.current = true // the first press
+              onCheckout() // take out the unavailable lines and open the details page
+            }}
+            className={`${PILL_ACTION} shrink-0 px-6`} // the primary pill
           >
-            Browse more
+            Checkout
+            <span aria-hidden="true">›</span> {/* leads on; not part of the name */}
           </button>
-        )}
-      </div>
+        </>
+      ) : (
+        <button
+          type="button" // not a form submit
+          onClick={onBrowse} // back to the shop
+          className={`${PILL_ACTION} w-full`} // one full-width action
+        >
+          Browse more
+          <span aria-hidden="true">›</span> {/* leads on; not part of the name */}
+        </button>
+      )}
     </div>
   )
 }
