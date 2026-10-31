@@ -76,43 +76,29 @@ describe('index.css emblem trace', () => {
     throw new Error('unclosed block') // malformed css
   }
 
-  it('plays once: every trace rule runs forwards with no repeat', () => {
-    // catches: a loop coming back, which would need a pause control (WCAG 2.2.2)
-    const rules = css.slice(0, css.indexOf('@media (prefers-reduced-motion')).match(/\.trace-(build|tail[123]|rider)\s*\{[^}]*\}/g) ?? [] // the base rules, before the Reduce Motion block
-    expect(rules).toHaveLength(5) // build, three tails, rider
-    for (const rule of rules) {
-      expect(rule).toMatch(/forwards/)
-      expect(rule).not.toMatch(/infinite/)
+  it('leaves none of the stacked SVG trace layers, rider or CSS flicker behind', () => {
+    // catches: the three tails, the rider or the flicker returning on top of the canvas
+    for (const name of ['trace-tail', 'trace-rider', 'trace-ride', 'trace-rays', 'trace-build', 'trace-flicker']) {
+      expect(css).not.toContain(name)
     }
+    expect(css).not.toMatch(/offset-path/)
   })
 
-  it('gives the spark head rays and a flicker that end, and a light-bloom blend, with the rays and flicker off under Reduce Motion', () => {
-    // catches: a flicker or turn that never stops (WCAG 2.2.2), or sparks and rays left running for people who asked for no motion
-    const base = css.slice(0, css.indexOf('@media (prefers-reduced-motion')) // the rules before the Reduce Motion block
-    for (const name of ['trace-rays', 'trace-flicker']) {
-      const rule = base.match(new RegExp(`\\.${name}\\s*\\{[^}]*\\}`))?.[0] ?? '' // the base rule
-      expect(rule).toMatch(/forwards/)
-      expect(rule).not.toMatch(/infinite/)
-    }
-    expect(base.match(/\.trace-flicker\s*\{[^}]*\}/)![0]).toMatch(/animation:[^;]*\s\d+\s/) // a finite count
-    expect(base.match(/\.trace-rider\s*\{[^}]*\}/)![0]).toMatch(/mix-blend-mode:\s*plus-lighter/)
+  it('blurs and adds the bloom canvas', () => {
+    // catches: a bloom that is sharp, or one that covers the band instead of adding light to it
+    const rule = css.match(/\.emblem-bloom\s*\{[^}]*\}/)?.[0] ?? '' // the bloom rule
+    expect(rule).toMatch(/filter:\s*blur\(8px\)/)
+    expect(rule).toMatch(/mix-blend-mode:\s*plus-lighter/)
+  })
+
+  it('hides both canvases under Reduce Motion and keeps the tab pill rules there', () => {
+    // catches: motion for people who asked for none, or the tab pill losing its Reduce Motion rules
     const reduced = block('@media (prefers-reduced-motion: reduce)')
-    for (const name of ['trace-rays', 'trace-flicker', 'emblem-sparks']) expect(reduced).toContain(name)
-  })
-
-  it('ends the flicker before the trace does: steps times flicker duration is at most the trace duration', () => {
-    // catches: a token edit that lets the flicker outlive the ride and pass 5 s (WCAG 2.2.2)
-    const rule = css.match(/\.trace-flicker\s*\{[^}]*\}/)![0] // the base rule
-    const steps = Number(/linear\s+(\d+)\s+alternate/.exec(rule)![1]) // the iteration count
-    const flicker = Number(/--duration-trace-flicker:\s*(\d+)ms/.exec(css)![1]) // one step in ms
-    const trace = Number(/--duration-trace:\s*(\d+)ms/.exec(css)![1]) // the trace in ms
-    expect(steps * flicker).toBeLessThanOrEqual(trace)
-  })
-
-  it('holds the emblem path in one place, not in the stylesheet', () => {
-    // catches: a second copy of the path, which a swap would miss (the rider would leave the line)
-    expect(css).not.toMatch(/path\(\s*['"]M/)
-    expect(css).toMatch(/offset-path:\s*var\(--emblem-path\)/)
+    expect(reduced).toContain('.emblem-canvas')
+    expect(reduced).toContain('.emblem-bloom')
+    expect(reduced).toMatch(/display:\s*none/)
+    expect(reduced).toContain('.pill-tab')
+    expect(reduced).toContain('.pill-content')
   })
 
   it('defines the plain and the stronger tile-name halo', () => {
@@ -121,19 +107,12 @@ describe('index.css emblem trace', () => {
     expect(css).toMatch(/--text-shadow-halo-strong:/)
   })
 
-  it('keeps the whole play under 5 seconds', () => {
-    // catches: a WCAG 2.2.2 regression
+  it('keeps the whole play under 5 seconds, with no repeat, and drops the two CSS-ride tokens', () => {
+    // catches: a WCAG 2.2.2 regression, or tokens left that nothing reads
     expect(css).toMatch(/--duration-trace:\s*4800ms/)
-    expect(css).toMatch(/--duration-trace-build:\s*4100ms/)
-  })
-
-  it('stops the build line and hides the trail and rider under Reduce Motion', () => {
-    // catches: motion for people who asked for none
-    const reduced = block('@media (prefers-reduced-motion: reduce)')
-    expect(reduced).toMatch(/\.trace-build[^{]*\{[^}]*animation:\s*none/)
-    expect(reduced).not.toMatch(/opacity:\s*0\.6/) // the path already carries its 0.3, so the still outline matches the resting one
-    for (const name of ['trace-tail1', 'trace-tail2', 'trace-tail3', 'trace-rider']) expect(reduced).toContain(name)
-    expect(reduced).toMatch(/display:\s*none/)
+    expect(css.match(/\.emblem-[a-z]+\s*\{[^}]*\}/g)?.join('') ?? '').not.toMatch(/animation/) // the canvases are moved by script, never by a CSS loop
+    expect(css).not.toContain('--duration-trace-build')
+    expect(css).not.toContain('--duration-trace-flicker')
   })
 })
 
